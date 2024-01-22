@@ -1,0 +1,115 @@
+---
+title: "Interaction Network"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::material:
+    highlight: kate
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r}
+library(igraph)
+library(tidyverse)
+```
+
+
+# Import file
+why not just do this:
+
+```{r}
+dt1 <-read.csv("./data/caradonna_rmbl_flowering_phenology_data_EDI.csv",header=T,sep=",",quot='"')
+summary(dt1)
+```
+
+```{r}
+if (class(dt1$year)=="factor") dt1$year <-as.numeric(levels(dt1$year))[as.integer(dt1$year) ]               
+if (class(dt1$year)=="character") dt1$year <-as.numeric(dt1$year)
+if (class(dt1$site)!="factor") dt1$site<- as.factor(dt1$site)
+if (class(dt1$plant)!="factor") dt1$plant<- as.factor(dt1$plant)
+if (class(dt1$transect)!="factor") dt1$transect<- as.factor(dt1$transect)
+if (class(dt1$week_num)=="factor") dt1$week_num <-as.numeric(levels(dt1$week_num))[as.integer(dt1$week_num) ]               
+if (class(dt1$week_num)=="character") dt1$week_num <-as.numeric(dt1$week_num)
+if (class(dt1$flower_count)=="factor") dt1$flower_count <-as.numeric(levels(dt1$flower_count))[as.integer(dt1$flower_count) ]               
+if (class(dt1$flower_count)=="character") dt1$flower_count <-as.numeric(dt1$flower_count)
+
+summary(dt1)
+```
+
+C'est bon on a bien les données dans le formatque l'on voulait.
+
+```{r}
+sub_set = dt1[dt1$year == 2013 & dt1$week_num == 1 & dt1$transect == 1,]
+sub_set
+```
+
+```{r}
+dt2 <-read.csv("./data/caradonna_rmbl_interaction_networks_data_EDI.csv",header=T,sep=",",quot='"')
+summary(dt2)
+```
+
+Je ne suis pas sûr que toutes le scolonnes soient au bon format.
+
+```{r}                
+if (class(dt2$year)=="factor") dt2$year <-as.numeric(levels(dt2$year))[as.integer(dt2$year) ]               
+if (class(dt2$year)=="character") dt2$year <-as.numeric(dt2$year)
+summary(dt2)
+```
+
+Afin de créer le graph, il faudra créer un sous jeu de données qui contient les lignes pour une semaine d'unée année donnée et  pour un transect donné.
+
+Après on peut débatre si il vaut mieux le faire sur un transect ou sur un site particulié.
+
+normalement il faudrait checker les NA
+
+le format n'est pas du tout pratique pour manipuller des jeux de données, verfier qu'il n'y a pas une autre alternative.
+
+Mais ça peut valoir le coup de manipuler les données comme un dataframe.
+Peut être avec une matrice d'ajacence
+https://kateto.net/network-visualization
+
+Il y a visNetwork pour visualiser de façon dynamique et il y a aussi ggnet du paquet GGally pour tracer des graphes ggplot.
+
+```{r}
+sub_set = dt2[dt1$year == 2013 & dt2$week_num == 1 & dt1$transect == 1, c("pollinator", "plant")]
+edges_list = sub_set %>% transmute( merged = paste0(pollinator, ",", plant)) %>% separate_rows(merged, sep = ",")
+
+graph_sub_set <- graph(edges = as.vector(edges_list$merged))
+plot(graph_sub_set)
+```
+
+```{r}
+table(sub_set$plant)
+table(sub_set$pollinator)
+```
+
+```{r}
+sub_set %>% transmute( = paste0(col1, ",", col2)) %>% separate_rows(col1, sep = ",")
+```
+
+
+
+```{r}
+graph_sub_set <- graph(edges = c(), n = length(table(sub_set$plant)) + length(table(sub_set$pollinator)) )
+
+
+graph_sub_set <- graph(edge = c(unique(sub_set$plant, unique(sub_set$pollinator))))
+plot(graph_sub_set)
+```
+
+
+
+
+```{r}
+g1 <- graph( edges=c(1,2, 2,3, 3, 1), n=3, directed=F ) 
+
+plot(g1)
+```
+
+```{r}
+unique()
+```
+

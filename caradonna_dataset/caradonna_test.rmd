@@ -1,0 +1,242 @@
+---
+title: "caradonna_test"
+output: html_document
+date: "2024-01-16"
+---
+
+https://portal.edirepository.org/nis/mapbrowse?packageid=edi.512.1
+
+```{r}
+# Package ID: edi.512.1 Cataloging System:https://pasta.edirepository.org.
+# Data set title: Temporal variation in plant-pollinator interactions, Rocky Mountain Biological       Laboratory, CO, USA, 2013 - 2015 .
+# Data set creator:  Paul CaraDonna - Rocky Mountain Biological Laboratory 
+# Contact:  Paul CaraDonna -  Rocky Mountain Biological Laboratory  - pcaradonna@gmail.com
+# Stylesheet v2.11 for metadata conversion into program: John H. Porter, Univ. Virginia, jporter@virginia.edu
+```
+
+Le bout suivant fonctionne mais j'ai déjà les données et je ne veux pas les retelecharger à chaque fois
+
+```{r}
+# inUrl1  <- "https://pasta.lternet.edu/package/data/eml/edi/512/1/c858be23bac4b5f93b830bcbdac6ba2c" 
+# infile1 <- tempfile()
+# try(download.file(inUrl1,infile1,method="curl"))
+# if (is.na(file.size(infile1))) download.file(inUrl1,infile1,method="auto")
+```
+
+
+```{r}
+dt1 <-read.csv("./data/caradonna_rmbl_flowering_phenology_data_EDI.csv",header=F 
+          ,skip=1
+            ,sep=","  
+                ,quot='"' 
+        , col.names=c(
+                    "year",     
+                    "site",     
+                    "plant",     
+                    "transect",     
+                    "week_num",     
+                    "flower_count"    ), check.names=TRUE)
+```
+
+pareil
+
+```{r}
+# unlink(infile1)
+```
+
+
+# Fix any interval or ratio columns mistakenly read in as nominal and nominal columns read as numeric or dates read as strings
+
+```{r}
+if (class(dt1$year)=="factor") dt1$year <-as.numeric(levels(dt1$year))[as.integer(dt1$year) ]               
+if (class(dt1$year)=="character") dt1$year <-as.numeric(dt1$year)
+if (class(dt1$site)!="factor") dt1$site<- as.factor(dt1$site)
+if (class(dt1$plant)!="factor") dt1$plant<- as.factor(dt1$plant)
+if (class(dt1$transect)!="factor") dt1$transect<- as.factor(dt1$transect)
+if (class(dt1$week_num)=="factor") dt1$week_num <-as.numeric(levels(dt1$week_num))[as.integer(dt1$week_num) ]               
+if (class(dt1$week_num)=="character") dt1$week_num <-as.numeric(dt1$week_num)
+if (class(dt1$flower_count)=="factor") dt1$flower_count <-as.numeric(levels(dt1$flower_count))[as.integer(dt1$flower_count) ]               
+if (class(dt1$flower_count)=="character") dt1$flower_count <-as.numeric(dt1$flower_count)
+```
+
+
+
+# Convert Missing Values to NA for non-dates
+
+```{r}
+dt1$week_num <- ifelse((trimws(as.character(dt1$week_num))==trimws("NA")),NA,dt1$week_num)               
+suppressWarnings(dt1$week_num <- ifelse(!is.na(as.numeric("NA")) & (trimws(as.character(dt1$week_num))==as.character(as.numeric("NA"))),NA,dt1$week_num))
+dt1$flower_count <- ifelse((trimws(as.character(dt1$flower_count))==trimws("NA")),NA,dt1$flower_count)               
+suppressWarnings(dt1$flower_count <- ifelse(!is.na(as.numeric("NA")) & (trimws(as.character(dt1$flower_count))==as.character(as.numeric("NA"))),NA,dt1$flower_count))
+```
+
+
+
+# Here is the structure of the input data frame:
+
+```{r}
+str(dt1)                            
+attach(dt1)
+```
+
+
+
+# The analyses below are basic descriptions of the variables. After testing, they should be replaced.                 
+
+```{r}
+summary(year)
+summary(site)
+summary(plant)
+summary(transect)
+summary(week_num)
+summary(flower_count)
+```
+
+
+# Get more details on character variables
+
+
+```{r}
+summary(as.factor(dt1$site)) 
+summary(as.factor(dt1$plant)) 
+summary(as.factor(dt1$transect))
+detach(dt1)
+```
+
+Pareil qu'avant
+
+```{r}
+# inUrl2  <- "https://pasta.lternet.edu/package/data/eml/edi/512/1/bb87318745d9b83f102aa0a58e9b5386" 
+# infile2 <- tempfile()
+# try(download.file(inUrl2,infile2,method="curl"))
+# if (is.na(file.size(infile2))) download.file(inUrl2,infile2,method="auto")
+```
+
+
+```{r}
+dt2 <-read.csv("./data/caradonna_rmbl_interaction_networks_data_EDI.csv",header=F 
+          ,skip=1
+            ,sep=","  
+                ,quot='"' 
+        , col.names=c(
+                    "year",     
+                    "date",     
+                    "day_of_year",     
+                    "week_num",     
+                    "site",     
+                    "transect",     
+                    "start_time",     
+                    "end_time",     
+                    "plant",     
+                    "pollinator",     
+                    "interactions",     
+                    "pollinator_family",     
+                    "pollinator_group",     
+                    "pollinator_sex",     
+                    "pollinator_2013",     
+                    "observer"    ), check.names=TRUE)
+```
+
+
+```{r}
+# unlink(infile2)
+```
+
+
+
+# Fix any interval or ratio columns mistakenly read in as nominal and nominal columns read as numeric or dates read as strings
+
+```{r}                
+if (class(dt2$year)=="factor") dt2$year <-as.numeric(levels(dt2$year))[as.integer(dt2$year) ]               
+if (class(dt2$year)=="character") dt2$year <-as.numeric(dt2$year)
+```
+
+
+
+# attempting to convert dt2$date dateTime string to R date structure (date or POSIXct)                                
+```{r}                
+tmpDateFormat<-"%Y-%m-%d"
+tmp2date<-as.Date(dt2$date,format=tmpDateFormat)
+```
+
+
+# Keep the new dates only if they all converted correctly
+
+```{r}                
+if(length(tmp2date) == length(tmp2date[!is.na(tmp2date)])){dt2$date <- tmp2date } else {print("Date conversion failed for dt2$date. Please inspect the data and do the date conversion yourself.")}                                                                    
+rm(tmpDateFormat,tmp2date) 
+if (class(dt2$day_of_year)=="factor") dt2$day_of_year <-as.numeric(levels(dt2$day_of_year))[as.integer(dt2$day_of_year) ]               
+if (class(dt2$day_of_year)=="character") dt2$day_of_year <-as.numeric(dt2$day_of_year)
+if (class(dt2$week_num)=="factor") dt2$week_num <-as.numeric(levels(dt2$week_num))[as.integer(dt2$week_num) ]               
+if (class(dt2$week_num)=="character") dt2$week_num <-as.numeric(dt2$week_num)
+if (class(dt2$site)!="factor") dt2$site<- as.factor(dt2$site)
+if (class(dt2$transect)!="factor") dt2$transect<- as.factor(dt2$transect)
+if (class(dt2$plant)!="factor") dt2$plant<- as.factor(dt2$plant)
+if (class(dt2$pollinator)!="factor") dt2$pollinator<- as.factor(dt2$pollinator)
+if (class(dt2$interactions)=="factor") dt2$interactions <-as.numeric(levels(dt2$interactions))[as.integer(dt2$interactions) ]               
+if (class(dt2$interactions)=="character") dt2$interactions <-as.numeric(dt2$interactions)
+if (class(dt2$pollinator_family)!="factor") dt2$pollinator_family<- as.factor(dt2$pollinator_family)
+if (class(dt2$pollinator_group)!="factor") dt2$pollinator_group<- as.factor(dt2$pollinator_group)
+if (class(dt2$pollinator_sex)!="factor") dt2$pollinator_sex<- as.factor(dt2$pollinator_sex)
+if (class(dt2$pollinator_2013)!="factor") dt2$pollinator_2013<- as.factor(dt2$pollinator_2013)
+if (class(dt2$observer)!="factor") dt2$observer<- as.factor(dt2$observer)
+```
+
+
+
+# Convert Missing Values to NA for non-dates
+```{r}                                
+dt2$day_of_year <- ifelse((trimws(as.character(dt2$day_of_year))==trimws("NA")),NA,dt2$day_of_year)               
+suppressWarnings(dt2$day_of_year <- ifelse(!is.na(as.numeric("NA")) & (trimws(as.character(dt2$day_of_year))==as.character(as.numeric("NA"))),NA,dt2$day_of_year))
+dt2$week_num <- ifelse((trimws(as.character(dt2$week_num))==trimws("NA")),NA,dt2$week_num)               
+suppressWarnings(dt2$week_num <- ifelse(!is.na(as.numeric("NA")) & (trimws(as.character(dt2$week_num))==as.character(as.numeric("NA"))),NA,dt2$week_num))
+dt2$interactions <- ifelse((trimws(as.character(dt2$interactions))==trimws("NA")),NA,dt2$interactions)               
+suppressWarnings(dt2$interactions <- ifelse(!is.na(as.numeric("NA")) & (trimws(as.character(dt2$interactions))==as.character(as.numeric("NA"))),NA,dt2$interactions))
+```
+
+
+
+# Here is the structure of the input data frame:
+```{r}                
+str(dt2)                            
+attach(dt2)
+```
+
+
+
+# The analyses below are basic descriptions of the variables. After testing, they should be replaced.                 
+```{r}                
+summary(year)
+summary(date)
+summary(day_of_year)
+summary(week_num)
+summary(site)
+summary(transect)
+summary(start_time)
+summary(end_time)
+summary(plant)
+summary(pollinator)
+summary(interactions)
+summary(pollinator_family)
+summary(pollinator_group)
+summary(pollinator_sex)
+summary(pollinator_2013)
+summary(observer)
+```
+
+
+
+# Get more details on character variables
+```{r}                                 
+summary(as.factor(dt2$site)) 
+summary(as.factor(dt2$transect)) 
+summary(as.factor(dt2$plant)) 
+summary(as.factor(dt2$pollinator)) 
+summary(as.factor(dt2$pollinator_family)) 
+summary(as.factor(dt2$pollinator_group)) 
+summary(as.factor(dt2$pollinator_sex)) 
+summary(as.factor(dt2$pollinator_2013)) 
+summary(as.factor(dt2$observer))
+detach(dt2)               
+```
+
