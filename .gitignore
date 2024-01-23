@@ -5,3 +5,5 @@
 *.Rproj
 *.md.backup
 *.html
+*_cache
+*_files
