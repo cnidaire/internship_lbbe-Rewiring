@@ -135,63 +135,95 @@ layout_netw <- layout_as_bipartite(g)
 layout_netw[12,2] = 0
 plot(g, layout = layout_netw, vertex.color = vertex_col, edge.arrow.size = .4, vertex.label = NA)
 ```
-
-```{r}
-layout <- layout_as_bipartite(g)
-```
-
-```{r}
-matrix(0, nrow = length(unique(interaction_netw$pollinator)) + length(unique(interaction_netw$pollinator)),ncol = 2)
-```
-
 # ggNetwork
 
+```{r}
+interaction_netw <-read.csv("./data/caradonna_rmbl_interaction_networks_data_EDI.csv",header=T,sep=",",quot='"')
+summary(interaction_netw)
+```
 
-# Propre
 
 ```{r}
-library(igraph)
 library(ggnetwork)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 
-# Define a subset
-sub_set <- interaction_netw[phenology_flower$year == 2013 & interaction_netw$week_num == 2 & phenology_flower$transect == 1, c("pollinator", "plant")]
+sub_set <- function(data, year, week, transect){
+  return(distinct(
+    interaction_netw[data$year == year & data$week_num == week & data$transect == transect, c("pollinator", "plant")]
+  ))
+}
 
-#  Remove duplicate interactions
-sub_set <- distinct(sub_set)
+data1 <- sub_set(interaction_netw, 2013, 2, 1)
 ```
 
 ## vertices
 
 ```{r}
+
 # Make a dataframe of one column that contains an alternation of source and target vertices
-edges_list <- sub_set %>%
-  transmute(name = paste0(pollinator, ",", plant)) %>%
-  separate_rows(name, sep = ",")
+edge_list <- function(data){
+  return(
+    data %>%
+    transmute(name = paste0(pollinator, ",", plant)) %>%
+    separate_rows(name, sep = ",")
+  )
+}
+
+edge1 <- edge_list(data1)
 
 # Create a first dataframe in which there will be the nature of each vertex
-vert <- rbind(data.frame(name = unique(sub_set$pollinator), cat = "pol"), 
-              data.frame(name = unique(sub_set$plant), cat = "pla"))
+vert_list <- function(data){
+  rbind(data.frame(name = unique(data$pollinator), cat = "pol"), 
+        data.frame(name = unique(data$plant), cat = "pla"))
+}
+
+vert1 <- vert_list(interaction_netw)
 
 # Create a directed graph
-g <- graph_from_data_frame(sub_set, directed = TRUE, vertices = vert)
+
+g <- graph_from_data_frame(data1, directed = TRUE, vertices = vert1)
 
 # Set layout positions manually
-vert_pos <- data.frame(
-  name = V(g)$name,
-  x = 0,
-  y = ifelse(V(g)$cat == "pol", 0, 1)
-)
 
-vert_pos[vert_pos$y == 0, "x"] = seq(0,1, by = 1/(length(vert_pos[vert_pos$y == 0, "x"])-1))
-vert_pos[vert_pos$y != 0, "x"] = seq(0,1, by = 1/(length(vert_pos[vert_pos$y != 0, "x"])-1))
+bipartite_layout_vert <- function(graph){
+  vert_pos <- data.frame(
+    name = V(graph)$name,
+    x = 0, ###################### pas opti ##############################
+    y = ifelse(V(graph)$cat == "pol", 0, 1)
+  )
+  vert_pos[vert_pos$y == 0, "x"] = seq(0,1, by = 1/(length(vert_pos[vert_pos$y == 0, "x"])-1))
+  vert_pos[vert_pos$y != 0, "x"] = seq(0,1, by = 1/(length(vert_pos[vert_pos$y != 0, "x"])-1))
+  return(vert_pos)
+}
+
+vert_pos = bipartite_layout_vert(g)
 ```
 
 ## edges
 
 ```{r}
+
+bipartite_layout_edge <- function(edge_list,vertices_position,){
+  # associate the position of the staring and ending vertices to the list of edges
+  edges = left_join(edges_list,vert_pos, by = "name")
+  
+  start_pos = edges_test[seq(1, nrow(edges_test), by = 2), 2:3]
+  colnames(start_pos)[1:2] = c("x_start", "y_start")
+  end_pos = edges_test[seq(2, nrow(edges_test), by = 2), 2:3]
+  colnames(end_pos)[1:2] = c("x_end", "y_end")
+  
+  edge_pos = cbind(start_pos,end_pos)
+  
+  
+  edge_pos$x_dist = edge_pos$x_end - edge_pos$x_start
+  edge_pos$y_dist = edge_pos$y_end - edge_pos$y_start
+  edge_pos[5:6] = edge_pos[5:6] * 0.98
+  edge_pos$x_end = edge_pos$x_start + edge_pos$x_dist
+  edge_pos$y_end = edge_pos$y_start + edge_pos$y_dist
+}
+
 edges_test = left_join(edges_list,vert_pos, by = "name")
 
 start_pos = edges_test[seq(1, nrow(edges_test), by = 2), 2:3]
@@ -211,6 +243,8 @@ edge_pos$y_end = edge_pos$y_start + edge_pos$y_dist
 # Get edge data for ggplot
 edge_data <- as.data.frame(get.edgelist(g))
 ```
+
+## plot
 
 ```{r}
 # Plot the graph
