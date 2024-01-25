@@ -76,7 +76,7 @@ Hence it can be hard to quantify all the relations as the nature can be really d
 ## Niche écologique
 
 Grinnell :
-- tout ce qui conditinne l'existance d'une espèce à un endroit donné, ce qui inclut les facteur abiotiques (T, himidité, précipitations),  comme des facteurs biotiques (nourriture, competiteurs , prédateurs, abris, etc0)
+- tout ce qui conditinne l'existance d'une espèce à un endroit donné, ce qui inclut les facteur abiotiques (T, himidité, précipitations),  comme des facteurs biotiques (nourriture, competiteurs , prédateurs, abris, etc)
 
 Elton:
 - la place qu'occupe une espèce dans les chaines trophiques, bien que d'autres facteurs tels quel le micro-habitat puissent être inclus.
