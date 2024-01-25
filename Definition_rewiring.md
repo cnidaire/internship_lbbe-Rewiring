@@ -2,19 +2,26 @@
 
 Le rewiring peut être définit comme:
 - uniquement une réorganisation de la topologie du réseaux suite à une perturbation/modification de l’environnement (approche assez binaire):
-	+ Foodweb rewiring in a changing world, Bartley
 	+ Beyond species, Poisot
 - comprend la réorganisation de la topologie (topological rewiring) ou de la force des interactions et la modification de la force des interactions (interaction strength rewiring):
 	+ CaraDonna
 	+ Dissimilarity of species interaction network, Fründ
-	
+	+ Foodweb rewiring in a changing world, Bartley
+
+mais je pense que dans le premier, cas, la définition a été dressée de telle sorte à matcher la suite de l'analyse pour la simplifier.
+
 # Éléments déclencheurs
 
 modification de  l'environnement:
-- causes anthropologique: direct: urbanisation / indirect : changement climatique (spatial ou temporal mismatchs (Trait based Assessment, Schleuning))
-- saisonnalité: (Interaction rewiring de CaraDonna)le plus souvent regardé, car je suppose que ce sont les jeux de données les plus faciles à obtenir
+- causes anthropique: direct: urbanisation / indirect : changement climatique (spatial ou temporal mismatchs (Trait based Assessment, Schleuning))
+- cause naturelles: saisonnalité: (Interaction rewiring de CaraDonna)le plus souvent regardé, car je suppose que ce sont les jeux de données les plus faciles à obtenir
 		
 	
+# Prédire modification des interactions:
+
+Trait matching pour les nouvelles interactions
+
+Généralisme de l'espèce (mobilité et pluralité des source de nourriture) pour la modification des force d'interaction ou la capacité à changer de niche)
 
 # Notes
 
