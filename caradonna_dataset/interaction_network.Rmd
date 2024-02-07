@@ -23,6 +23,8 @@ library(tidyr)
 
 The data is coming from the article of Caradonna ("interaction rewiring and the rapid turnover of plant pollinator networks"). The data is coming from weekly census across 3 years in a sub-alpine ecosystem. The main goal of this census was to quantify the within season turnover of the interactions between plant pollinators.
 
+The study area is snow covered much of the year with a short summer growing season of 3-5 months. Hence the data is observed across the flowering season on weekly intervals (2013: 11 weeks / 2014: 15 weeks / 2015: 16 weeks).
+
 # Import data interaction network
 
 ```{r}
@@ -43,7 +45,7 @@ summary(interaction_netw)
 ```{r}
 sub_set <- function(data, year, week, site){
   return(distinct(
-    interaction_netw[data$year == year & data$week_num == week & data$site == site, c("pollinator", "plant")]
+    data[data$year %in% year & data$week_num %in% week & data$site %in% site, c("pollinator", "plant")]
   ))
 }
 
@@ -71,7 +73,7 @@ vert_list <- function(data){
         data.frame(name = unique(data$plant), cat = "pla"))
 }
 
-vert1 <- vert_list(interaction_netw) ################################### N'a pas à être calculé plusieurs fois ##################################
+vert1 <- vert_list(interaction_netw)
 
 # Create a directed graph
 
@@ -82,7 +84,7 @@ g <- graph_from_data_frame(data1, directed = TRUE, vertices = vert1)
 bipartite_layout_vert <- function(graph){
   vert_pos <- data.frame(
     name = V(graph)$name,
-    x = 0, ###################### pas opti ##############################
+    x = 0,
     y = ifelse(V(graph)$cat == "pol", 0, 1)
   )
   vert_pos[vert_pos$y == 0, "x"] = seq(0,1, by = 1/(length(vert_pos[vert_pos$y == 0, "x"])-1))
@@ -90,7 +92,7 @@ bipartite_layout_vert <- function(graph){
   return(vert_pos)
 }
 
-vert_pos = bipartite_layout_vert(g) ################################### N'a pas à être calculé plusieurs fois ##################################
+vert_pos = bipartite_layout_vert(g)
 ```
 
 ## Edges
@@ -135,6 +137,36 @@ ggplot() +
   theme(legend.position = "none") +
   coord_fixed()
 ```
+
+## Make a big function to save memory
+
+```{r}
+master_function <- function(data_file, year, week, site){
+  data <- sub_set(data_file, year, week, site)
+  edge <- edge_list(data)
+  vert <- vert_list(data_file)
+  g <- graph_from_data_frame(data, directed = TRUE, vertices = vert)
+  vert_pos = bipartite_layout_vert(g)
+  edge_pos <- bipartite_layout_edge(edge,vert_pos)
+  
+  
+  figure <- ggplot() +
+    geom_edges(data = edge_pos, aes(x = x_start, y = y_start, xend = x_end, yend = y_end), arrow = arrow(length = unit(0.2, "cm")), color = "black") +
+    geom_nodes(data = vert_pos, aes(x = x, y = y, color = vert$cat), size = 3) +
+    scale_color_manual(values = c("pol" = "#EECE00", "pla" = "#06CB21")) +
+    theme_void() +
+    theme(legend.position = "none") +
+    coord_fixed()
+  return(figure)
+}
+```
+
+
+```{r}
+master_function(interaction_netw, 2013, 2, "shady_point")
+```
+That's way more convenient.
+
 # Data visualization and saving of data
 
 ```{r}
@@ -161,6 +193,27 @@ for (date in c(1:10)) {
 }
 ```
 
+
+# AFC of the full network
+
+```{r}
+full_network <- sub_set(interaction_netw, c(2013:2015), c(1:15), c("shady_point", "twin_meadows"))
+full_edge <- edge_list(full_network)
+full_vert <- vert_list(interaction_netw)
+full_graph <- graph_from_data_frame(full_network, directed = T, vertices = full_vert)
+full_vert_pos <- bipartite_layout_vert(full_graph)
+full_edge_pos <- bipartite_layout_edge(full_edge, full_vert_pos)
+
+ggplot() +
+geom_edges(data = full_edge_pos, aes(x = x_start, y = y_start, xend = x_end, yend = y_end), arrow = arrow(length = unit(0.2, "cm")), color = "black") +
+geom_nodes(data = full_vert_pos, aes(x = x, y = y, color = vert1$cat), size = 3) +
+scale_color_manual(values = c("pol" = "#EECE00", "pla" = "#06CB21")) +
+theme_void() +
+theme(legend.position = "none") +
+coord_fixed()
+```
+Unreadable, of course but it was just to check that it works. 
+
 # Todo list:
 
 - [ ] &nbsp; make an animation and save it
@@ -168,3 +221,5 @@ for (date in c(1:10)) {
 - [ ] &nbsp; put everything into a big function where so that the memory won't fill up needlessly
 
 - [ ] &nbsp; pull up in similar factors (like one every year) or by site.
+
+- [ ] &nbsp; c'est un eu crade, j'utilise graph_from_data_frame de igraph alors que pour tout le reste, je n'utilise que ggnetwork voir si il n'y a pas un équilivalent chez ggnetwork
