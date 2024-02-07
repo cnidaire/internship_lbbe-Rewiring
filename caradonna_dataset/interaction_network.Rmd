@@ -194,7 +194,7 @@ for (date in c(1:10)) {
 ```
 
 
-# AFC of the full network
+# Component Analysis of the full network (average graph)
 
 ```{r}
 full_network <- sub_set(interaction_netw, c(2013:2015), c(1:15), c("shady_point", "twin_meadows"))
@@ -213,6 +213,34 @@ theme(legend.position = "none") +
 coord_fixed()
 ```
 Unreadable, of course but it was just to check that it works. 
+
+## Make a dataframe containing the frequencies
+
+```{r}
+freq_table <- as.data.frame.matrix(table(interaction_netw$plant, interaction_netw$pollinator)) 
+```
+
+## 
+have to use dudi.coa
+
+```{r}
+library(ade4)
+```
+
+```{r}
+min(table(interaction_netw$plant, interaction_netw$pollinator))
+which(is.na(freq_table))
+```
+
+```{r}
+x <- dudi.coa(freq_table, scannf = TRUE, nf = 2) 
+```
+
+```{r}
+x$eig
+scatter(x)
+```
+
 
 # Todo list:
 
