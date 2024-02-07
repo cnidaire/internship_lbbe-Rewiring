@@ -14,31 +14,14 @@ knitr::opts_chunk$set(cache = TRUE)
 ```{r include=FALSE}
 library(igraph)
 library(tidyverse)
+library(ggnetwork)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
 ```
+# About the data
 
-
-# Import file
-
-```{r}
-phenology_flower <-read.csv("./data/caradonna_rmbl_flowering_phenology_data_EDI.csv",header=T,sep=",",quot='"')
-summary(phenology_flower)
-```
-
-check the format
-
-```{r}
-if (class(phenology_flower$year)=="factor") phenology_flower$year <-as.numeric(levels(phenology_flower$year))[as.integer(phenology_flower$year) ]               
-if (class(phenology_flower$year)=="character") phenology_flower$year <-as.numeric(phenology_flower$year)
-if (class(phenology_flower$site)!="factor") phenology_flower$site<- as.factor(phenology_flower$site)
-if (class(phenology_flower$plant)!="factor") phenology_flower$plant<- as.factor(phenology_flower$plant)
-if (class(phenology_flower$transect)!="factor") phenology_flower$transect<- as.factor(phenology_flower$transect)
-if (class(phenology_flower$week_num)=="factor") phenology_flower$week_num <-as.numeric(levels(phenology_flower$week_num))[as.integer(phenology_flower$week_num) ]               
-if (class(phenology_flower$week_num)=="character") phenology_flower$week_num <-as.numeric(phenology_flower$week_num)
-if (class(phenology_flower$flower_count)=="factor") phenology_flower$flower_count <-as.numeric(levels(phenology_flower$flower_count))[as.integer(phenology_flower$flower_count) ]               
-if (class(phenology_flower$flower_count)=="character") phenology_flower$flower_count <-as.numeric(phenology_flower$flower_count)
-
-summary(phenology_flower)
-```
+The data is coming from the article of Caradonna ("interaction rewiring and the rapid turnover of plant pollinator networks"). The data is coming from weekly census across 3 years in a sub-alpine ecosystem. The main goal of this census was to quantify the within season turnover of the interactions between plant pollinators.
 
 # Import data interaction network
 
@@ -47,7 +30,7 @@ interaction_netw <-read.csv("./data/caradonna_rmbl_interaction_networks_data_EDI
 summary(interaction_netw)
 ```
 
-Set the columns to the right format.
+## Set the columns to the right format.
 
 ```{r}                
 if (class(interaction_netw$year)=="factor") interaction_netw$year <-as.numeric(levels(interaction_netw$year))[as.integer(interaction_netw$year) ]               
@@ -55,72 +38,9 @@ if (class(interaction_netw$year)=="character") interaction_netw$year <-as.numeri
 summary(interaction_netw)
 ```
 
-# Work on a smaller subset
+# Define functions
 
 ```{r}
-# define a subset
-sub_set = interaction_netw[phenology_flower$year == 2013 & interaction_netw$week_num == 2 & phenology_flower$transect == 1, c("pollinator", "plant")]
-
-# Ajouter un filtre pour retirer les interaction en double.
-sub_set <- distinct(sub_set)
-
-# Make a dataframe of one column that contain an alternation of source and target vertices
-edges_list = sub_set %>% transmute( merged = paste0(pollinator, ",", plant)) %>% separate_rows(merged, sep = ",")
-
-# create a first dataframe in which there will be the nature of each vertex
-vert <- rbind(data.frame(name = unique(sub_set$pollinator), cat = "pol"), data.frame(name = unique(sub_set$plant), cat = "pla"))
-g <- graph_from_data_frame(sub_set, directed = T, vertices = vert)
-
-vertex_col <- get.vertex.attribute(g, "cat")
-colors = c("Green", "Yellow")
-vertex_col[vertex_col == "pla"] = colors[1]
-vertex_col[vertex_col == "pol"] = colors[2]
-
-# add a type col to visualize the data
-V(g)$type = bipartite_mapping(g)$type
-
-plot(g, layout = layout_as_bipartite, vertex.color = vertex_col, edge.arrow.size = .4, vertex.label = NA)
-```
-
-# Do the same but for a different time frame
-
-```{r warning=FALSE}
-par(mfrow = c(2,3))
-for (date_sample in sort(unique(interaction_netw$week_num))[1:6]) {
-  # subset
-  sub_set = interaction_netw[phenology_flower$year == 2013 & interaction_netw$week_num == date_sample & phenology_flower$transect == 1, c("pollinator", "plant")]
-  # remove duplactes
-  sub_set <- distinct(sub_set)
-  # format the network
-  edges_list = sub_set %>% transmute( merged = paste0(pollinator, ",", plant)) %>% separate_rows(merged, sep = ",")
-  vert <- rbind(data.frame(name = unique(sub_set$pollinator), cat = "pol"), data.frame(name = unique(sub_set$plant), cat = "pla"))
-  g <- graph_from_data_frame(sub_set, directed = T, vertices = vert)
-  vertex_col <- get.vertex.attribute(g, "cat")
-  colors = c("Green", "Yellow")
-  vertex_col[vertex_col == "pla"] = colors[1]
-  vertex_col[vertex_col == "pol"] = colors[2]
-  V(g)$type = bipartite_mapping(g)$type
-  plot(g, layout = layout_as_bipartite, vertex.color = vertex_col, edge.arrow.size = .4, vertex.label = NA, main = date_sample)
-}
-
-```
-
-**Could be nice to have the vertices fixed so that we can have only the interactions moving and then, why not make a tiny animation out of it if it works (this way, we won't have many small graphs and it will be easier to see the modifications).**
-
-# ggNetwork
-
-```{r}
-interaction_netw <-read.csv("./data/caradonna_rmbl_interaction_networks_data_EDI.csv",header=T,sep=",",quot='"')
-summary(interaction_netw)
-```
-
-
-```{r}
-library(ggnetwork)
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-
 sub_set <- function(data, year, week, site){
   return(distinct(
     interaction_netw[data$year == year & data$week_num == week & data$site == site, c("pollinator", "plant")]
@@ -130,7 +50,7 @@ sub_set <- function(data, year, week, site){
 data1 <- sub_set(interaction_netw, 2013, 2, "shady_point")
 ```
 
-## vertices
+## Vertices and layout
 
 ```{r}
 
@@ -173,7 +93,7 @@ bipartite_layout_vert <- function(graph){
 vert_pos = bipartite_layout_vert(g) ################################### N'a pas à être calculé plusieurs fois ##################################
 ```
 
-## edges
+## Edges
 
 ```{r}
 
@@ -203,7 +123,7 @@ edge_pos <- bipartite_layout_edge(edge1,vert_pos)
 
 ```
 
-## plot
+## Plot
 
 ```{r}
 # Plot the graph
@@ -215,7 +135,7 @@ ggplot() +
   theme(legend.position = "none") +
   coord_fixed()
 ```
-
+# Data visualization and saving of data
 
 ```{r}
 for (date in c(1:10)) {
@@ -243,6 +163,8 @@ for (date in c(1:10)) {
 
 # Todo list:
 
-make an animation and save it
-optimize the code to only compute stuff once when possible
-put everything into a big function where so that the memory won't fill up needlessly
+- [ ] &nbsp; make an animation and save it
+- [ ] &nbsp; optimize the code to only compute stuff once when possible
+- [ ] &nbsp; put everything into a big function where so that the memory won't fill up needlessly
+
+- [ ] &nbsp; pull up in similar factors (like one every year) or by site.
