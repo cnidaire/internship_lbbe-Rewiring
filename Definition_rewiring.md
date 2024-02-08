@@ -26,3 +26,13 @@ Généralisme de l'espèce (mobilité et pluralité des source de nourriture) po
 # Notes
 
 Ils ne parlent pas d'espèces invasives directement comme cause du rewiring mais plus souvent comme conséquence vu que l'espèce va quitter sa niche et aller coloniser une autre niche. Cependant, cette espèce invasive va probablement elle aussi mener à du rewiring. (Trait based Assessment, Schleuning/Foodweb rewiring in a changing world, Bartley)
+
+
+
+Les interactions visibles sont une combinaison de l'abondance qui est considérée comme neutre et de la préférence. Cependant même si entre deux sources de nourriture toutes deux aussi présentes, l'espèce en choisira peut-être une préférentiellement, si celle qu'il préfère disparaît, alors il consommera l'autre
+
+donner examples
+
+prey switching: lié à l'abondance
+
+migration
