@@ -196,6 +196,8 @@ for (date in c(1:10)) {
 
 # Component Analysis of the full network (average graph)
 
+First of all let's see what does the full networklook like
+
 ```{r}
 full_network <- sub_set(interaction_netw, c(2013:2015), c(1:15), c("shady_point", "twin_meadows"))
 full_edge <- edge_list(full_network)
@@ -212,7 +214,7 @@ theme_void() +
 theme(legend.position = "none") +
 coord_fixed()
 ```
-Unreadable, of course but it was just to check that it works. 
+Unreadable, of course, but it was just to check that it works. 
 
 ## Make a dataframe containing the frequencies
 
@@ -220,7 +222,7 @@ Unreadable, of course but it was just to check that it works.
 freq_table <- as.data.frame.matrix(table(interaction_netw$plant, interaction_netw$pollinator)) 
 ```
 
-## 
+## Try CA
 have to use dudi.coa
 
 ```{r}
@@ -233,12 +235,16 @@ which(is.na(freq_table))
 ```
 
 ```{r}
-x <- dudi.coa(freq_table, scannf = TRUE, nf = 2) 
+x <- dudi.coa(freq_table, scannf = T, nf = 2) 
 ```
 
 ```{r}
+summary(x)
 x$eig
 scatter(x)
+```
+```{r}
+s.label(x$li, xax = 1, yax = 2)
 ```
 
 
