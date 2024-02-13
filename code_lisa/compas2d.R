@@ -101,7 +101,7 @@ function (nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
   # Sites/resource species
   if (is.null(row_abund)) {
     # Generate random abundances for each species (uniform law)
-    row_abund <- runif(nsp, min = min.ab, max = max.ab)
+    row_abund <- runif(nsite, min = min.ab, max = max.ab)
   }
 
   # Species niche/consumer niche ---

@@ -1,0 +1,24 @@
+---
+title: "test_package_lisa"
+format: html
+editor: visual
+---
+
+# Import the package from local
+
+```{r}
+source("compas2d.R")
+```
+
+```{r}
+compas2d(nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
+         col_abund = NULL,
+         row_abund = NULL,
+         col_prefix = "s", row_prefix = "e", rowvar_prefix = "env",
+         remove_zeroes = FALSE,
+         buffer = 1, min.ab = 1, max.ab = 100,
+         ninter = 100,
+         delta = 1,
+         mean.tol = 2, sd.tol = 10,
+         return_intermediate = FALSE)
+```
