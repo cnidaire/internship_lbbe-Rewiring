@@ -6,6 +6,8 @@ Here, rewiring due to the initial failure of one node
 
 hence either change of the strength of relation with other species or formation of new links
 
+
+
 # Questions:
 
 How can we be sure when we are looking for a way to characterize rewiring from the data that the thing we are observing are indeed some rewiring?
@@ -18,7 +20,7 @@ Many examples in Beyond species, in section "The basic processes"
 - The turnover of some species can lead to rewiring and it seems like it is the most commonly considered case. The disappearance of a species can lead the species that where interacting with it to create new connections with other already existing species of the network.
 - The opposite is also true, the apparition of a new specie will most likely lead to new connection with the other species of the network and possibly make some other disappear. The most common example is the one of invasive species.
 
-It can be due not to the disappearance a species but just d different phenology or a shifted one, due to the modification of the environment for example.
+It can be due not to the disappearance a species but just different phenology or a shifted one, due to the modification of the environment for example.
 
 I am not sure of when is the limit to stop talking about rewiring, because some mechanisms can have an impact on the strength of an interaction without leading to a complete disappearance.
 
@@ -48,7 +50,7 @@ Predict impact of climate change on the world's ecosystems.
 
 # Important points
 
-- be careful, the rewiring isn't only about who is eating who, there is complex interactions with the soils, plants, microorganisms, parasites, etc. And the nature of these interactions is not restricted to predation, it can be different like competition (or just bothering one another, or maybe even mutual aid (facilitation) however it is not so hard to represent in a topological network, but in a weighted one, it can be harder, because we can not talk in frequencies.
+- be careful, the rewiring isn't only about who is eating who, there is complex interactions with the soils, plants, microorganisms, parasites, etc. And the nature of these interactions is not restricted to prédation, it can be different like competition (or just bothering one another, or maybe even mutual aid (facilitation) however it is not so hard to represent in a topological network, but in a weighted one, it can be harder, because we can not talk in frequencies.
 
 Hence it can be hard to quantify all the relations as the nature can be really different, even inside of the same kind, two animals will not eat as much. So it is getting really complex
 
@@ -71,13 +73,31 @@ Hence it can be hard to quantify all the relations as the nature can be really d
 		
 # Définitions
 
-## Analyse spéctrale de graphe
+## Analyse spectrale de graphe
 
 ## Niche écologique
 
 Grinnell :
-- tout ce qui conditionne l'existance d'une espèce à un endroit donné, ce qui inclut les facteur abiotiques (T, humidité, précipitations),  comme des facteurs biotiques (nourriture, compétiteurs , prédateurs, abris, etc)
+- tout ce qui conditionne l’existence d'une espèce à un endroit donné, ce qui inclut les facteur abiotiques (T, humidité, précipitations),  comme des facteurs biotiques (nourriture, compétiteurs , prédateurs, abris, etc)
 
 Elton:
 - la place qu'occupe une espèce dans les chaines trophiques, bien que d'autres facteurs tels quel le micro-habitat puissent être inclus.
 
+# État de l'art sur le rewiring
+
+[[ecolett-caradonna2017_interaction_rewiring.pdf| CaraDonna 2017]]
+Species interaction networks are constructed from temporally aggregated interaction data -> assume interaction are fixed -> obscurs timescale at which interactions form or dissolves
+
+_rewiring:_ the reassembly of interactions among species
+
+[[Ecosphere - 2021 - Fründ - Dissimilarity of species interaction networks  how to partition rewiring and species turnover.pdf|Fründ 2021]]
+
+[[jae-vizentin2023_rewiring_extinction.pdf|Vizentin-Bugoni 2023]]
+
+[[naturecom-gilljam2015_simulation_rewiring_overexploitation.pdf|Gilljam 2015]]
+
+[[natureecoevo-bartley2019_rewiring_generalist_climatechange.pdf|Bartley 2019]]
+
+[[Poisot, Stouffer, Gravel - 2015 - Beyond species why ecological interactions vary through space and time.pdf| Poisot 2015]]
+
+[[schleuning2020_trait_based_assessementof_climate_change.pdf|Schleuning 2020]]

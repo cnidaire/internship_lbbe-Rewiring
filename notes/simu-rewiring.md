@@ -63,7 +63,7 @@ Une autre option pourrait être d'assumer que l'évolution des traits de la nich
 
 Le gros point noir de la seconde méthode est que bien que plus fun sur le plan personnel, il y a un risque de vouloir prendre trop de choses en comptes et de du coup faire quelque chose de moins solide scientifiquement
 
-Quelque chose qui n'est pas pris en compte notament, c'est la fait que quand une source de nourriture / niche est modifiée/ disparait, alors l'espèce est impactée et va alors se rabattre sur une autre niche 
+Quelque chose qui n'est pas pris en compte notamment, c'est la fait que quand une source de nourriture / niche est modifiée/ disparaît, alors l'espèce est impactée et va alors se rabattre sur une autre niche 
 
 **Selon moi le rewiring correspond à la plasticité d'une espèce à s'adapter en modifiant ses interactions face à une contrainte. À l'équilibre, on devrait observer des interactions selon le model de Lisa vu que les espèces sont à l'"équilibre" du point de vu trait matching. Hors une évolution rapide implique une adaptation qui n'est ni expliquée par le trait matching ni par les abondances seules mais par des valeurs d'interactions supérieures (ou inférieures mais je ne saurais pas comment l’interpréter) dues à une modification rapide du réseau et à une perte des individus avec lequel il interagissait. Cependant je ne sais pas comment l’interpréter si on ne parle plus de temps mais d'évolution dans l'espace.**
 
@@ -86,6 +86,10 @@ Il se pourrait que le terme rewiring ne soit en fait que un effet de l'abondance
 Cependant si maintenant on observe un milieu b où il n'y a que la plante non favorite. Alors on n'observera que cette observation car c'est la seule viable. Mais peut on parler de rewiring. Il n'y a pas eu création de nouvelles interactions, et la proportion attribuée à chaque espèce reste la même (95% et 5%), il y a juste qu'on n'observe maintenant que les 5% mais les proportions n'ont pas changées. C'est pourquoi je ne suis même pas sûr que l'on puisse parler de changement du poids des interaction, je dirais juste un changement des abondances.
 
 Ainsi, si il y a une nouvelle espèce qui est plus favorable que celles présentes jusqu'alors, alors on aura  l'impression que sa présence a fait disparaître d'autres interactions alors que si on regarde ça du point de vue des abondances et du trait-matching, alors il est normal de ne plus observer certaines des interactions moins favorables car elle se font plus rares en comparaison au nombre d'interactions. Elles n'ont cependant pas disparues pour autant.
+
+## autres commentaires: 
+
+l'AFC permet de discriminer entre le trait matching et les abondances vu qu'en faisant un $\chi^2$ on obtient: $\frac{P_{ij}- P_{i.}P{.j} }{P{i.}P{.j}}$
 
 ## Choses à faire
 

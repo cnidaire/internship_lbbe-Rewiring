@@ -56,9 +56,9 @@ so CA is based on $\chi^2$ distance unlike the PCA that is based on euclidean di
 # General principle for ACP and others?
 
 matrice de correlation
-valeurs et vecteurs propres, puis classer les valeurs propres par ordre décroissant et ainsi on obtient les vacteurs propres correspondant qui sont les composantes principales.
+valeurs et vecteurs propres, puis classer les valeurs propres par ordre décroissant et ainsi on obtient les vecteurs propres correspondant qui sont les composantes principales.
 
-mode of information in ecology (chap7):
+mode of information in ecology (chap 7):
 
 ![](mode_of_information.png)
 
