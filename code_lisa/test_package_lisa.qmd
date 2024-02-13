@@ -10,6 +10,8 @@ editor: visual
 source("compas2d.R")
 ```
 
+test du package
+
 ```{r}
 compas2d(nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
          col_abund = NULL,
@@ -21,4 +23,41 @@ compas2d(nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
          delta = 1,
          mean.tol = 2, sd.tol = 10,
          return_intermediate = FALSE)
+```
+
+## Generate an environmental gradient
+
+### Generate random environmental niche for species
+
+```{r}
+
+nb_location <- 5
+nb_plant <- 5
+nb_pol <- 20
+env_grad_min <- 0
+env_grad_max <- 100
+
+### Plant gradient ###
+env_grad_plant <- array(0, dim = c(nb_plant, 2)) # two col, 1st: mean, 2nd: sd
+# Generate environmental optima for each species
+env_grad_plant[, 1] <- runif(nb_plant, min = env_grad_min, max = env_grad_max)
+# Generate random niche widths for each species
+env_grad_plant[, 2] <- abs(rnorm(nb_plant, mean = 2, sd = 10))
+
+
+### Pollinator gradient ###
+env_grad_pol <- array(0, dim = c(nb_pol, 2)) # two col, 1st: mean, 2nd: sd
+# Generate environmental optima for each species
+env_grad_pol[, 1] <- runif(nb_pol, min = env_grad_min, max = env_grad_max)
+# Generate random niche widths for each species
+env_grad_pol[, 2] <- abs(rnorm(nb_pol, mean = 2, sd = 10))
+
+env_grad_plant
+env_grad_pol
+```
+
+### Obtain abundances along environmental gradient
+
+```{r}
+seq(from = env_grad_min, to = env_grad_max, by = (env_grad_max - env_grad_min)/4)
 ```
