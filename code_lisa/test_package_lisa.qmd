@@ -52,12 +52,38 @@ env_grad_pol[, 1] <- runif(nb_pol, min = env_grad_min, max = env_grad_max)
 # Generate random niche widths for each species
 env_grad_pol[, 2] <- abs(rnorm(nb_pol, mean = 2, sd = 10))
 
-env_grad_plant
+env_grad_plant[]
 env_grad_pol
 ```
 
 ### Obtain abundances along environmental gradient
 
 ```{r}
-seq(from = env_grad_min, to = env_grad_max, by = (env_grad_max - env_grad_min)/4)
+nb_site = 4
+site_coordonates <- seq(from = env_grad_min, to = env_grad_max, by = (env_grad_max - env_grad_min)/nb_site)
+
+
+### Obtenir les abondances à une altitude donnée ###
+
+# Lisa a utilisé mvtnorm::dmvnorm mais je ne comprends pas exactement ce qu'elle a fait.
+
+
+### Abundance Plants ### 
+abund_plant <- array(0, c(nb_site, nb_plant))
+
+for (site in 1:nb_site) {
+  for (plant in 1:nb_plant){
+    abund_plant[site, plant] <- dnorm(site_coordonates[site], mean = env_grad_plant[plant, 1], sd = env_grad_plant[plant, 2])
+  }
+}
+
+### Abundance Polinators ###
+
+abund_pol <- array(0, c(nb_site, nb_pol))
+
+for (site in 1:nb_site) {
+  for (pol in 1:nb_pol){
+    abund_pol[site, pol] <- dnorm(site_coordonates[site], mean = env_grad_pol[pol, 1], sd = env_grad_pol[pol, 2])
+  }
+}
 ```
