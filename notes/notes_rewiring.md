@@ -85,19 +85,43 @@ Elton:
 
 # État de l'art sur le rewiring
 
-[[ecolett-caradonna2017_interaction_rewiring.pdf| CaraDonna 2017]]
+Ce dont Vincent a peur c'est que en disant que l'on ne prend en compte que les traits et l'abondance en compte, ce serait ignorer le facteur préférence et habitude. C'est possible aussi mais j'ai eu l'impression que Stéphane regroupait le facteur préférence sous  le trait matching aussi. Et vu qu'il est possible de faire du trait matching en compte, il serait possible que le facteur goût soit pris en compte mais qu'en est il de la notion d'habitude? De plus on ne prend pas en compte la notion de competition et ce serait bien de la quantifier avant de l'écarter.
+
+**Une façon de le tester serait d'essayer de trouver un cas où on observe une pollinisateur dont les interactions sont modifiées bien que les abondances restent inchangées (dans le cas de pollinisation, il faut prendre en compte la phénologie car les abondances des plantes peut rester identique mais ne pas rester en activité).**
+
+[[ecolett-caradonna2017_interaction_rewiring.pdf| CaraDonna 2017]] :
 Species interaction networks are constructed from temporally aggregated interaction data -> assume interaction are fixed -> obscurs timescale at which interactions form or dissolves
 
 _rewiring:_ the reassembly of interactions among species
+"interaction rewiring: interactions are reassembled over time because of changes in who is interacting with whom among the same pool of co-occurring species"
+and here, they make a distinction with turnover which would correspond to the variation in abundance we were talking about.
 
-[[Ecosphere - 2021 - Fründ - Dissimilarity of species interaction networks  how to partition rewiring and species turnover.pdf|Fründ 2021]]
+[[Ecosphere - 2021 - Fründ - Dissimilarity of species interaction networks  how to partition rewiring and species turnover.pdf|Fründ 2021]] :
+"[...]it has been suggested to partition network dissimilarity into one component driven by species turnover, that is, changes in community composition, and another component reflecting rewiring, that is, flexibility of interactions among shared species."
 
-[[jae-vizentin2023_rewiring_extinction.pdf|Vizentin-Bugoni 2023]]
+"Furthermore, I argue that the term rewiring is not well defined in network ecology and that there are reasons why both methods overestimate the importance of rewiring, in particu- lar with quantitative networks."
 
-[[naturecom-gilljam2015_simulation_rewiring_overexploitation.pdf|Gilljam 2015]]
+[[jae-vizentin2023_rewiring_extinction.pdf|Vizentin-Bugoni 2023]] :
+"Their main hypothesis postulated that the loss of a highly connected species would lead to interaction rewiring and niche expansions by hummingbirds, decreasing individual, species and network specialization. However, they found that the overall structure of the plant-hummingbird networks remains mostly unaltered, with limited rewiring and minimal changes in specialization. "
 
-[[natureecoevo-bartley2019_rewiring_generalist_climatechange.pdf|Bartley 2019]]
+"The limited change in species interactions highlights that network stability through interaction rewiring may have been overestimated in previous studies, calling for further manipulative studies in the field. At the same time, it also indicated that even the loss of a highly abundant plant species has an overall small effect on network structure."
 
-[[Poisot, Stouffer, Gravel - 2015 - Beyond species why ecological interactions vary through space and time.pdf| Poisot 2015]]
+**À RELIRE, JE 'AI PAS TROP COMPRIS**
 
-[[schleuning2020_trait_based_assessementof_climate_change.pdf|Schleuning 2020]]
+[[naturecom-gilljam2015_simulation_rewiring_overexploitation.pdf|Gilljam 2015]] :
+rewiring: "an ability of consumers to rewire to novel prey should mitigate the consequences of species loss by reducing the risk of cascading extinction"
+
+"Two possible mechanisms that may buffer against bottom-up driven secondary extinctions in ecological networks are the forming of new feeding links (rewiring) and compensatory readjustment of flows through remaining links"
+
+"Earlier studies on rewiring in ecological networks are mainly based on a static (topological) approach that do not consider population dynamics "
+
+[[natureecoevo-bartley2019_rewiring_generalist_climatechange.pdf|Bartley 2019]] :
+"topological rewiring — a change in the patterning of food webs due to the addition or loss of connections."
+
+"strength rewiring — changes that reroute energy and carbon flows through existing food web connections and alter the food web’s interaction strengths."
+
+[[Poisot, Stouffer, Gravel - 2015 - Beyond species why ecological interactions vary through space and time.pdf| Poisot 2015]] :
+Ne contient pas le terme rewiring
+
+[[schleuning2020_trait_based_assessementof_climate_change.pdf|Schleuning 2020]] :
+"Interaction rewiring: the formation of novel interactions between species that previously did not interact, usually because these species did not overlap in their spatial or temporal occurrence. Special cases of rewiring are ecological or evolutionary changes in matching traits, which result in novel interactions between species that currently co-occur, but cannot interact"
