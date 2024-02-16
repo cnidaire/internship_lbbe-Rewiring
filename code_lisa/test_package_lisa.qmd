@@ -31,38 +31,45 @@ test du package
 
 ### Generate random environmental niche for species
 
+Conversion des variable Lisa vers les miennes:
+
+. -\> \_ dans les noms
+
+nsp -\> nb_consumer
+
+nsite -\> nb_resource
+
+nb_location pour ne pas confondre avec le nsite de Lisa: nombre de sites échantillonés sur le gradient environemental
+
 ```{r}
 
 nb_location <- 5
-nb_consumer <- 5
-nb_pol <- 20
+nb_resource <- 5
+nb_consumer <- 20
 env_grad_min <- 0
 env_grad_max <- 100
 
-### consumer gradient ###
+### resource gradient ###
+env_grad_resource <- array(0, dim = c(nb_resource, 2)) # two col, 1st: mean, 2nd: sd
+# Generate environmental optima for each species
+env_grad_resource[, 1] <- runif(nb_resource, min = env_grad_min, max = env_grad_max)
+# Generate random niche widths for each species
+env_grad_resource[, 2] <- abs(rnorm(nb_resource, mean = 2, sd = 10))
+
+
+### Consumer gradient ###
 env_grad_consumer <- array(0, dim = c(nb_consumer, 2)) # two col, 1st: mean, 2nd: sd
 # Generate environmental optima for each species
 env_grad_consumer[, 1] <- runif(nb_consumer, min = env_grad_min, max = env_grad_max)
 # Generate random niche widths for each species
 env_grad_consumer[, 2] <- abs(rnorm(nb_consumer, mean = 2, sd = 10))
-
-
-### Pollinator gradient ###
-env_grad_pol <- array(0, dim = c(nb_pol, 2)) # two col, 1st: mean, 2nd: sd
-# Generate environmental optima for each species
-env_grad_pol[, 1] <- runif(nb_pol, min = env_grad_min, max = env_grad_max)
-# Generate random niche widths for each species
-env_grad_pol[, 2] <- abs(rnorm(nb_pol, mean = 2, sd = 10))
-
-# env_grad_consumer
-# env_grad_pol
 ```
 
 ### Obtain abundances along environmental gradient
 
 ```{r}
-nb_site = 4
-site_coordonates <- seq(from = env_grad_min, to = env_grad_max, by = (env_grad_max - env_grad_min)/nb_site)
+
+site_coordonates <- seq(from = env_grad_min, to = env_grad_max, by = (env_grad_max - env_grad_min)/nb_location)
 
 
 ### Obtain abundances from a given postion along the gardient ###
@@ -70,22 +77,22 @@ site_coordonates <- seq(from = env_grad_min, to = env_grad_max, by = (env_grad_m
 # Lisa a utilisé mvtnorm::dmvnorm mais je ne comprends pas exactement ce qu'elle a fait. Je pense que c'est due au fait qu'elle prend en compte deux gradients pour deux traits en compte en même temps
 
 
-### Abundance consumers ### 
-abund_consumer <- array(0, c(nb_site, nb_consumer))
+### Abundance Resource ### 
+abund_resource <- array(0, c(nb_location, nb_resource))
 
-for (site in 1:nb_site) {
-  for (consumer in 1:nb_consumer){
-    abund_consumer[site, consumer] <- dnorm(site_coordonates[site], mean = env_grad_consumer[consumer, 1], sd = env_grad_consumer[consumer, 2])
+for (site in 1:nb_location) {
+  for (resource in 1:nb_resource){
+    abund_resource[site, resource] <- dnorm(site_coordonates[site], mean = env_grad_resource[resource, 1], sd = env_grad_resource[resource, 2])
   }
 }
 
-### Abundance Polinators ###
+### Abundance Consumer ###
 
-abund_pol <- array(0, c(nb_site, nb_pol))
+abund_consumer <- array(0, c(nb_location, nb_consumer))
 
-for (site in 1:nb_site) {
-  for (pol in 1:nb_pol){
-    abund_pol[site, pol] <- dnorm(site_coordonates[site], mean = env_grad_pol[pol, 1], sd = env_grad_pol[pol, 2])
+for (site in 1:nb_location) {
+  for (consumer in 1:nb_consumer){
+    abund_consumer[site, consumer] <- dnorm(site_coordonates[site], mean = env_grad_consumer[consumer, 1], sd = env_grad_consumer[consumer, 2])
   }
 }
 ```
@@ -102,11 +109,13 @@ Todo list
 
 -   [ ] Compute the Matching matrix once at the beginning outside of the function of Lisa and make it into a function to make it prettier
 
+### Compute Matching matrix
+
 ```{r}
 
-le_grad = 100
-ratio_grad = 0.8
+le_grad = 100 ; ratio_grad = 0.8
 buffer = 1
+mean_tol = 2 ; sd_tol = 10
 
 
 # Gradient for axis 2 ---
@@ -121,28 +130,54 @@ gradmax2_buffer <- buffer + gradmax2
 
 # Environment/resource species trait gradient ---
 # Initialize empty trait/environment values matrix
-x <- matrix(0, nrow = nsite, ncol = 2)
+x <- matrix(0, nrow = nb_resource, ncol = 2)
 # For each site, generate an environmental gradient value at random (uniform) (and sort them)
-x[, 1] <- sort(runif(nsite, min = 0, max = le_grad))
-x[, 2] <- runif(nsite, min = gradmin2, max = gradmax2)
+x[, 1] <- sort(runif(nb_resource, min = 0, max = le_grad))
+x[, 2] <- runif(nb_resource, min = gradmin2, max = gradmax2)
 
 # Species niche/consumer niche ---
 # Initialize an array for species optima and tolerances
 # The array has last dimension 2 (one for each trait)
-p <- array(0, dim = c(nsp, 2, 2))
+p <- array(0, dim = c(nb_consumer, 2, 2))
 
 # Fill array p
 
 # -> first dimension
 # Generate environmental optima for each species
-p[, 1, 1] <- runif(nsp, min = 0-buffer, max = le_grad+buffer)
+p[, 1, 1] <- runif(nb_consumer, min = 0-buffer, max = le_grad+buffer)
 # Generate random niche widths for each species
-p[, 2, 1] <- abs(rnorm(nsp, mean = mean_tol, sd = sd_tol))
+p[, 2, 1] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
 # -> second dimension
-p[, 1, 2] <- runif(nsp,
+p[, 1, 2] <- runif(nb_consumer,
                    min = gradmin2_buffer,
                    max = gradmax2_buffer)
-p[, 2, 2] <- abs(rnorm(nsp, mean = mean_tol, sd = sd_tol))
+p[, 2, 2] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
+```
+
+```{r}
+  # Probability matrix (only matching) ---
+  # Initialize empty community matrix
+  p_matching <- matrix(0, nrow = nrow(x), ncol = nb_consumer)
+
+  for (i in 1:nrow(x)) {
+    for (j in 1:nb_consumer) {
+      # Fill each cell with a "presence probability" or an "interaction probability"
+      # from a multivariate normal law depending on:
+      # - the matching between resource species trait and consumer species trait
+      # - the matching between the site environmental value and the species niche optimum on this gradient
+      p_matching[i,j] <- mvtnorm::dmvnorm(x[i,] - p[j, 1, ], sigma = diag(p[j, 2, ]^2))
+    }
+  }
+  # Transform negative values to zero probability
+  p_matching <- ifelse(p_matching > 0, p_matching, 0)
+
+  # Make columns a proba distribution
+  # - each species (column) is distributed in sites following a probability of choosing this site
+  # - each consumer (column) chooses the resource according to a given proba of presence
+  p_matching <- sweep(p_matching, 2, STATS = apply(p_matching, 2, sum), FUN = "/")
+
+  # Quick patch (in case there are species with zero obs that became NA at the division step)
+  p_matching[is.na(p_matching)] <- 0
 ```
