@@ -41,9 +41,13 @@ nsite -\> nb_resource
 
 nb_location pour ne pas confondre avec le nsite de Lisa: nombre de sites échantillonés sur le gradient environemental
 
+row_abund -\> abund_resource
+
+col_abund -\> abund_consumer
+
 ```{r}
 
-nb_location <- 5
+nb_location <- 2
 nb_resource <- 5
 nb_consumer <- 20
 env_grad_min <- 0
@@ -180,4 +184,37 @@ p[, 2, 2] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
   # Quick patch (in case there are species with zero obs that became NA at the division step)
   p_matching[is.na(p_matching)] <- 0
+```
+
+Dans l'idée:
+
+-   Créer gradient environement
+
+-   générer abondances
+
+-   Créer matrice matching
+
+    -   soit utiliser fonction pour juste faire le produit de matrices mais ça fait beaucoup de modifs pour quasi rien
+
+    -   soit le faire à la main
+
+```{r}
+delta = 1
+  # Theoretical interaction count (based on abundances) ---
+  # This code makes sense only for interaction matrices because the abundance of
+  # resource species is a limiting factor here.
+  # It makes less sense in the context of species x sites association, unless we consider
+  # resources in the different sites are limited and a site has a limited number of species.
+  prop_row <- abund_resource[1,]/sum(abund_resource[1,]) # Get the proportion of each plant (its "availability")
+  ab_neutral <- prop_row %*% t(abund_consumer[1,]) # Get the predicted abundance -> the birds
+  # choose a plant only based on its availability
+  # Each bird abundance is exactly abund_consumer and the plants abundances are proportional to
+  # abund_resource
+
+  # Probability matrix (matching and abundance) ---
+  # these theoretical abundances of interactions must then be confronted to the probability of interactions
+  ab_mix <- ab_neutral*p_matching^delta # We multiply expected interaction number by trait matching
+  # Create a vector of probabilities that takes into account the matching
+  p_mix <- ab_mix/sum(ab_mix)
+  p_mix[is.na(p_mix)] <- 0 # Handle divisions per zero
 ```
