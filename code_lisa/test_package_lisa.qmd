@@ -13,17 +13,19 @@ source("compas2d.R")
 test du package
 
 ```{r}
-compas2d(nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
-         col_abund = NULL,
-         row_abund = NULL,
-         col_prefix = "s", row_prefix = "e", rowvar_prefix = "env",
-         remove_zeroes = FALSE,
-         buffer = 1, min.ab = 1, max.ab = 100,
-         ninter = 100,
-         delta = 1,
-         mean.tol = 2, sd.tol = 10,
-         return_intermediate = FALSE)
+# compas2d(nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
+#          col_abund = NULL,
+#          row_abund = NULL,
+#          col_prefix = "s", row_prefix = "e", rowvar_prefix = "env",
+#          remove_zeroes = FALSE,
+#          buffer = 1, min.ab = 1, max.ab = 100,
+#          ninter = 100,
+#          delta = 1,
+#          mean.tol = 2, sd.tol = 10,
+#          return_intermediate = FALSE)
 ```
+
+# Generate series of interactions networks along an environmental gradient
 
 ## Generate an environmental gradient
 
@@ -32,17 +34,17 @@ compas2d(nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
 ```{r}
 
 nb_location <- 5
-nb_plant <- 5
+nb_consumer <- 5
 nb_pol <- 20
 env_grad_min <- 0
 env_grad_max <- 100
 
-### Plant gradient ###
-env_grad_plant <- array(0, dim = c(nb_plant, 2)) # two col, 1st: mean, 2nd: sd
+### consumer gradient ###
+env_grad_consumer <- array(0, dim = c(nb_consumer, 2)) # two col, 1st: mean, 2nd: sd
 # Generate environmental optima for each species
-env_grad_plant[, 1] <- runif(nb_plant, min = env_grad_min, max = env_grad_max)
+env_grad_consumer[, 1] <- runif(nb_consumer, min = env_grad_min, max = env_grad_max)
 # Generate random niche widths for each species
-env_grad_plant[, 2] <- abs(rnorm(nb_plant, mean = 2, sd = 10))
+env_grad_consumer[, 2] <- abs(rnorm(nb_consumer, mean = 2, sd = 10))
 
 
 ### Pollinator gradient ###
@@ -52,8 +54,8 @@ env_grad_pol[, 1] <- runif(nb_pol, min = env_grad_min, max = env_grad_max)
 # Generate random niche widths for each species
 env_grad_pol[, 2] <- abs(rnorm(nb_pol, mean = 2, sd = 10))
 
-env_grad_plant[]
-env_grad_pol
+# env_grad_consumer
+# env_grad_pol
 ```
 
 ### Obtain abundances along environmental gradient
@@ -63,17 +65,17 @@ nb_site = 4
 site_coordonates <- seq(from = env_grad_min, to = env_grad_max, by = (env_grad_max - env_grad_min)/nb_site)
 
 
-### Obtenir les abondances à une altitude donnée ###
+### Obtain abundances from a given postion along the gardient ###
 
-# Lisa a utilisé mvtnorm::dmvnorm mais je ne comprends pas exactement ce qu'elle a fait.
+# Lisa a utilisé mvtnorm::dmvnorm mais je ne comprends pas exactement ce qu'elle a fait. Je pense que c'est due au fait qu'elle prend en compte deux gradients pour deux traits en compte en même temps
 
 
-### Abundance Plants ### 
-abund_plant <- array(0, c(nb_site, nb_plant))
+### Abundance consumers ### 
+abund_consumer <- array(0, c(nb_site, nb_consumer))
 
 for (site in 1:nb_site) {
-  for (plant in 1:nb_plant){
-    abund_plant[site, plant] <- dnorm(site_coordonates[site], mean = env_grad_plant[plant, 1], sd = env_grad_plant[plant, 2])
+  for (consumer in 1:nb_consumer){
+    abund_consumer[site, consumer] <- dnorm(site_coordonates[site], mean = env_grad_consumer[consumer, 1], sd = env_grad_consumer[consumer, 2])
   }
 }
 
@@ -86,4 +88,61 @@ for (site in 1:nb_site) {
     abund_pol[site, pol] <- dnorm(site_coordonates[site], mean = env_grad_pol[pol, 1], sd = env_grad_pol[pol, 2])
   }
 }
+```
+
+## Implement it in the code of Lisa
+
+In the code of Lisa, It would be nice to modify it in order to obtain the Trait matching matrix in order to only have to compute it once and have the exact same one at different locations along the gradient.
+
+Todo list
+
+-   [ ] Add the trait matching matrix in the arguments or at least the trait list ( implies less modifications of the code but this way, we won't have to compute many times the same thing that is quite demanding for big networks)
+
+-   [ ] Modify so that if the Traits are given in arguments, the traits don't have to be randomly drawn (to avoid overwriting on the given traits)
+
+-   [ ] Compute the Matching matrix once at the beginning outside of the function of Lisa and make it into a function to make it prettier
+
+```{r}
+
+le_grad = 100
+ratio_grad = 0.8
+buffer = 1
+
+
+# Gradient for axis 2 ---
+# The length of the second gradient is a fraction of the length of the
+# first gradient
+gradmin2 <- (1-ratio_grad) / 2 * le_grad
+gradmax2 <- le_grad - (1-ratio_grad) / 2 * le_grad
+# For the columns, we include a buffer that is also on axis 2
+# (if buffer = 0 then gradmin/max2_buffer and gradmin/max2 are equal)
+gradmin2_buffer <- -buffer + gradmin2
+gradmax2_buffer <- buffer + gradmax2
+
+# Environment/resource species trait gradient ---
+# Initialize empty trait/environment values matrix
+x <- matrix(0, nrow = nsite, ncol = 2)
+# For each site, generate an environmental gradient value at random (uniform) (and sort them)
+x[, 1] <- sort(runif(nsite, min = 0, max = le_grad))
+x[, 2] <- runif(nsite, min = gradmin2, max = gradmax2)
+
+# Species niche/consumer niche ---
+# Initialize an array for species optima and tolerances
+# The array has last dimension 2 (one for each trait)
+p <- array(0, dim = c(nsp, 2, 2))
+
+# Fill array p
+
+# -> first dimension
+# Generate environmental optima for each species
+p[, 1, 1] <- runif(nsp, min = 0-buffer, max = le_grad+buffer)
+# Generate random niche widths for each species
+p[, 2, 1] <- abs(rnorm(nsp, mean = mean_tol, sd = sd_tol))
+
+# -> second dimension
+p[, 1, 2] <- runif(nsp,
+                   min = gradmin2_buffer,
+                   max = gradmax2_buffer)
+p[, 2, 2] <- abs(rnorm(nsp, mean = mean_tol, sd = sd_tol))
+
 ```
