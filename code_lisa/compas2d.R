@@ -63,172 +63,174 @@
 #'
 #' @export
 "compas2d" <-
-function (nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
-          col_abund = NULL,
-          row_abund = NULL,
-          col_prefix = "s", row_prefix = "e", rowvar_prefix = "env",
-          remove_zeroes = FALSE,
-          buffer = 1, min.ab = 1, max.ab = 100,
-          ninter = 100,
-          delta = 1,
-          mean.tol = 2, sd.tol = 10,
-          return_intermediate = FALSE)
-{
+  function(nsp = 40, le.grad = 100, ratio.grad = 0.8, nsite = 100,
+           col_abund = NULL,
+           row_abund = NULL,
+           col_prefix = "s", row_prefix = "e", rowvar_prefix = "env",
+           remove_zeroes = FALSE,
+           buffer = 1, min.ab = 1, max.ab = 100,
+           ninter = 100,
+           delta = 1,
+           mean.tol = 2, sd.tol = 10,
+           return_intermediate = FALSE) {
+    # Gradient for axis 2 ---
+    # The length of the second gradient is a fraction of the length of the
+    # first gradient
+    gradmin2 <- (1 - ratio.grad) / 2 * le.grad
+    gradmax2 <- le.grad - (1 - ratio.grad) / 2 * le.grad
+    # For the columns, we include a buffer that is also on axis 2
+    # (if buffer = 0 then gradmin/max2_buffer and gradmin/max2 are equal)
+    gradmin2_buffer <- -buffer + gradmin2
+    gradmax2_buffer <- buffer + gradmax2
 
-  # Gradient for axis 2 ---
-  # The length of the second gradient is a fraction of the length of the
-  # first gradient
-  gradmin2 <- (1-ratio.grad) / 2 * le.grad
-  gradmax2 <- le.grad - (1-ratio.grad) / 2 * le.grad
-  # For the columns, we include a buffer that is also on axis 2
-  # (if buffer = 0 then gradmin/max2_buffer and gradmin/max2 are equal)
-  gradmin2_buffer <- -buffer + gradmin2
-  gradmax2_buffer <- buffer + gradmax2
+    # Environment/resource species trait gradient ---
+    # Initialize empty trait/environment values matrix
+    x <- matrix(0, nrow = nsite, ncol = 2)
+    # For each site, generate an environmental gradient value at random (uniform) (and sort them)
+    x[, 1] <- sort(runif(nsite, min = 0, max = le.grad))
+    x[, 2] <- runif(nsite, min = gradmin2, max = gradmax2)
 
-  # Environment/resource species trait gradient ---
-  # Initialize empty trait/environment values matrix
-  x <- matrix(0, nrow = nsite, ncol = 2)
-  # For each site, generate an environmental gradient value at random (uniform) (and sort them)
-  x[, 1] <- sort(runif(nsite, min = 0, max = le.grad))
-  x[, 2] <- runif(nsite, min = gradmin2, max = gradmax2)
-
-  # Abundances ---
-  # Species/consumer species
-  if (is.null(col_abund)) {
-    # Generate random abundances for each species (uniform law)
-    col_abund <- runif(nsp, min = min.ab, max = max.ab)
-  }
-  # Sites/resource species
-  if (is.null(row_abund)) {
-    # Generate random abundances for each species (uniform law)
-    row_abund <- runif(nsite, min = min.ab, max = max.ab)
-  }
-
-  # Species niche/consumer niche ---
-  # Initialize an array for species optima and tolerances
-  # The array has last dimension 2 (one for each trait)
-  p <- array(0, dim = c(nsp, 2, 2))
-
-  # Fill array p
-
-  # -> first dimension
-  # Generate environmental optima for each species
-  p[, 1, 1] <- runif(nsp, min = 0-buffer, max = le.grad+buffer)
-  # Generate random niche widths for each species
-  p[, 2, 1] <- abs(rnorm(nsp, mean = mean.tol, sd = sd.tol))
-
-  # -> second dimension
-  p[, 1, 2] <- runif(nsp,
-                     min = gradmin2_buffer,
-                     max = gradmax2_buffer)
-  p[, 2, 2] <- abs(rnorm(nsp, mean = mean.tol, sd = sd.tol))
-
-  # Probability matrix (only matching) ---
-  # Initialize empty community matrix
-  p_matching <- matrix(0, nrow = nrow(x), ncol = nsp)
-
-  for (i in 1:nrow(x)) {
-    for (j in 1:nsp) {
-      # Fill each cell with a "presence probability" or an "interaction probability"
-      # from a multivariate normal law depending on:
-      # - the matching between resource species trait and consumer species trait
-      # - the matching between the site environmental value and the species niche optimum on this gradient
-      p_matching[i,j] <- mvtnorm::dmvnorm(x[i,] - p[j, 1, ], sigma = diag(p[j, 2, ]^2))
+    # Abundances ---
+    # Species/consumer species
+    if (is.null(col_abund)) {
+      # Generate random abundances for each species (uniform law)
+      col_abund <- runif(nsp, min = min.ab, max = max.ab)
     }
+    # Sites/resource species
+    if (is.null(row_abund)) {
+      # Generate random abundances for each species (uniform law)
+      row_abund <- runif(nsite, min = min.ab, max = max.ab)
+    }
+
+    # Species niche/consumer niche ---
+    # Initialize an array for species optima and tolerances
+    # The array has last dimension 2 (one for each trait)
+    p <- array(0, dim = c(nsp, 2, 2))
+
+    # Fill array p
+
+    # -> first dimension
+    # Generate environmental optima for each species
+    p[, 1, 1] <- runif(nsp, min = 0 - buffer, max = le.grad + buffer)
+    # Generate random niche widths for each species
+    p[, 2, 1] <- abs(rnorm(nsp, mean = mean.tol, sd = sd.tol))
+
+    # -> second dimension
+    p[, 1, 2] <- runif(nsp,
+      min = gradmin2_buffer,
+      max = gradmax2_buffer)
+    p[, 2, 2] <- abs(rnorm(nsp, mean = mean.tol, sd = sd.tol))
+
+    # Probability matrix (only matching) ---
+    # Initialize empty community matrix
+    p_matching <- matrix(0, nrow = nrow(x), ncol = nsp)
+
+    for (i in 1:nrow(x)) {
+      for (j in 1:nsp) {
+        # Fill each cell with a "presence probability" or an "interaction probability"
+        # from a multivariate normal law depending on:
+        # - the matching between resource species trait and consumer species trait
+        # - the matching between the site environmental value and the species niche optimum on this gradient
+        p_matching[i, j] <- mvtnorm::dmvnorm(x[i, ] - p[j, 1, ], sigma = diag(p[j, 2, ]^2))
+      }
+    }
+    # Transform negative values to zero probability
+    p_matching <- ifelse(p_matching > 0, p_matching, 0)
+
+    # Make columns a proba distribution
+    # - each species (column) is distributed in sites following a probability of choosing this site
+    # - each consumer (column) chooses the resource according to a given proba of presence
+    p_matching <- sweep(p_matching, 2, STATS = apply(p_matching, 2, sum), FUN = "/")
+
+    # Quick patch (in case there are species with zero obs that became NA at the division step)
+    p_matching[is.na(p_matching)] <- 0
+
+    # Theoretical interaction count (based on abundances) ---
+    # This code makes sense only for interaction matrices because the abundance of
+    # resource species is a limiting factor here.
+    # It makes less sense in the context of species x sites association, unless we consider
+    # resources in the different sites are limited and a site has a limited number of species.
+    prop_row <- row_abund / sum(row_abund) # Get the proportion of each plant (its "availability")
+    ab_neutral <- prop_row %*% t(col_abund) # Get the predicted abundance -> the birds
+    # choose a plant only based on its availability
+    # Each bird abundance is exactly col_abund and the plants abundances are proportional to
+    # row_abund
+
+    # Probability matrix (matching and abundance) ---
+    # these theoretical abundances of interactions must then be confronted to the probability of interactions
+    ab_mix <- ab_neutral * p_matching^delta # We multiply expected interaction number by trait matching
+    # Create a vector of probabilities that takes into account the matching
+    p_mix <- ab_mix / sum(ab_mix)
+    p_mix[is.na(p_mix)] <- 0 # Handle divisions per zero
+
+    # Final community matrix (with counts) ---
+    # Then we need to sample observations in this web
+    # The method is inspired by Fründ et al 2016
+    # We sample ninter interactions from a multinomial distribution, where the probability to
+    # draw each interaction depends on the probability taking into account abundance and matching
+    ab_obs_vec <- stats::rmultinom(
+      n = 1,
+      size = ninter,
+      prob = as.numeric(p_mix))
+    ab_obs <- matrix(ab_obs_vec, nrow = nsite, byrow = FALSE) # Reformat to a matrix
+
+    if (remove_zeroes) {
+      # Remove species that haven't been observed
+      colkeep <- which(colSums(ab_obs) != 0)
+      rowkeep <- which(rowSums(ab_obs) != 0)
+
+      ab_obs <- ab_obs[, colkeep]
+      ab_obs <- ab_obs[rowkeep, ]
+
+      # Select traits only species that have been observed
+      p <- p[colkeep, , ]
+      x <- x[rowkeep, ]
+    }
+
+    # Format result
+    # Rows and columns names
+    rnames <- paste0(row_prefix, 1:nrow(ab_obs))
+    cnames <- paste0(col_prefix, 1:ncol(ab_obs))
+
+    rownames(ab_obs) <- rnames
+    colnames(ab_obs) <- cnames
+
+    rownames(x) <- rnames
+    colnames(x) <- paste0(rowvar_prefix, 1:2)
+
+    rownames(p) <- cnames
+    colnames(p) <- c("mean", "sd")
+
+    if (return_intermediate) {
+      rownames(p_matching) <- rnames
+      colnames(p_matching) <- cnames
+
+      rownames(ab_neutral) <- rnames
+      colnames(ab_neutral) <- cnames
+
+      rownames(p_mix) <- rnames
+      colnames(p_mix) <- cnames
+
+      intermediate <- list(
+        p_matching = p_matching,
+        ab_neutral = ab_neutral,
+        p_mix = p_mix)
+
+      sol <- list(
+        comm = ab_obs,
+        rowvar = x,
+        colvar = p,
+        intermediate = intermediate)
+    } else {
+      sol <- list(
+        comm = ab_obs,
+        rowvar = x,
+        colvar = p)
+    }
+
+
+    class(sol) <- "compas"
+    sol$call <- match.call()
+
+    return(sol)
   }
-  # Transform negative values to zero probability
-  p_matching <- ifelse(p_matching > 0, p_matching, 0)
-
-  # Make columns a proba distribution
-  # - each species (column) is distributed in sites following a probability of choosing this site
-  # - each consumer (column) chooses the resource according to a given proba of presence
-  p_matching <- sweep(p_matching, 2, STATS = apply(p_matching, 2, sum), FUN = "/")
-
-  # Quick patch (in case there are species with zero obs that became NA at the division step)
-  p_matching[is.na(p_matching)] <- 0
-
-  # Theoretical interaction count (based on abundances) ---
-  # This code makes sense only for interaction matrices because the abundance of
-  # resource species is a limiting factor here.
-  # It makes less sense in the context of species x sites association, unless we consider
-  # resources in the different sites are limited and a site has a limited number of species.
-  prop_row <- row_abund/sum(row_abund) # Get the proportion of each plant (its "availability")
-  ab_neutral <- prop_row %*% t(col_abund) # Get the predicted abundance -> the birds
-  # choose a plant only based on its availability
-  # Each bird abundance is exactly col_abund and the plants abundances are proportional to
-  # row_abund
-
-  # Probability matrix (matching and abundance) ---
-  # these theoretical abundances of interactions must then be confronted to the probability of interactions
-  ab_mix <- ab_neutral*p_matching^delta # We multiply expected interaction number by trait matching
-  # Create a vector of probabilities that takes into account the matching
-  p_mix <- ab_mix/sum(ab_mix)
-  p_mix[is.na(p_mix)] <- 0 # Handle divisions per zero
-
-  # Final community matrix (with counts) ---
-  # Then we need to sample observations in this web
-  # The method is inspired by Fründ et al 2016
-  # We sample ninter interactions from a multinomial distribution, where the probability to
-  # draw each interaction depends on the probability taking into account abundance and matching
-  ab_obs_vec <- stats::rmultinom(n = 1,
-                                     size = ninter,
-                                     prob = as.numeric(p_mix))
-  ab_obs <- matrix(ab_obs_vec, nrow = nsite, byrow = FALSE) # Reformat to a matrix
-
-  if (remove_zeroes) {
-    # Remove species that haven't been observed
-    colkeep <- which(colSums(ab_obs) != 0)
-    rowkeep <- which(rowSums(ab_obs) != 0)
-
-    ab_obs <- ab_obs[, colkeep]
-    ab_obs <- ab_obs[rowkeep, ]
-
-    # Select traits only species that have been observed
-    p <- p[colkeep, , ]
-    x <- x[rowkeep, ]
-  }
-
-  # Format result
-  # Rows and columns names
-  rnames <- paste0(row_prefix, 1:nrow(ab_obs))
-  cnames <- paste0(col_prefix, 1:ncol(ab_obs))
-
-  rownames(ab_obs) <- rnames
-  colnames(ab_obs) <- cnames
-
-  rownames(x) <- rnames
-  colnames(x) <- paste0(rowvar_prefix, 1:2)
-
-  rownames(p) <- cnames
-  colnames(p) <- c("mean", "sd")
-
-  if (return_intermediate) {
-    rownames(p_matching) <- rnames
-    colnames(p_matching) <- cnames
-
-    rownames(ab_neutral) <- rnames
-    colnames(ab_neutral) <- cnames
-
-    rownames(p_mix) <- rnames
-    colnames(p_mix) <- cnames
-
-    intermediate <- list(p_matching = p_matching,
-                         ab_neutral = ab_neutral,
-                         p_mix = p_mix)
-
-    sol <- list(comm = ab_obs,
-                rowvar = x,
-                colvar = p,
-                intermediate = intermediate)
-  } else {
-    sol <- list(comm = ab_obs,
-                rowvar = x,
-                colvar = p)
-  }
-
-
-  class(sol) <- "compas"
-  sol$call <- match.call()
-
-  return(sol)
-}
