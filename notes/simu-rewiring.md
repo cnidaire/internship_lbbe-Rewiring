@@ -45,9 +45,9 @@ En utilisant une loi multinomiale (polynomiale), ça permet de simuler l’écha
 ## Objets
 
 - p_matching
-- A_abund
-- M_mix
-- M_observed
+- A_abund 
+- M_mix : ab_mix
+- M_observed : ab_obs
 
 # Prévision Code
 

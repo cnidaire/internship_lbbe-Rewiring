@@ -168,6 +168,35 @@ Specialization: **J'ai un gros doute, il font 14 de tests et il trouvent que il 
 
 **De ce qu'ils disent, j'ai l'impression que ce serait plutôt un biais d'échantillonnage et que les réseaux observés ne sont pas représentatif du réseau sous-jacent et que ainsi ce que l'on observe selon moi pourrait n'être dû que aux abondances plutôt qu'à un phénomène tel que le rewiring tel que les trois mécanismes cité plus tôt"
 
+## Points importants
+
+Dans l'article [[Petanidou et al. - 2008 - Long-term observation of a pollination network fl.pdf|Petanidou 2008]], L'un dé résultats est "many plant and pollinator appear as specialists in 1 year, but tend to be generalists or to interact with different partner species when observed in other years."
+Donc ça me semble déjà dur de parler de rewiring du coup sur des séries de plantes pollinisateurs sachant que la "perte" et la "création" de nouvelles interactions n'est probablement due qu'au biais échantillonnage et ce qui fait qu'il serait dur de faire un lien de cause à effet.
+
+Ce qui est redis dans cet article [[Benadi et al. - 2014 - Specialization and phenological synchrony of plant.pdf|Benadi 2014]]
+"Our results show that even relatively specialized pollinators were much more flexible in their use of plant species as floral resources than their local flower visitation suggested."
+"our results suggest that specialized **flower visitors select plant species based on certain floral traits such as the length of the nectar holder tube.** If that is the case, the observed flexibility of plant–pollinator interactions likely depends on a high degree of functional redundancy in the plant community, **which may not exist in less diverse systems.**"
+
+**Bref, mauvaise idée d'utiliser les interactions plantes pollinisateurs**
+
+## Articles citant Tylianakis
+
+*Ecological networks are more sensitive to plant than to animal extinction under climate change*
+"In the simulation, we further accounted for the potential flexibility of species in the choice of their interaction partners by reallocating a varying proportion of lost interaction events to persisting species."
+**Si ce n'est que ça, alors c'est juste une histoire de changement de force d'interaction quand un lien fort disparaît, alors changement de proportions de cible potentielles et favorables, alors ce serait quelque chose comme un produit entre les abondances et à quel point les espèces sont favorable (représenté par le trait matching qui est la façon la plus facile de le représenter)**
+
+*Adaptive Networks for Restoration Ecology*
+Notion de "forbidden links" qui est intéressante mais incluse dans la vision que l'on a du trait matching pour la partie morphologie mais pas mismatch phénologie
+"interaction rewiring: the reconfiguration of an ecological network arising from the establishment or cessation of pairwise interactions as a consequence of adaptive or stochastic processes."
+En gros ils font la même chose avec des trait mais sans vraiment faire de trait matching et pour moi ça me semble moins bien que ce qui est fait avec des gaussiennes (encore faut-il pouvoir les obtenir, ce qui implique dans la réalité beaucoup de données).
+
+*Dissimilarity of species interaction networks: quantifying the effect of turnover and rewiring*
+pour eux, le rewiring est le fait que dans deux graphes contenante un sous ensemble d'espèce commune qui ont des interactions qui diffèrent dans les deux milieu. Ce serait cool car ce n'est pas incompatible avec la théorie que c'est juste des différences d'abondance.
+
+*Rewilding ecological communities and rewiring ecological networks*
+I refer to network rewiring as the establishment of novel ecological interactions, which will generally involve the introduced species, but also reconfigurations of the interaction network that occur as an indirect effect of a species introduction.
+
+
 
 # Interrogation
 
