@@ -39,7 +39,7 @@ Guzzo et al, 2017: data of foraging and lake temperature over 11 years
 
 # Application
 
-Can enable to indicate imminent collapse of one or more species.
+Can enable to indicate immnt collapse of one or more species.
 
 Predict impact of climate change on the world's ecosystems.
 
@@ -194,9 +194,29 @@ En gros ils font la même chose avec des trait mais sans vraiment faire de trait
 pour eux, le rewiring est le fait que dans deux graphes contenante un sous ensemble d'espèce commune qui ont des interactions qui diffèrent dans les deux milieu. Ce serait cool car ce n'est pas incompatible avec la théorie que c'est juste des différences d'abondance.
 
 *Rewilding ecological communities and rewiring ecological networks*
-I refer to network rewiring as the establishment of novel ecological interactions, which will generally involve the introduced species, but also reconfigurations of the interaction network that occur as an indirect effect of a species introduction.
+"I refer to network rewiring as the establishment of novel ecological interactions, which will generally involve the introduced species, but also reconfigurations of the interaction network that occur as an indirect effect of a species introduction."
+
+*Genetic and plastic rewiring of food webs under climate change*
+Ils semblent voir le rewiring du point de vue génétique mais je ne l'ai pas lu et ce searait bien de le regarder plus en profondeur quand j'aurais un peu de temps.
+
+*Human-Mediated Dispersal and the Rewiring of Spatial Networks*
+"Rewiring: the alteration of interactions within spatial networks, due to the removal of natural nodes and links, and the emergence of new links between existing or new nodes."
+Très vite regardé mais ici il ne considèrent que la création de nouvelle interactions j'ai l'impression mais après le cadre l'article est assez spécifique.
+
+*Importance of interaction rewiring in determining spatial and temporal turnover of tritrophic (Piper-caterpillar-parasitoid) metanetworks in the Yucatán Península, México*
+"Seasonal turnover in plant–herbivore interactions may be largely influenced by interaction turnover due to reassembly or reorganization of interactions among the same pool of co-occurring species (i.e., CaraDonna et al., 2017; Lepesqueur et al., 2018; Saavedra et al., 2017), referred hereafter as interaction rewiring, rather than turnover in species composition"
+**Cette phrase me met un gros doute, pour moi la différence entre interaction rewiring et turnover in species composition est assez floue. Pour moi les deux sont difficilement séparables. Je comprenais le turnover comme un renouvellement/rotation des espèces présentes et ainsi ça impliquait une modification du poids des interactions et donc du rewiring. Selon moi, l'un est une consequence de l'autre qui est peut avoir plusieurs causes comme gradient environmental, de la dispersion médié par l'Homme, ou autre.**
+
+*Multi-site interaction turnover in flea–mammal networks from four continents: Application of zeta diversity concept and multi-site generalised dissimilarity modelling*
+Dans cet articles in séparent le total rewiring en trois catégories: ST (species turnover), RW (Interaction rewiring) et l'intersection entre les deux qui serait le mixed turnover. Ça été dis dans : *A multi-site method to capture turnover in rare to common interactions in bipartite species networks* qu'il fait absolument que je lise
+
+*Network ecology in dynamic landscapes*
 
 
+### Sur autre chose que le rewiring
+
+[[Comparing species interaction networks along environmental gradients|Pellissier 2018]] :
+Est probablement important pour comparer les réseaux suivant des gradients, ce qui m'intéresse.
 
 # Interrogation
 
