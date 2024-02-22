@@ -207,14 +207,6 @@ for (i in 1:3) {
 }
 ```
 
-## Test master function
-
-```{r}
-test_1 <- env_grad_netw(nb_resource =10 , nb_consumer = 10, nb_location = 10)
-test_1[[1]]
-```
-
-
 ## Test plot
 
 To import the data visualization package of Lisa
@@ -227,12 +219,15 @@ library(ggplot2)
 
 
 ```{r}
-getwd()
-for (i in 1:10) {
-  png(file = paste0("test",i, ".png"))
+# getwd()
+frame = 20
+spe = 10
+test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame)
+for (i in 1:frame) {
+  # png(file = paste0("test",i, ".png"))
   
   p <- plot_matrix(data.frame(test_1[[i]]), 
-            max_size = 10) +
+            max_size = 20) +
   theme(axis.text = element_blank(),
         axis.text.x.top = element_blank(),
         axis.title = element_blank(),
@@ -240,11 +235,17 @@ for (i in 1:10) {
         panel.grid.major = element_blank(),
         legend.position="none",
         plot.background = element_blank(),
-        axis.line.x.top = element_line(colour = "darkred", 
-                                       size = 3),
-        axis.line.y = element_line(colour = "cornflowerblue", 
-                                   size = 3))
-  dev.off()
+        axis.line.x.top = element_line(colour = "darkorange4", 
+                                       linewidth = 3),
+        axis.line.y = element_line(colour = "green4", 
+                                   linewidth = 3))
+  # dev.off()
+  if (i < 10) {
+    ggsave(paste0("figure/test0",i, ".png"), width = spe, height = spe)
+  }
+  else {
+    ggsave(paste0("figure/test",i, ".png"), width = spe, height = spe)
+  }
 }
 
 ```
