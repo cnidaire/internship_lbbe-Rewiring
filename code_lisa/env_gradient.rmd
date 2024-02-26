@@ -320,15 +320,18 @@ cor(na.omit(as.vector(beta_div_abund)), na.omit(as.vector(beta_div_link)), metho
 ```
 
 ```{r}
-# Création de deux matrices d'exemple
-matrice1 <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2)
-matrice2 <- matrix(c(6, 5, 4, 3, 2, 1), nrow = 2)
+dist_env <- matrix(, nrow = 10, ncol = 10)
+for (i in 1:10) {
+  for (j in i:10) {
+    dist_env[i,j] = abs(i - j)
+  }
+}
 
-# Calcul de la corrélation de Pearson entre les deux matrices
-correlation_pearson <- cor(matrice1, matrice2, method = "pearson")
+dist_env[dist_env == 0] <- NA
+dist_env
+```
 
-# Affichage du résultat
-print(correlation_pearson)
-
+```{r}
+plot(dist_env, beta_div_abund, xlim = c(0, 10), ylim = c(0, 0.7))
 ```
 
