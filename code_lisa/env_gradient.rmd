@@ -274,64 +274,50 @@ test_1$abudance$abundance_resource
 ## for abudance
 
 ```{r}
-
-frame = 10
-spe = 10
-# test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame)
-
-full_abund <- cbind(test_1$abudance$abundance_resource, test_1$abudance$abundance_consumer)
-
-beta_div_abund <- matrix(,nrow = 10, ncol = 10)
-for (i in 1:10) {
-  for (j in i:10) {
-  # for (j in 1:10) {
-        c <- apply(full_abund[c(i, j), ], 2, min)
-    beta_div_abund[i, j] <- 1- (2*sum(c) / (sum(full_abund[i,]) + sum(full_abund[j, ])))
-  }
-}
-
-beta_div_abund[beta_div_abund ==0] <- NA
-beta_div_abund
-```
-
-## for links
-
-```{r}
 library(abind)
-# apply(abind(test_1$network[[1]], test_1$network[[2]], along = 3), c(1, 2), min)
 
-beta_div_link <- matrix(,nrow = 10, ncol = 10)
-for (i in 1:10) {
-  for (j in i:10) {
-  # for (j in 1:10) {
-    c <- apply(abind(test_1$network[[i]], test_1$network[[j]], along = 3), c(1, 2), min)
-    beta_div_link[i, j] <- 1- (2*sum(c) / (sum(test_1$network[[i]]) + sum(test_1$network[[j]])))
+cor_abund_grad <- function(frame = 10, spe = 10){
+  generated_netw <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame)
+  
+  ### Beta diversity abundance ###
+  full_abund <- cbind(generated_netw$abudance$abundance_resource, generated_netw$abudance$abundance_consumer)
+  beta_div_abund <- matrix(,nrow = frame, ncol = frame)
+  for (i in 1:frame) {
+    for (j in i:frame) {
+          c <- apply(full_abund[c(i, j), ], 2, min)
+      beta_div_abund[i, j] <- 1- (2*sum(c) / (sum(full_abund[i,]) + sum(full_abund[j, ])))
+    }
   }
-}
-
-beta_div_link[beta_div_link == 0] <- NA
-beta_div_link
-```
-
-```{r}
-# cor(beta_div_abund, beta_div_link, method = "pearson", use = "pairwise.complete.obs")
-
-cor(na.omit(as.vector(beta_div_abund)), na.omit(as.vector(beta_div_link)), method = "pearson")
-```
-
-```{r}
-dist_env <- matrix(, nrow = 10, ncol = 10)
-for (i in 1:10) {
-  for (j in i:10) {
-    dist_env[i,j] = abs(i - j)
+  beta_div_abund[beta_div_abund ==0] <- NA
+  
+  ### Beta Diversity links ###
+  beta_div_link <- matrix(,nrow = frame, ncol = frame)
+  for (i in 1:frame) {
+    for (j in i:frame) {
+      c <- apply(abind(generated_netw$network[[i]], generated_netw$network[[j]], along = 3), c(1, 2), min)
+      beta_div_link[i, j] <- 1 - (2*sum(c) / (sum(generated_netw$network[[i]]) + sum(generated_netw$network[[j]])))
+    }
   }
+  beta_div_link[beta_div_link == 0] <- NA
+  
+  ### Distance Environmental Gradient ###
+  dist_env <- matrix(, nrow = frame, ncol = frame)
+  for (i in 1:frame) {
+    for (j in i:frame) {
+      dist_env[i,j] = abs(i - j)
+    }
+  }
+  dist_env[dist_env == 0] <- NA
+  
+  ### Correlation ###
+  cor_abun_link <- cor(na.omit(as.vector(beta_div_abund)), na.omit(as.vector(beta_div_link)), method = "pearson")
+  
+  ### Results ###
+  return(list(abundance = beta_div_abund, link = beta_div_link, env_grad = dist_env, correlation = cor_abun_link))
 }
-
-dist_env[dist_env == 0] <- NA
-dist_env
 ```
 
 ```{r}
-plot(dist_env, beta_div_abund, xlim = c(0, 10), ylim = c(0, 0.7))
+network <- cor_abund_grad(frame = 60, spe = 10)
+plot(network$env_grad, network$abundance, ylim = c(0, 1))
 ```
-
