@@ -52,3 +52,21 @@ J'ai eu un appel avec Vincent pour en discuter. Il m'a dit que ce qui l’intér
 Une des choses à côté de laquelle j'ai du passer à côté sans le comprendre est la notion de saturation, qui implique que une espèce n'interagit probablement pas avec toutes les espèce potentielles mais cela ne pourrait n'être due qu'à une histoire d'abondance.
 
 Dans l'idée, ça pourrait être bien de developer quelque chose où on fait de la génération de graphes à partir de quelque chose d'aléatoire et que l'on puisse en suite retrouver "paramètres" de départ pour avoir quelque chose de contrôlé mais je ne suis pas sûr de savoir quoi mettre dan le terme paramètre.
+
+# 23 février
+
+Je voulais vérifier que je n'avais pas de problème de code lors de la generation de gradient, vu que j'ai certaines frames qui sont très différentes de certaines mais en augmentant la résolution du gradient, on se rend compte que ce ne sont que des changement très rapide, impliquant que la stabilité d’une interaction peut être très sensible au gradient environment.
+
+Cependant il faudrait qu'on le voit tous ensemble pour voir si il y aurait vraiment une explication car la totalité du réseau subit une variation importante pour quelques frames.
+
+# 26 février
+
+Aujourd'hui j'ai pu discuter avec Stéphane, ce qui'il faudrait faire:
+- jouer avec les largeurs de gradients ainsi que avec les variances des niches
+- ajouter une légère correlation entre de certains traits avec le gradient environnemental.
+- appliquer une AFC sur les réseaux générés
+- plotter la distance suivant le gradient en fonction de la distance calculée via la Beta diversité et peut aussi être fait suivant les métriques usuelles pour caractériser un réseau écologique
+- Une théorie serait:
+	- deux réseaux très différents: turnover entre espèces
+	- deux réseaux quasi identiques: turnover-trait matching et biais échantillonnage.
+	

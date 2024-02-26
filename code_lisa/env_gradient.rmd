@@ -186,15 +186,20 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
   for (i in 1:nb_location) {
     th_env_netw[[i]] <- int_count_th(i, abund_resource = abundance$abundance_resource, abund_consumer = abundance$abundance_consumer, p_matching = trait)
   }
-  return(th_env_netw)
+  return(list(network = th_env_netw, abudance = abundance))
 }
 ```
-
 
 # Probation
 
 ```{r}
-(abundance <- abund_env_grad(nb_resource = 2, nb_consumer = 10, nb_location = 3))
+(abundance <- abund_env_grad(nb_resource = 2, nb_consumer = 10, nb_location = 10))
+```
+
+```{r}
+plot(abundance$abundance_consumer[,4])
+
+# plot(dnorm(-5:5,1,1))
 ```
 
 ```{r}
@@ -217,17 +222,16 @@ source("formatting.R")
 library(ggplot2)
 ```
 
-
 ```{r}
 # getwd()
-frame = 20
+frame = 60
 spe = 10
 test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame)
 for (i in 1:frame) {
   # png(file = paste0("test",i, ".png"))
   
-  p <- plot_matrix(data.frame(test_1[[i]]), 
-            max_size = 20) +
+  p <- plot_matrix(data.frame(test_1$network[[i]]), 
+            max_size = 15) +
   theme(axis.text = element_blank(),
         axis.text.x.top = element_blank(),
         axis.title = element_blank(),
@@ -235,17 +239,96 @@ for (i in 1:frame) {
         panel.grid.major = element_blank(),
         legend.position="none",
         plot.background = element_blank(),
-        axis.line.x.top = element_line(colour = "darkorange4", 
+        axis.line.x.top = element_line(colour = "darkorange4",
                                        linewidth = 3),
         axis.line.y = element_line(colour = "green4", 
                                    linewidth = 3))
   # dev.off()
   if (i < 10) {
-    ggsave(paste0("figure/test0",i, ".png"), width = spe, height = spe)
+    ggsave(paste0("figure/test0",i, ".png"), width = spe/2, height = spe/2)
   }
   else {
-    ggsave(paste0("figure/test",i, ".png"), width = spe, height = spe)
+    ggsave(paste0("figure/test",i, ".png"), width = spe/2, height = spe/2)
   }
 }
 
 ```
+
+```{r}
+plot(test_1$abudance$abundance_resource[,3])
+```
+
+```{r}
+plot(test_1$abudance$abundance_consumer[,5])
+```
+
+```{r}
+apply(test_1$abudance$abundance_resource, 1, min)
+apply(test_1$abudance$abundance_resource, 2, min)
+test_1$abudance$abundance_resource
+```
+
+
+## Beta diversity
+
+## for abudance
+
+```{r}
+
+frame = 10
+spe = 10
+# test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame)
+
+full_abund <- cbind(test_1$abudance$abundance_resource, test_1$abudance$abundance_consumer)
+
+beta_div_abund <- matrix(,nrow = 10, ncol = 10)
+for (i in 1:10) {
+  for (j in i:10) {
+  # for (j in 1:10) {
+        c <- apply(full_abund[c(i, j), ], 2, min)
+    beta_div_abund[i, j] <- 1- (2*sum(c) / (sum(full_abund[i,]) + sum(full_abund[j, ])))
+  }
+}
+
+beta_div_abund[beta_div_abund ==0] <- NA
+beta_div_abund
+```
+
+## for links
+
+```{r}
+library(abind)
+# apply(abind(test_1$network[[1]], test_1$network[[2]], along = 3), c(1, 2), min)
+
+beta_div_link <- matrix(,nrow = 10, ncol = 10)
+for (i in 1:10) {
+  for (j in i:10) {
+  # for (j in 1:10) {
+    c <- apply(abind(test_1$network[[i]], test_1$network[[j]], along = 3), c(1, 2), min)
+    beta_div_link[i, j] <- 1- (2*sum(c) / (sum(test_1$network[[i]]) + sum(test_1$network[[j]])))
+  }
+}
+
+beta_div_link[beta_div_link == 0] <- NA
+beta_div_link
+```
+
+```{r}
+# cor(beta_div_abund, beta_div_link, method = "pearson", use = "pairwise.complete.obs")
+
+cor(na.omit(as.vector(beta_div_abund)), na.omit(as.vector(beta_div_link)), method = "pearson")
+```
+
+```{r}
+# Création de deux matrices d'exemple
+matrice1 <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2)
+matrice2 <- matrix(c(6, 5, 4, 3, 2, 1), nrow = 2)
+
+# Calcul de la corrélation de Pearson entre les deux matrices
+correlation_pearson <- cor(matrice1, matrice2, method = "pearson")
+
+# Affichage du résultat
+print(correlation_pearson)
+
+```
+
