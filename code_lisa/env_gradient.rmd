@@ -274,7 +274,7 @@ test_1$abudance$abundance_resource
 ## for abudance
 
 ```{r}
-library(abind)
+library(abind) # pour facilement fusionner des matrices 2D en une 3D
 
 cor_abund_grad <- function(frame = 10, spe = 10){
   generated_netw <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame)
@@ -283,12 +283,12 @@ cor_abund_grad <- function(frame = 10, spe = 10){
   full_abund <- cbind(generated_netw$abudance$abundance_resource, generated_netw$abudance$abundance_consumer)
   beta_div_abund <- matrix(,nrow = frame, ncol = frame)
   for (i in 1:frame) {
-    for (j in i:frame) {
-          c <- apply(full_abund[c(i, j), ], 2, min)
-      beta_div_abund[i, j] <- 1- (2*sum(c) / (sum(full_abund[i,]) + sum(full_abund[j, ])))
+    for (j in i:frame) { # to have only the upper half
+          c <- apply(full_abund[c(i, j), ], 2, min) # sum of the lesser values in shared between both samples
+      beta_div_abund[i, j] <- 1- (2*sum(c) / (sum(full_abund[i,]) + sum(full_abund[j, ]))) # sum of the abundances of both samples
     }
   }
-  beta_div_abund[beta_div_abund ==0] <- NA
+  beta_div_abund[beta_div_abund ==0] <- NA # to remove the identity diagonal
   
   ### Beta Diversity links ###
   beta_div_link <- matrix(,nrow = frame, ncol = frame)
@@ -318,6 +318,7 @@ cor_abund_grad <- function(frame = 10, spe = 10){
 ```
 
 ```{r}
-network <- cor_abund_grad(frame = 60, spe = 10)
+network <- cor_abund_grad(frame = 100, spe = 20)
+network$correlation
 plot(network$env_grad, network$abundance, ylim = c(0, 1))
 ```
