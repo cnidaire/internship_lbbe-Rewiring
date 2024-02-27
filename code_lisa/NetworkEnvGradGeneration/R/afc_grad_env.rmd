@@ -1,0 +1,79 @@
+---
+title: "afc_grad_env"
+author: "Rémi"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(NetworkEnvGradGeneration)
+library(ade4)
+
+getwd()
+setwd("../../")
+getwd()
+source("plot.R")
+source("formatting.R")
+library(ggplot2)
+```
+
+# Analysing changes in abundance with AFC
+
+```{r}
+set.seed(0)
+nb_frame <- 100
+spe_resource <-15; spe_consum <- 20
+simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum, nb_location = nb_frame)
+
+row.names(simulated_network$abudance$abundance_resource) <- paste0("site",1:nb_frame)
+row.names(simulated_network$abudance$abundance_consumer) <- paste0("site",1:nb_frame)
+```
+
+```{r}
+plot_matrix(data.frame(simulated_network$network[[1]]), 
+          max_size = 15) +
+theme(axis.text = element_blank(),
+      axis.text.x.top = element_blank(),
+      axis.title = element_blank(),
+      axis.ticks = element_blank(),
+      panel.grid.major = element_blank(),
+      legend.position="none",
+      plot.background = element_blank(),
+      axis.line.x.top = element_line(colour = "darkorange4",
+                                     linewidth = 3),
+      axis.line.y = element_line(colour = "green4", 
+                                 linewidth = 3))
+```
+
+```{r}
+table.value(simulated_network$abudance$abundance_resource)
+```
+
+```{r}
+table.value(simulated_network$abudance$abundance_consumer)
+```
+
+```{r}
+afp = dudi.coa(simulated_network$abudance$abundance_resource, scannf = F, nf = 2)
+scatter(afp)
+```
+
+Ici, on a deux eigenvalues dominantes ainsi c'est top pour le graphique en 2D.
+
+On observe bien un effet fer à cheval (ou aussi dit guttman) ce qui est rassurant vu que l'on a généré les données suivant un gradient.
+
+L'effet Guttman est une conséquence d'une forte liaison entre les variables, et peut s'expliquer par l'existence d'un facteur beaucoup plus important que les autres, c'est à dire que l'un des facteurs dépend de manière quadratique du premier.
+
+Cela permet d'obtenir les sites que se ressemblent (1, 2, 10 ici par exemple) ainsi que les espèces aillant des profils d'abondaznces se ressemblant (toutes sauf V3, V9, V10).
+
+# K-table
+
+```{r}
+
+```
+
+
