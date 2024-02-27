@@ -320,5 +320,16 @@ cor_abund_grad <- function(frame = 10, spe = 10){
 ```{r}
 network <- cor_abund_grad(frame = 100, spe = 20)
 network$correlation
-plot(network$env_grad, network$abundance, ylim = c(0, 1))
+plot(network$env_grad, network$abundance, ylim = c(0, 1), ylab = "Beta div abundance", xlab = "Distance grad env")
 ```
+La corélation entre les abondances et les liens sont quasi toujours > 80% et souvent > 90%.
+
+```{r}
+correlation_distrib <- vector(, length = 70)
+for (i in 1:70) {
+  network <- cor_abund_grad(frame = 10, spe = 20)
+  correlation_distrib[i] <- network$correlation
+}
+hist(correlation_distrib, breaks = 10, xlim = c(0.6,1))
+```
+
