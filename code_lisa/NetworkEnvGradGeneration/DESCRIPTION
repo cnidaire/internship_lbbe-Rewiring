@@ -1,0 +1,14 @@
+Package: NetworkEnvGradGeneration
+Type: Package
+Title: Generate networks along environmental an gradient
+Version: 0.1.0
+Author: Rémi Legrand
+Maintainer: Rémi Legrand <remi.legrand38@gmail.com>
+Description: Generate random networks along an environmental gradient.To do so:
+    - genrate random niches for each species uniformly distributed along this gradient
+    - induce abundances from it
+    - make trait matching
+    - generate a theoritical interaction matrix
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
