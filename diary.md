@@ -62,11 +62,13 @@ Cependant il faudrait qu'on le voit tous ensemble pour voir si il y aurait vraim
 # 26 février
 
 Aujourd'hui j'ai pu discuter avec Stéphane, ce qui'il faudrait faire:
-- jouer avec les largeurs de gradients ainsi que avec les variances des niches
-- ajouter une légère correlation entre de certains traits avec le gradient environnemental.
-- appliquer une AFC sur les réseaux générés
-- plotter la distance suivant le gradient en fonction de la distance calculée via la Beta diversité et peut aussi être fait suivant les métriques usuelles pour caractériser un réseau écologique
+- [ ] jouer avec les largeurs de gradients ainsi que avec les variances des niches
+- [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.
+- [ ] appliquer une AFC sur les réseaux générés
+- [x] plotter la distance suivant le gradient en fonction de la distance calculée via la Beta diversité et peut aussi être fait suivant les métriques usuelles pour caractériser un réseau écologique
+- [ ] refaire la même chose en rajoutant une couche avec la loi polynomiale afin de simuler l’échantillonnage.
 - Une théorie serait:
 	- deux réseaux très différents: turnover entre espèces
 	- deux réseaux quasi identiques: turnover-trait matching et biais échantillonnage.
-	
+
+J'ai passé une très bonne journée parce que Léa et Emma étaient là (hier c'était triste)
