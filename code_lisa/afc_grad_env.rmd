@@ -24,17 +24,33 @@ library(ggplot2)
 # Analysing changes in abundance with AFC
 
 ```{r}
-# set.seed(0)
-nb_frame <- 10
+set.seed(0)
+nb_frame <- 60
 spe_resource <-15; spe_consum <- 20
-simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum, nb_location = nb_frame)
+simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum, nb_location = nb_frame, ninter = 200)
 
 row.names(simulated_network$abudance$abundance_resource) <- paste0("site",1:nb_frame)
 row.names(simulated_network$abudance$abundance_consumer) <- paste0("site",1:nb_frame)
 ```
 
 ```{r}
-plot_matrix(data.frame(simulated_network$network[[1]]), 
+plot_matrix(data.frame(simulated_network$th_network[[30]]), 
+          max_size = 15) +
+theme(axis.text = element_blank(),
+      axis.text.x.top = element_blank(),
+      axis.title = element_blank(),
+      axis.ticks = element_blank(),
+      panel.grid.major = element_blank(),
+      legend.position="none",
+      plot.background = element_blank(),
+      axis.line.x.top = element_line(colour = "darkorange4",
+                                     linewidth = 3),
+      axis.line.y = element_line(colour = "green4", 
+                                 linewidth = 3))
+```
+
+```{r}
+plot_matrix(data.frame(simulated_network$obs_network[[30]]), 
           max_size = 15) +
 theme(axis.text = element_blank(),
       axis.text.x.top = element_blank(),
@@ -61,7 +77,7 @@ table.value(simulated_network$abudance$abundance_consumer)
 afc = dudi.coa(simulated_network$abudance$abundance_resource, scannf = F, nf = 2)
 scatter(afc)
 
-scatter(dudi.coa(simulated_network$network[[1]], scannf = F, nf = 2))
+scatter(dudi.coa(simulated_network$th_network[[1]], scannf = F, nf = 2))
 ```
 
 Ici, on a deux eigenvalues dominantes ainsi c'est top pour le graphique en 2D.
@@ -78,12 +94,12 @@ Je crois qu'il faut que je fasse une Foucart CoA
 
 ```{r}
 # kplot()
-k_table_format <- lapply(simulated_network$network, as.data.frame)
+k_table_format <- lapply(simulated_network$th_network, as.data.frame)
 
 class(k_table_format[[1]])
 
-# is.ktab(lapply(dudi.ktable simulated_network$network, ))
+# is.ktab(lapply(dudi.ktable simulated_network$th_network, ))
 ?dudi.ktab
-# as.data.frame(simulated_network$network[[1]])
-plot(foucart(k_table_format))
+# as.data.frame(simulated_network$th_network[[1]])
+# plot(foucart(k_table_format))
 ```
