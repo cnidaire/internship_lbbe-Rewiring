@@ -18,8 +18,8 @@
 ##################### Environmental Gradient and abundances along this gradient #####################
 
 abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
-                           mean_tol_env = 2, sd_tol_env = 10,
-                           env_grad_min = 0, env_grad_max = 12) {
+                           mean_tol_env = 1, sd_tol_env = 1,
+                           env_grad_min = 0, env_grad_max = 10) {
   ### resource gradient ###
   env_grad_resource <- array(0, dim = c(nb_resource, 2)) # two col, 1st: mean, 2nd: sd
   # Generate environmental optima for each species
@@ -36,13 +36,17 @@ abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
   env_grad_consumer[, 2] <- abs(rnorm(nb_consumer, mean = mean_tol_env, sd = sd_tol_env))
 
   ### Obtain abundances from a given position along the gradient ###
-  site_coordonates <- seq(from = env_grad_min, to = env_grad_max, by = (env_grad_max - env_grad_min) / (nb_location - 1))
+  site_coordonates <- seq(from = env_grad_min,
+                          to = env_grad_max,
+                          by = (env_grad_max - env_grad_min) / (nb_location - 1))
 
   ### Abundance Resource ###
   abund_resource <- array(0, c(nb_location, nb_resource))
   for (site in 1:nb_location) {
     for (resource in 1:nb_resource) {
-      abund_resource[site, resource] <- dnorm(site_coordonates[site], mean = env_grad_resource[resource, 1], sd = env_grad_resource[resource, 2])
+      abund_resource[site, resource] <- dnorm(site_coordonates[site],
+                                              mean = env_grad_resource[resource, 1],
+                                              sd = env_grad_resource[resource, 2])
     }
   }
 
@@ -50,7 +54,9 @@ abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
   abund_consumer <- array(0, c(nb_location, nb_consumer))
   for (site in 1:nb_location) {
     for (consumer in 1:nb_consumer) {
-      abund_consumer[site, consumer] <- dnorm(site_coordonates[site], mean = env_grad_consumer[consumer, 1], sd = env_grad_consumer[consumer, 2])
+      abund_consumer[site, consumer] <- dnorm(site_coordonates[site],
+                                              mean = env_grad_consumer[consumer, 1],
+                                              sd = env_grad_consumer[consumer, 2])
     }
   }
 
@@ -157,16 +163,48 @@ int_count_th <- function(location, abund_resource, abund_consumer, p_matching, d
   return(p_mix)
 }
 
+##################### Sampling with Multinomial #####################
+
+# Need to add ninter to the arguments of the function
+
+# Final community matrix (with counts) ---
+# Then we need to sample observations in this web
+# The method is inspired by Fründ et al 2016
+# We sample ninter interactions from a multinomial distribution, where the probability to
+# draw each interaction depends on the probability taking into account abundance and matching
+
+sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
+  obs_network_vect <- stats::rmultinom(
+    n = 1,
+    size = ninter,
+    prob = as.numeric(th_network)
+  )
+  obs_network <- matrix(obs_network_vect, nrow = nb_resource, byrow = FALSE) # Reformat to a matrix
+  return(obs_network)
+}
+# ab_obs_vec <- stats::rmultinom(
+#   n = 1,
+#   size = ninter,
+#   prob = as.numeric(p_mix))
+# ab_obs <- matrix(ab_obs_vec, nrow = nsite, byrow = FALSE) # Reformat to a matrix
+
+  # Select traits only species that have been observed
+  # p <- p[colkeep, , ]
+  # x <- x[rowkeep, ]
+
+
+
 
 ##################### Master function #####################
 
 env_grad_netw <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
-                          mean_tol_env = 2, sd_tol_env = 10,
-                          env_grad_min = 0, env_grad_max = 12,
+                          mean_tol_env = 1, sd_tol_env = 1,
+                          env_grad_min = 0, env_grad_max = 10,
                           le_grad = 100, ratio_grad = 0.8,
                           buffer = 1,
                           mean_tol = 2, sd_tol = 10,
-                          delta = 1) {
+                          delta = 1,
+                          ninter = 100) {
   abundance <- abund_env_grad(
     nb_resource = nb_resource, nb_consumer = nb_consumer, nb_location = nb_location,
     mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env,
@@ -182,6 +220,10 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
   for (i in 1:nb_location) {
     th_env_netw[[i]] <- int_count_th(i, abund_resource = abundance$abundance_resource, abund_consumer = abundance$abundance_consumer, p_matching = trait)
   }
-  return(list(network = th_env_netw, abudance = abundance))
+  obs_env_netw <- list()
+  for (i in 1:nb_location) {
+    obs_env_netw[[i]] <- sampling(th_env_netw[[i]], ninter = ninter, nb_resource = nb_resource)
+  }
+  return(list(abudance = abundance, th_network = th_env_netw, obs_network = obs_env_netw))
 }
 
