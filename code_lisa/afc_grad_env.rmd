@@ -14,7 +14,7 @@ library(NetworkEnvGradGeneration)
 library(ade4)
 
 getwd()
-setwd("../../")
+# setwd("../../")
 getwd()
 source("plot.R")
 source("formatting.R")
@@ -24,8 +24,8 @@ library(ggplot2)
 # Analysing changes in abundance with AFC
 
 ```{r}
-set.seed(0)
-nb_frame <- 100
+# set.seed(0)
+nb_frame <- 10
 spe_resource <-15; spe_consum <- 20
 simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum, nb_location = nb_frame)
 
@@ -58,8 +58,10 @@ table.value(simulated_network$abudance$abundance_consumer)
 ```
 
 ```{r}
-afp = dudi.coa(simulated_network$abudance$abundance_resource, scannf = F, nf = 2)
-scatter(afp)
+afc = dudi.coa(simulated_network$abudance$abundance_resource, scannf = F, nf = 2)
+scatter(afc)
+
+scatter(dudi.coa(simulated_network$network[[1]], scannf = F, nf = 2))
 ```
 
 Ici, on a deux eigenvalues dominantes ainsi c'est top pour le graphique en 2D.
@@ -68,12 +70,20 @@ On observe bien un effet fer à cheval (ou aussi dit guttman) ce qui est rassura
 
 L'effet Guttman est une conséquence d'une forte liaison entre les variables, et peut s'expliquer par l'existence d'un facteur beaucoup plus important que les autres, c'est à dire que l'un des facteurs dépend de manière quadratique du premier.
 
-Cela permet d'obtenir les sites que se ressemblent (1, 2, 10 ici par exemple) ainsi que les espèces aillant des profils d'abondaznces se ressemblant (toutes sauf V3, V9, V10).
+Cela permet d'obtenir les sites que se ressemblent ainsi que les espèces aillant des profils d'abondances se ressemblant.
 
 # K-table
 
+Je crois qu'il faut que je fasse une Foucart CoA
+
 ```{r}
+# kplot()
+k_table_format <- lapply(simulated_network$network, as.data.frame)
 
+class(k_table_format[[1]])
+
+# is.ktab(lapply(dudi.ktable simulated_network$network, ))
+?dudi.ktab
+# as.data.frame(simulated_network$network[[1]])
+plot(foucart(k_table_format))
 ```
-
-
