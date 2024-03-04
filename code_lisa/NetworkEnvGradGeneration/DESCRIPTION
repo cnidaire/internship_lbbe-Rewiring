@@ -1,14 +1,21 @@
 Package: NetworkEnvGradGeneration
 Type: Package
-Title: Generate networks along environmental an gradient
+Title: Generate networks along environmental gradient
 Version: 0.1.0
 Author: Rémi Legrand
 Maintainer: Rémi Legrand <remi.legrand38@gmail.com>
-Description: Generate random networks along an environmental gradient.To do so:
-    - genrate random niches for each species uniformly distributed along this gradient
-    - induce abundances from it
-    - make trait matching
-    - generate a theoritical interaction matrix
-License: Apache-2.0
+Description: Generate random networks along an environmental gradient. To do so:
+    - Generate random niches for each species uniformly distributed along this gradient.
+    - Induce abundances from it.
+    - Make trait matching.
+    - Generate a theoretical interaction matrix.
+    - Sample using multinomial.
+License: Apache License (== 2.0)
 Encoding: UTF-8
 LazyData: true
+Imports:
+    mvtnorm
+RoxygenNote: 7.3.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

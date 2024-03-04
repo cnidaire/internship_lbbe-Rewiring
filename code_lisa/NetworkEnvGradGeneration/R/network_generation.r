@@ -17,13 +17,36 @@
 
 ##################### Environmental Gradient and abundances along this gradient #####################
 
+#' Environmental gradient and Species abundances
+#'
+#' @description
+#' Generate the environmental gradient and abundances for the species along this gradient,
+#' separately for the consumer and the resources.
+#'
+#' @param nb_resource Numeric, Number of resources in the bipartite network
+#' @param nb_consumer Numeric, Number of consumer in the bipartite network
+#' @param nb_location Numeric, Number of location along the gradient (i.e. number of networks)
+#' @param mean_tol_env Numeric, Mean of the standard deviation of the niche tolerance
+#' @param sd_tol_env Numeric, Standard deviation of the standard deviation of the niche tolerance
+#' @param env_grad_min Numeric, Maximum value of the gradient in arbitrary unit
+#' @param env_grad_max Numeric, Minimum value of the gradient in arbitrary unit
+#'
+#' @return List, Two arrays in a list containing respectively the resource and consumer abundance along the gradient
+#'
+#' @export
+#'
+#' @examples
+#' abund_env_grad(nb_resource = 40, nb_consumer = 100, nb_location = 3,
+#'                mean_tol_env = 1, sd_tol_env = 1,
+#'                env_grad_min = 0, env_grad_max = 10)
+
 abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
                            mean_tol_env = 1, sd_tol_env = 1,
                            env_grad_min = 0, env_grad_max = 10) {
   ### resource gradient ###
   env_grad_resource <- array(0, dim = c(nb_resource, 2)) # two col, 1st: mean, 2nd: sd
   # Generate environmental optima for each species
-  env_grad_resource[, 1] <- runif(nb_resource, min = env_grad_min, max = env_grad_max)
+  env_grad_resource[, 1] <- sort(runif(nb_resource, min = env_grad_min, max = env_grad_max))
   # Generate random niche widths for each species
   env_grad_resource[, 2] <- abs(rnorm(nb_resource, mean = mean_tol_env, sd = sd_tol_env))
 
@@ -31,7 +54,7 @@ abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
   ### Consumer gradient ###
   env_grad_consumer <- array(0, dim = c(nb_consumer, 2)) # two col, 1st: mean, 2nd: sd
   # Generate environmental optima for each species
-  env_grad_consumer[, 1] <- runif(nb_consumer, min = env_grad_min, max = env_grad_max)
+  env_grad_consumer[, 1] <- sort(runif(nb_consumer, min = env_grad_min, max = env_grad_max))
   # Generate random niche widths for each species
   env_grad_consumer[, 2] <- abs(rnorm(nb_consumer, mean = mean_tol_env, sd = sd_tol_env))
 
@@ -70,9 +93,26 @@ abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
 
 ##################### Trait matching matrix #####################
 
+#' Trait matching matrix
+#'
+#' @description
+#' Draw 2 random traits with different optimums and variance for each species and then induce a trait
+#' matching probability for each couple of species in a Matrix.
+#'
+#' @param le_grad Numeric, Higher bound of the first trait gradient
+#' @param ratio_grad Numeric between 0 and 1, Ratio between the first and second gradient
+#' @param mean_tol Numeric, Mean of the standard deviation of the trait tolerance
+#' @param sd_tol  Numeric, Standard deviation of the standard deviation of the trait tolerance
+#' @param buffer Numeric, Enable the mean of the trait to fall outside of the gradient by the buffer value
+#' @param nb_resource Numeric, Number of resource in the bipartite network
+#' @param nb_consumer Numeric, Number of consumer in the bipartite network
+#'
+#' @return Matrix, Array containing the probabilities of species interactions only based on trait matching
+#'
+#' @export
 trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
-                            buffer = 1,
                             mean_tol = 2, sd_tol = 10,
+                            buffer = 1,
                             nb_resource = 40, nb_consumer = 100) {
   ### Initialize the gradient for axis 2 ###
   # The length of the second gradient is a fraction of the length of the first gradient
@@ -140,6 +180,23 @@ trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
 
 ##################### Mix abundance and trait matching #####################
 
+#' Mix abundance and trait matching
+#'
+#' @description
+#' Take in account the probability of matching only by meeting randomly (with the abundances) and the
+#' of interacting due to trait matching.
+#'
+#' @param location Numeric, Number of location along the gradient (i.e. number of networks)
+#' @param abund_resource Array, resource abundance along the gradient
+#' @param abund_consumer Array, consumer abundance along the gradient
+#' @param p_matching Matrix, Array containing the probabilities of species interactions only based on trait matching
+#' @param delta Numeric, weight of trait matching relatively to abundance
+#'
+#' @return Matrix, Theoretical interaction probability taking in account trait matching and abundances
+#'
+#' @export
+
+
 int_count_th <- function(location, abund_resource, abund_consumer, p_matching, delta = 1) {
   ### Theoretical interaction count (based on abundances) ###
   # This code makes sense only for interaction matrices because the abundance of
@@ -173,6 +230,21 @@ int_count_th <- function(location, abund_resource, abund_consumer, p_matching, d
 # We sample ninter interactions from a multinomial distribution, where the probability to
 # draw each interaction depends on the probability taking into account abundance and matching
 
+#' Sampling with Multinomial
+#'
+#' @description
+#' Using the multinomial law we can sample the theoretical network according to the probability of two
+#' species interaction's probability.
+#'
+#' @param th_network  Matrix, Theoretical interaction probability taking in account trait matching and abundances
+#' @param ninter Numeric, number of interactions observed on the network
+#' @param nb_resource Numeric, Number of resources in the bipartite network
+#'
+#' @return  Matrix, Observed interactions across an environmental gradient
+#'
+#' @export
+
+
 sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
   obs_network_vect <- stats::rmultinom(
     n = 1,
@@ -182,20 +254,36 @@ sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
   obs_network <- matrix(obs_network_vect, nrow = nb_resource, byrow = FALSE) # Reformat to a matrix
   return(obs_network)
 }
-# ab_obs_vec <- stats::rmultinom(
-#   n = 1,
-#   size = ninter,
-#   prob = as.numeric(p_mix))
-# ab_obs <- matrix(ab_obs_vec, nrow = nsite, byrow = FALSE) # Reformat to a matrix
-
-  # Select traits only species that have been observed
-  # p <- p[colkeep, , ]
-  # x <- x[rowkeep, ]
-
 
 
 
 ##################### Master function #####################
+
+#' Network sampling generation across an environmental gradient
+#'
+#' @description
+#' Generate and environmental gradient and random trait matching to create an theoretical interaction
+#' probability and then sample this theoretical network to simulate random observation.
+#'
+#' @param nb_resource Numeric, Number of resources in the bipartite network
+#' @param nb_consumer Numeric, Number of consumers in the bipartite network
+#' @param nb_location Numeric, Number of location along the gradient (i.e. number of networks)
+#' @param mean_tol_env Numeric, Mean of the standard deviation of the niche tolerance
+#' @param sd_tol_env Numeric, Mean of the standard deviation of the niche tolerance
+#' @param env_grad_min Numeric, Maximum value of the gradient in arbitrary unit
+#' @param env_grad_max Numeric, Minimum value of the gradient in arbitrary unit
+#' @param le_grad Numeric, Higher bound of the first trait gradient
+#' @param ratio_grad Numeric between 0 and 1, Ratio between the first and second gradient
+#' @param buffer Numeric, Enable the mean of the trait to fall outside of the gradient by the buffer value
+#' @param mean_tol Numeric, Mean of the standard deviation of the trait tolerance
+#' @param sd_tol Numeric, Standard deviation of the standard deviation of the trait tolerance
+#' @param delta Numeric, weight of trait matching relatively to abundance
+#' @param ninter Numeric, number of interactions observed on the network
+#'
+#' @return List of matrix, Observed interactions across an environmental gradient
+#'
+#' @export
+
 
 env_grad_netw <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
                           mean_tol_env = 1, sd_tol_env = 1,
