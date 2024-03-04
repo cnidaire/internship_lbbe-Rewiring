@@ -88,5 +88,22 @@ Fin de la doc sur le packet
 # Todo list
 
 - [ ] jouer avec les largeurs de gradients ainsi que avec les variances des niches
+- [ ] faire en sorte que les abondance ne dépendent plus que de la variance de la niche mais aussi d'une autre variable puis rajouter de la variabilité avec un rpois de la valeur obtenue
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.
 - [ ] ne plus trier en fonction des optimums de niche théoriques mais en fonction de leurs ordre sur le premier axe de l'AFC. En théorie même résultat mais c'est ce que l'on ferait sur des données de terrain.
+- [ ] données Miele et Vasquez
+- [ ] métrique pour réseaux valués bipartis
+- [ ] différentes approches comme AFC, métriques (nestedness, motifs, modularity, degree moyen), beta div
+- [ ] lire bersier et al 2012 et abundances and generalisaztion in mutualistic networks solving the chicken and egg dilema
+
+inférer le vrai réseau et comparer en se basant sur le vrai réseau obtenu avec l'AFC et monter que même si le réseau observé est différent, le trait matching est similaire
+
+récupérer les trait matching théorique
+
+obtenir les paramètres de largeur de niche et la meme chose pour les traits
+
+données caradonna
+
+correlation entre le co / le li et les traits
+
+jouer avec le delta et peut être les faire varier (genre les fixer à 0 pour la moité) et regarder si il est toujours possible d'obtenir le trait matching à partir de ça.

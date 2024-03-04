@@ -1,0 +1,36 @@
+---
+title: "data_vincent"
+author: "Rémi"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(igraph)
+```
+
+
+The R dataset consists of the bipartite plant-pollinator interaction matrices (*bipartite.networks*) for 18 subseas (3 subseasons per 6 years), 18 subseasonal dependence matrices (*directed.networks*), and the plant species (*plant.id*) and pollinator species (*pollinator.id*) identification codes. The code used for the analyses (miele-JAE.R) is also provided.
+
+18 seasons, 59 plants and 196 pollinators
+
+```{r}
+season_1 <- directed.networks[1, , ]
+# View(season_1)
+which(season_1[2,] != 0)# pas beaucoup differents de 0
+
+# to keep only the connected species
+test <- season_1[which(rowSums(season_1) != 0), which(colSums(season_1) != 0)]
+
+plot(graph_from_incidence_matrix(test), vertex.size=5)
+```
+
+```{r}
+pollinator.id
+plant.id
+```
+
