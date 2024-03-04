@@ -26,6 +26,8 @@
 #' @param nb_resource Numeric, Number of resources in the bipartite network
 #' @param nb_consumer Numeric, Number of consumer in the bipartite network
 #' @param nb_location Numeric, Number of location along the gradient (i.e. number of networks)
+#' @param know_env_grad_pos Boolean, If True: then evenly spaced sampling along the environmental
+#' gradient, otherwise, uniformly drawn position along the gradient
 #' @param mean_tol_env Numeric, Mean of the standard deviation of the niche tolerance
 #' @param sd_tol_env Numeric, Standard deviation of the standard deviation of the niche tolerance
 #' @param env_grad_min Numeric, Maximum value of the gradient in arbitrary unit
@@ -40,7 +42,8 @@
 #'                mean_tol_env = 1, sd_tol_env = 1,
 #'                env_grad_min = 0, env_grad_max = 10)
 
-abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
+abund_env_grad <- function(know_env_grad_pos = TRUE,
+                           nb_resource = 40, nb_consumer = 100, nb_location = 3,
                            mean_tol_env = 1, sd_tol_env = 1,
                            env_grad_min = 0, env_grad_max = 10) {
   ### resource gradient ###
@@ -59,9 +62,14 @@ abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
   env_grad_consumer[, 2] <- abs(rnorm(nb_consumer, mean = mean_tol_env, sd = sd_tol_env))
 
   ### Obtain abundances from a given position along the gradient ###
-  site_coordonates <- seq(from = env_grad_min,
-                          to = env_grad_max,
-                          by = (env_grad_max - env_grad_min) / (nb_location - 1))
+  if (know_env_grad_pos) {
+    site_coordonates <- seq(from = env_grad_min,
+                            to = env_grad_max,
+                            by = (env_grad_max - env_grad_min) / (nb_location - 1))
+  } else {
+    site_coordonates <- sort(runif(n = nb_location,
+                                   min = env_grad_min, max = env_grad_max))
+  }
 
   ### Abundance Resource ###
   abund_resource <- array(0, c(nb_location, nb_resource))
@@ -268,6 +276,8 @@ sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
 #' @param nb_resource Numeric, Number of resources in the bipartite network
 #' @param nb_consumer Numeric, Number of consumers in the bipartite network
 #' @param nb_location Numeric, Number of location along the gradient (i.e. number of networks)
+#' @param know_env_grad_pos Boolean, If True: then evenly spaced sampling along the environmental
+#' gradient, otherwise, uniformly drawn position along the gradient
 #' @param mean_tol_env Numeric, Mean of the standard deviation of the niche tolerance
 #' @param sd_tol_env Numeric, Mean of the standard deviation of the niche tolerance
 #' @param env_grad_min Numeric, Maximum value of the gradient in arbitrary unit
@@ -285,7 +295,8 @@ sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
 #' @export
 
 
-env_grad_netw <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
+env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
+                          nb_location = 3, know_env_grad_pos = TRUE,
                           mean_tol_env = 1, sd_tol_env = 1,
                           env_grad_min = 0, env_grad_max = 10,
                           le_grad = 100, ratio_grad = 0.8,
@@ -294,7 +305,8 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
                           delta = 1,
                           ninter = 100) {
   abundance <- abund_env_grad(
-    nb_resource = nb_resource, nb_consumer = nb_consumer, nb_location = nb_location,
+    nb_resource = nb_resource, nb_consumer = nb_consumer,
+    nb_location = nb_location, know_env_grad_pos = know_env_grad_pos,
     mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env,
     env_grad_min = env_grad_min, env_grad_max = env_grad_max
   )

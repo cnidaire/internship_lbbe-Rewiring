@@ -8,6 +8,7 @@ env_grad_netw(
   nb_resource = 40,
   nb_consumer = 100,
   nb_location = 3,
+  know_env_grad_pos = TRUE,
   mean_tol_env = 1,
   sd_tol_env = 1,
   env_grad_min = 0,
@@ -27,6 +28,9 @@ env_grad_netw(
 \item{nb_consumer}{Numeric, Number of consumers in the bipartite network}
 
 \item{nb_location}{Numeric, Number of location along the gradient (i.e. number of networks)}
+
+\item{know_env_grad_pos}{Boolean, If True: then evenly spaced sampling along the environmental
+gradient, otherwise, uniformly drawn position along the gradient}
 
 \item{mean_tol_env}{Numeric, Mean of the standard deviation of the niche tolerance}
 
