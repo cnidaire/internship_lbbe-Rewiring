@@ -64,11 +64,23 @@ Cependant il faudrait qu'on le voit tous ensemble pour voir si il y aurait vraim
 Aujourd'hui j'ai pu discuter avec Stéphane, ce qui'il faudrait faire:
 - [ ] jouer avec les largeurs de gradients ainsi que avec les variances des niches
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.
-- [ ] appliquer une AFC sur les réseaux générés
+- [x] appliquer une AFC sur les réseaux générés
 - [x] plotter la distance suivant le gradient en fonction de la distance calculée via la Beta diversité et peut aussi être fait suivant les métriques usuelles pour caractériser un réseau écologique
-- [ ] refaire la même chose en rajoutant une couche avec la loi polynomiale afin de simuler l’échantillonnage.
+- [x] refaire la même chose en rajoutant une couche avec la loi polynomiale afin de simuler l’échantillonnage.
+- [x] tirer des positions uniformément sur le gradient environmental vu que en théorie on ne sais jamais notre position sur le gradient
 - Une théorie serait:
 	- deux réseaux très différents: turnover entre espèces
 	- deux réseaux quasi identiques: turnover-trait matching et biais échantillonnage.
 
 J'ai passé une très bonne journée parce que Léa et Emma étaient là (hier c'était triste)
+
+# 29 février
+mise en fonction de l’échantillonnage pour avoir des réseaux observés et avec des vraies valeurs
+
+# 1 mars
+
+je lit le bouquin d'Hadley Wickham sur la création de packages R pour m'assurer que au moins j'ai les bonnes pratiques et que ce que je fais sera réutilisable.
+
+# 4 mars
+
+Fin de la doc sur le packet
