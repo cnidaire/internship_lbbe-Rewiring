@@ -30,7 +30,7 @@ Based on [[Lau et al. - 2017 - Ecological network metrics opportunities for synt
 - connectance
 - trophic level
 
-based on the bipartite r package
+based on the [[doc_bipartite.pdf|bipartite r package]]:
 
 **network level:**
 - connectance
@@ -85,3 +85,9 @@ based on the bipartite r package
 - proportional generality
 - proportional generality
 - Bluthgen's discrimination/selectivity index
+
+![[network_indices.png]]
+
+based on [[Bersier et al. - 2002 - Quantitative Descriptors of Food-Web Matrices.pdf| Bersier 2012]]:
+
+Basically the same as previously but with fewer that a better explained
