@@ -12,7 +12,9 @@ abund_env_grad(
   mean_tol_env = 1,
   sd_tol_env = 1,
   env_grad_min = 0,
-  env_grad_max = 10
+  env_grad_max = 10,
+  magn_size_res = 1000,
+  magn_size_con = 100
 )
 }
 \arguments{
@@ -32,6 +34,10 @@ gradient, otherwise, uniformly drawn position along the gradient}
 \item{env_grad_min}{Numeric, Maximum value of the gradient in arbitrary unit}
 
 \item{env_grad_max}{Numeric, Minimum value of the gradient in arbitrary unit}
+
+\item{magn_size_res}{Numeric, Order of magnitude of size of a resource population}
+
+\item{magn_size_con}{Numeric, Order of magnitude of size of a consumer population}
 }
 \value{
 List, Two arrays in a list containing respectively the resource and consumer abundance along the gradient
@@ -43,5 +49,6 @@ separately for the consumer and the resources.
 \examples{
 abund_env_grad(nb_resource = 40, nb_consumer = 100, nb_location = 3,
                mean_tol_env = 1, sd_tol_env = 1,
-               env_grad_min = 0, env_grad_max = 10)
+               env_grad_min = 0, env_grad_max = 10,
+               magn_size_res = 1000, magn_size_con = 100)
 }

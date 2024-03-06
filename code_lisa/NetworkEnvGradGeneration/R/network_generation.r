@@ -32,6 +32,8 @@
 #' @param sd_tol_env Numeric, Standard deviation of the standard deviation of the niche tolerance
 #' @param env_grad_min Numeric, Maximum value of the gradient in arbitrary unit
 #' @param env_grad_max Numeric, Minimum value of the gradient in arbitrary unit
+#' @param magn_size_res Numeric, Order of magnitude of size of a resource population
+#' @param magn_size_con Numeric, Order of magnitude of size of a consumer population
 #'
 #' @return List, Two arrays in a list containing respectively the resource and consumer abundance along the gradient
 #'
@@ -40,12 +42,14 @@
 #' @examples
 #' abund_env_grad(nb_resource = 40, nb_consumer = 100, nb_location = 3,
 #'                mean_tol_env = 1, sd_tol_env = 1,
-#'                env_grad_min = 0, env_grad_max = 10)
+#'                env_grad_min = 0, env_grad_max = 10,
+#'                magn_size_res = 1000, magn_size_con = 100)
 
 abund_env_grad <- function(know_env_grad_pos = TRUE,
                            nb_resource = 40, nb_consumer = 100, nb_location = 3,
                            mean_tol_env = 1, sd_tol_env = 1,
-                           env_grad_min = 0, env_grad_max = 10) {
+                           env_grad_min = 0, env_grad_max = 10,
+                           magn_size_res = 1000, magn_size_con = 100) {
   ### resource gradient ###
   env_grad_resource <- array(0, dim = c(nb_resource, 2)) # two col, 1st: mean, 2nd: sd
   # Generate environmental optima for each species
@@ -75,9 +79,9 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   abund_resource <- array(0, c(nb_location, nb_resource))
   for (site in 1:nb_location) {
     for (resource in 1:nb_resource) {
-      abund_resource[site, resource] <- dnorm(site_coordonates[site],
-                                              mean = env_grad_resource[resource, 1],
-                                              sd = env_grad_resource[resource, 2])
+      abund_resource[site, resource] <- rpois(1, dnorm(site_coordonates[site],
+                                                       mean = env_grad_resource[resource, 1],
+                                                       sd = env_grad_resource[resource, 2]) * magn_size_res)
     }
   }
 
@@ -85,9 +89,9 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   abund_consumer <- array(0, c(nb_location, nb_consumer))
   for (site in 1:nb_location) {
     for (consumer in 1:nb_consumer) {
-      abund_consumer[site, consumer] <- dnorm(site_coordonates[site],
-                                              mean = env_grad_consumer[consumer, 1],
-                                              sd = env_grad_consumer[consumer, 2])
+      abund_consumer[site, consumer] <- rpois(1, dnorm(site_coordonates[site],
+                                                       mean = env_grad_consumer[consumer, 1],
+                                                       sd = env_grad_consumer[consumer, 2]) * magn_size_con)
     }
   }
 
@@ -282,6 +286,8 @@ sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
 #' @param sd_tol_env Numeric, Mean of the standard deviation of the niche tolerance
 #' @param env_grad_min Numeric, Maximum value of the gradient in arbitrary unit
 #' @param env_grad_max Numeric, Minimum value of the gradient in arbitrary unit
+#' @param magn_size_res Numeric, Order of magnitude of size of a resource population
+#' @param magn_size_con Numeric, Order of magnitude of size of a consumer population
 #' @param le_grad Numeric, Higher bound of the first trait gradient
 #' @param ratio_grad Numeric between 0 and 1, Ratio between the first and second gradient
 #' @param buffer Numeric, Enable the mean of the trait to fall outside of the gradient by the buffer value
@@ -299,6 +305,7 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
                           nb_location = 3, know_env_grad_pos = TRUE,
                           mean_tol_env = 1, sd_tol_env = 1,
                           env_grad_min = 0, env_grad_max = 10,
+                          magn_size_res = 1000, magn_size_con = 100,
                           le_grad = 100, ratio_grad = 0.8,
                           buffer = 1,
                           mean_tol = 2, sd_tol = 10,
@@ -308,7 +315,8 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
     nb_resource = nb_resource, nb_consumer = nb_consumer,
     nb_location = nb_location, know_env_grad_pos = know_env_grad_pos,
     mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env,
-    env_grad_min = env_grad_min, env_grad_max = env_grad_max
+    env_grad_min = env_grad_min, env_grad_max = env_grad_max,
+    magn_size_res = magn_size_res, magn_size_con = magn_size_con
   )
   trait <- trait_match_mat(
     le_grad = le_grad, ratio_grad = ratio_grad,

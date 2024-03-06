@@ -13,6 +13,8 @@ env_grad_netw(
   sd_tol_env = 1,
   env_grad_min = 0,
   env_grad_max = 10,
+  magn_size_res = 1000,
+  magn_size_con = 100,
   le_grad = 100,
   ratio_grad = 0.8,
   buffer = 1,
@@ -39,6 +41,10 @@ gradient, otherwise, uniformly drawn position along the gradient}
 \item{env_grad_min}{Numeric, Maximum value of the gradient in arbitrary unit}
 
 \item{env_grad_max}{Numeric, Minimum value of the gradient in arbitrary unit}
+
+\item{magn_size_res}{Numeric, Order of magnitude of size of a resource population}
+
+\item{magn_size_con}{Numeric, Order of magnitude of size of a consumer population}
 
 \item{le_grad}{Numeric, Higher bound of the first trait gradient}
 
