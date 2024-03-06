@@ -40,7 +40,8 @@ gradient, otherwise, uniformly drawn position along the gradient}
 \item{magn_size_con}{Numeric, Order of magnitude of size of a consumer population}
 }
 \value{
-List, Two arrays in a list containing respectively the resource and consumer abundance along the gradient
+List, Four arrays in a list containing respectively the resource and consumer abundance along the gradient,
+and the theoretical distribution of the niches for the resource and consumer.
 }
 \description{
 Generate the environmental gradient and abundances for the species along this gradient,

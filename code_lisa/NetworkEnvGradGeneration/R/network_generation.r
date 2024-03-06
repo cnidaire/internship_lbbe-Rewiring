@@ -35,7 +35,8 @@
 #' @param magn_size_res Numeric, Order of magnitude of size of a resource population
 #' @param magn_size_con Numeric, Order of magnitude of size of a consumer population
 #'
-#' @return List, Two arrays in a list containing respectively the resource and consumer abundance along the gradient
+#' @return List, Four arrays in a list containing respectively the resource and consumer abundance along the gradient,
+#' and the theoretical distribution of the niches for the resource and consumer.
 #'
 #' @export
 #'
@@ -98,7 +99,9 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   ### Results ###
   abundance <- list(
     abundance_resource = abund_resource,
-    abundance_consumer = abund_consumer
+    abundance_consumer = abund_consumer,
+    th_distrib_resource = env_grad_resource,
+    th_distrib_consumer = env_grad_consumer
   )
   return(abundance)
 }
@@ -119,7 +122,8 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
 #' @param nb_resource Numeric, Number of resource in the bipartite network
 #' @param nb_consumer Numeric, Number of consumer in the bipartite network
 #'
-#' @return Matrix, Array containing the probabilities of species interactions only based on trait matching
+#' @return List, Array containing the probabilities of species interactions only based on trait matching
+#' and then 2 Arrays containing the trait distribution of both traits respectively
 #'
 #' @export
 trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
@@ -139,7 +143,7 @@ trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
   # Initialize empty trait/environment values matrix
   x <- matrix(0, nrow = nb_resource, ncol = 2)
   # For each site, generate an environmental gradient value at random (uniform) (and sort them)
-  x[, 1] <- sort(runif(nb_resource, min = 0, max = le_grad))
+  x[, 1] <- runif(nb_resource, min = 0, max = le_grad)
   x[, 2] <- runif(nb_resource, min = gradmin2, max = gradmax2)
 
   ### Species niche/consumer niche ###
@@ -187,7 +191,10 @@ trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
   p_matching[is.na(p_matching)] <- 0
 
   ### Results ###
-  return(p_matching)
+  trait <- list(matching_matrix = p_matching,
+                trait_1 = x,
+                trait_2 =2)
+  return(trait)
 }
 
 ##################### Mix abundance and trait matching #####################
@@ -326,12 +333,15 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
   )
   th_env_netw <- list()
   for (i in 1:nb_location) {
-    th_env_netw[[i]] <- int_count_th(i, abund_resource = abundance$abundance_resource, abund_consumer = abundance$abundance_consumer, p_matching = trait)
+    th_env_netw[[i]] <- int_count_th(i,
+                                     abund_resource = abundance$abundance_resource,
+                                     abund_consumer = abundance$abundance_consumer,
+                                     p_matching = trait$matching_matrix)
   }
   obs_env_netw <- list()
   for (i in 1:nb_location) {
     obs_env_netw[[i]] <- sampling(th_env_netw[[i]], ninter = ninter, nb_resource = nb_resource)
   }
-  return(list(abudance = abundance, th_network = th_env_netw, obs_network = obs_env_netw))
+  return(list(abudance = abundance, th_network = th_env_netw, obs_network = obs_env_netw, trait = trait))
 }
 

@@ -30,7 +30,8 @@ trait_match_mat(
 \item{nb_consumer}{Numeric, Number of consumer in the bipartite network}
 }
 \value{
-Matrix, Array containing the probabilities of species interactions only based on trait matching
+List, Array containing the probabilities of species interactions only based on trait matching
+and then 2 Arrays containing the trait distribution of both traits respectively
 }
 \description{
 Draw 2 random traits with different optimums and variance for each species and then induce a trait
