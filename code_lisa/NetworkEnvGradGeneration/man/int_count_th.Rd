@@ -4,7 +4,13 @@
 \alias{int_count_th}
 \title{Mix abundance and trait matching}
 \usage{
-int_count_th(location, abund_resource, abund_consumer, p_matching, delta = 1)
+int_count_th(
+  location,
+  abund_resource,
+  abund_consumer,
+  matching_matrix,
+  delta = 1
+)
 }
 \arguments{
 \item{location}{Numeric, Number of location along the gradient (i.e. number of networks)}
@@ -13,7 +19,7 @@ int_count_th(location, abund_resource, abund_consumer, p_matching, delta = 1)
 
 \item{abund_consumer}{Array, consumer abundance along the gradient}
 
-\item{p_matching}{Matrix, Array containing the probabilities of species interactions only based on trait matching}
+\item{matching_matrix}{Matrix, Array containing the probabilities of species interactions only based on trait matching}
 
 \item{delta}{Numeric, weight of trait matching relatively to abundance}
 }

@@ -23,6 +23,8 @@
 #' Generate the environmental gradient and abundances for the species along this gradient,
 #' separately for the consumer and the resources.
 #'
+#' @importFrom stats runif rnorm dnorm rpois
+#'
 #' @param nb_resource Numeric, Number of resources in the bipartite network
 #' @param nb_consumer Numeric, Number of consumer in the bipartite network
 #' @param nb_location Numeric, Number of location along the gradient (i.e. number of networks)
@@ -114,6 +116,9 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
 #' Draw 2 random traits with different optimums and variance for each species and then induce a trait
 #' matching probability for each couple of species in a Matrix.
 #'
+#' @importFrom stats runif
+#' @importFrom mvtnorm dmvnorm
+#'
 #' @param le_grad Numeric, Higher bound of the first trait gradient
 #' @param ratio_grad Numeric between 0 and 1, Ratio between the first and second gradient
 #' @param mean_tol Numeric, Mean of the standard deviation of the trait tolerance
@@ -139,61 +144,61 @@ trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
   gradmin2_buffer <- -buffer + gradmin2
   gradmax2_buffer <- buffer + gradmax2
 
-  ### Environment/resource species trait gradient ###
+  ### Resource species trait gradient ###
   # Initialize empty trait/environment values matrix
-  x <- matrix(0, nrow = nb_resource, ncol = 2)
-  # For each site, generate an environmental gradient value at random (uniform) (and sort them)
-  x[, 1] <- runif(nb_resource, min = 0, max = le_grad)
-  x[, 2] <- runif(nb_resource, min = gradmin2, max = gradmax2)
+  trait_resource <- matrix(0, nrow = nb_resource, ncol = 2)
+  # For each site, generate an environmental gradient value at random (uniform)
+  trait_resource[, 1] <- runif(nb_resource, min = 0, max = le_grad)
+  trait_resource[, 2] <- runif(nb_resource, min = gradmin2, max = gradmax2)
 
-  ### Species niche/consumer niche ###
+  ### Consumer species trait gradient ###
   # Initialize an array for species optima and tolerances
   # The array has last dimension 2 (one for each trait)
-  p <- array(0, dim = c(nb_consumer, 2, 2))
+  trait_consumer <- array(0, dim = c(nb_consumer, 2, 2))
 
   # Fill array p
 
   # -> first dimension
   # Generate environmental optima for each species
-  p[, 1, 1] <- runif(nb_consumer, min = 0 - buffer, max = le_grad + buffer)
+  trait_consumer[, 1, 1] <- runif(nb_consumer, min = 0 - buffer, max = le_grad + buffer)
   # Generate random niche widths for each species
-  p[, 2, 1] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
+  trait_consumer[, 2, 1] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
   # -> second dimension
-  p[, 1, 2] <- runif(nb_consumer,
+  trait_consumer[, 1, 2] <- runif(nb_consumer,
                      min = gradmin2_buffer,
                      max = gradmax2_buffer
   )
-  p[, 2, 2] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
+  trait_consumer[, 2, 2] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
   ### Probability matrix (only matching) ###
   # Initialize empty community matrix
-  p_matching <- matrix(0, nrow = nrow(x), ncol = nb_consumer)
+  matching_matrix <- matrix(0, nrow = nrow(trait_resource), ncol = nb_consumer)
 
-  for (i in 1:nrow(x)) {
+  for (i in 1:nrow(trait_resource)) {
     for (j in 1:nb_consumer) {
       # Fill each cell with a "presence probability" or an "interaction probability"
       # from a multivariate normal law depending on:
       # - the matching between resource species trait and consumer species trait
       # - the matching between the site environmental value and the species niche optimum on this gradient
-      p_matching[i, j] <- mvtnorm::dmvnorm(x[i, ] - p[j, 1, ], sigma = diag(p[j, 2, ]^2))
+      matching_matrix[i, j] <- mvtnorm::dmvnorm(trait_resource[i, ] - trait_consumer[j, 1, ], sigma = diag(trait_consumer[j, 2, ]^2))
     }
   }
   # Transform negative values to zero probability
-  p_matching <- ifelse(p_matching > 0, p_matching, 0)
+  matching_matrix <- ifelse(matching_matrix > 0, matching_matrix, 0)
 
   # Make columns a proba distribution
   # - each species (column) is distributed in sites following a probability of choosing this site
   # - each consumer (column) chooses the resource according to a given proba of presence
-  p_matching <- sweep(p_matching, 2, STATS = apply(p_matching, 2, sum), FUN = "/")
+  matching_matrix <- sweep(matching_matrix, 2, STATS = apply(matching_matrix, 2, sum), FUN = "/")
 
   # Quick patch (in case there are species with zero obs that became NA at the division step)
-  p_matching[is.na(p_matching)] <- 0
+  matching_matrix[is.na(matching_matrix)] <- 0
 
   ### Results ###
-  trait <- list(matching_matrix = p_matching,
-                trait_1 = x,
-                trait_2 =2)
+  trait <- list(matching_matrix = matching_matrix,
+                trait_resource = trait_resource,
+                trait_consumer = trait_consumer)
   return(trait)
 }
 
@@ -208,7 +213,7 @@ trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
 #' @param location Numeric, Number of location along the gradient (i.e. number of networks)
 #' @param abund_resource Array, resource abundance along the gradient
 #' @param abund_consumer Array, consumer abundance along the gradient
-#' @param p_matching Matrix, Array containing the probabilities of species interactions only based on trait matching
+#' @param matching_matrix Matrix, Array containing the probabilities of species interactions only based on trait matching
 #' @param delta Numeric, weight of trait matching relatively to abundance
 #'
 #' @return Matrix, Theoretical interaction probability taking in account trait matching and abundances
@@ -216,7 +221,7 @@ trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
 #' @export
 
 
-int_count_th <- function(location, abund_resource, abund_consumer, p_matching, delta = 1) {
+int_count_th <- function(location, abund_resource, abund_consumer, matching_matrix, delta = 1) {
   ### Theoretical interaction count (based on abundances) ###
   # This code makes sense only for interaction matrices because the abundance of
   # resource species is a limiting factor here.
@@ -230,7 +235,7 @@ int_count_th <- function(location, abund_resource, abund_consumer, p_matching, d
 
   ### Probability matrix (matching and abundance) ###
   # these theoretical abundances of interactions must then be confronted to the probability of interactions
-  ab_mix <- ab_neutral * p_matching^delta # We multiply expected interaction number by trait matching
+  ab_mix <- ab_neutral * matching_matrix^delta # We multiply expected interaction number by trait matching
   # Create a vector of probabilities that takes into account the matching
   p_mix <- ab_mix / sum(ab_mix)
   p_mix[is.na(p_mix)] <- 0 # Handle divisions per zero
@@ -254,6 +259,8 @@ int_count_th <- function(location, abund_resource, abund_consumer, p_matching, d
 #' @description
 #' Using the multinomial law we can sample the theoretical network according to the probability of two
 #' species interaction's probability.
+#'
+#' @importFrom stats rmultinom
 #'
 #' @param th_network  Matrix, Theoretical interaction probability taking in account trait matching and abundances
 #' @param ninter Numeric, number of interactions observed on the network
@@ -284,6 +291,9 @@ sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
 #' Generate and environmental gradient and random trait matching to create an theoretical interaction
 #' probability and then sample this theoretical network to simulate random observation.
 #'
+#' @importFrom stats runif rnorm dnorm rpois rmultinom
+#' @importFrom mvtnorm dmvnorm
+#'
 #' @param nb_resource Numeric, Number of resources in the bipartite network
 #' @param nb_consumer Numeric, Number of consumers in the bipartite network
 #' @param nb_location Numeric, Number of location along the gradient (i.e. number of networks)
@@ -303,7 +313,10 @@ sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
 #' @param delta Numeric, weight of trait matching relatively to abundance
 #' @param ninter Numeric, number of interactions observed on the network
 #'
-#' @return List of matrix, Observed interactions across an environmental gradient
+#' @return List of matrix, Observed interactions across an environmental gradient,
+#' as well as the abundances and related distribution information,
+#' the theoretical network,
+#' the trait distribution and trait matching probabilities.
 #'
 #' @export
 
@@ -336,7 +349,7 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
     th_env_netw[[i]] <- int_count_th(i,
                                      abund_resource = abundance$abundance_resource,
                                      abund_consumer = abundance$abundance_consumer,
-                                     p_matching = trait$matching_matrix)
+                                     matching_matrix = trait$matching_matrix)
   }
   obs_env_netw <- list()
   for (i in 1:nb_location) {

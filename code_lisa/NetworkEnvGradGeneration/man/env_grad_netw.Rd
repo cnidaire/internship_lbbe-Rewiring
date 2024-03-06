@@ -61,7 +61,10 @@ gradient, otherwise, uniformly drawn position along the gradient}
 \item{ninter}{Numeric, number of interactions observed on the network}
 }
 \value{
-List of matrix, Observed interactions across an environmental gradient
+List of matrix, Observed interactions across an environmental gradient,
+as well as the abundances and related distribution information,
+the theoretical network,
+the trait distribution and trait matching probabilities.
 }
 \description{
 Generate and environmental gradient and random trait matching to create an theoretical interaction
