@@ -13,7 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(NetworkEnvGradGeneration)
 library(ade4)
 
-getwd()
 # setwd("../../")
 getwd()
 source("plot.R")
@@ -26,19 +25,15 @@ library(ggplot2)
 ```{r}
 # set.seed(0)
 nb_frame <- 10; env_grad_max = 10
-spe_resource <-15; spe_consum <- 25
-mean_tol_env = 1.5; sd_tol_env = 1
+spe_resource <-40; spe_consum <- 40
+mean_tol_env = 2; sd_tol_env = 4
 simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum,
-                                   nb_location = nb_frame, env_grad_max = env_grad_max, 
-                                   ninter = 200, 
+                                   nb_location = nb_frame, env_grad_max = env_grad_max,
+                                   know_env_grad_pos = T, ninter = 200, 
                                    mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env)
 
 row.names(simulated_network$abudance$abundance_resource) <- paste0("site",1:nb_frame)
 row.names(simulated_network$abudance$abundance_consumer) <- paste0("site",1:nb_frame)
-```
-
-```{r}
-
 ```
 
 
@@ -86,9 +81,10 @@ table.value(simulated_network$abudance$abundance_consumer)
 afc = dudi.coa(simulated_network$abudance$abundance_resource, scannf = F, nf = 2)
 scatter(afc)
 
-scatter(dudi.coa(simulated_network$th_network[[1]], scannf = F, nf = 2))
-# scatter(dudi.coa(simulated_network$obs_network[[1]], scannf = F, nf = 2))
-# je ne sais pas pourquoi ça ne fonctionne pas
+scatter(dudi.coa(simulated_network$obs_network[[1]], scannf = F, nf = 2))
+
+
+table.value(simulated_network$obs_network[[3]])
 ```
 
 ```{r}
@@ -110,13 +106,15 @@ Cela permet d'obtenir les sites que se ressemblent ainsi que les espèces aillan
 Je crois qu'il faut que je fasse une Foucart CoA
 
 ```{r}
-# kplot()
 k_table_format <- lapply(simulated_network$th_network, as.data.frame)
-
-# class(k_table_format[[1]])
-
-# is.ktab(lapply(dudi.ktable simulated_network$th_network, ))
-# as.data.frame(simulated_network$th_network[[1]])
 plot(foucart(lapply(simulated_network$th_network, as.data.frame), scannf = F, nf = 2))
 plot(foucart(lapply(simulated_network$obs_network, as.data.frame), scannf = F, nf = 2))
 ```
+```{r}
+fou1 <- foucart(lapply(simulated_network$obs_network, as.data.frame), scannf = F, nf = 2)
+```
+
+```{r}
+fou1$co
+```
+

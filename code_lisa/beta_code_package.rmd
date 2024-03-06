@@ -10,6 +10,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 Code package
+```{r}
+source("plot.R")
+source("formatting.R")
+# library(ggplot2)
+```
+
+
 
 ```{r}
 # Network generation from an environmental gradient
@@ -37,7 +44,7 @@ abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
   ### resource gradient ###
   env_grad_resource <- array(0, dim = c(nb_resource, 2)) # two col, 1st: mean, 2nd: sd
   # Generate environmental optima for each species
-  env_grad_resource[, 1] <- runif(nb_resource, min = env_grad_min, max = env_grad_max)
+  env_grad_resource[, 1] <- sort(runif(nb_resource, min = env_grad_min, max = env_grad_max))
   # Generate random niche widths for each species
   env_grad_resource[, 2] <- abs(rnorm(nb_resource, mean = mean_tol_env, sd = sd_tol_env))
 
@@ -45,7 +52,7 @@ abund_env_grad <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
   ### Consumer gradient ###
   env_grad_consumer <- array(0, dim = c(nb_consumer, 2)) # two col, 1st: mean, 2nd: sd
   # Generate environmental optima for each species
-  env_grad_consumer[, 1] <- runif(nb_consumer, min = env_grad_min, max = env_grad_max)
+  env_grad_consumer[, 1] <- sort(runif(nb_consumer, min = env_grad_min, max = env_grad_max))
   # Generate random niche widths for each species
   env_grad_consumer[, 2] <- abs(rnorm(nb_consumer, mean = mean_tol_env, sd = sd_tol_env))
 
@@ -239,6 +246,60 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100, nb_location = 3,
     obs_env_netw[[i]] <- sampling(th_env_netw[[i]], ninter = ninter, nb_resource = nb_resource)
   }
   return(list(abudance = abundance, th_network = th_env_netw, obs_network = obs_env_netw))
+}
+```
+
+```{r}
+test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame, sd_tol_env = 1, ninter = sampling_size)
+```
+
+
+```{r}
+frame = 15
+spe = 20
+sampling_size = 100
+test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame, sd_tol_env = 1, ninter = sampling_size)
+plot_matrix(data.frame(test_1$obs_network[[2]]), 
+          max_size = 15)  +
+theme(axis.text = element_blank(),
+      axis.text.x.top = element_blank(),
+      axis.title = element_blank(),
+      axis.ticks = element_blank(),
+      panel.grid.major = element_blank(),
+      legend.position="none",
+      plot.background = element_blank(),
+      axis.line.x.top = element_line(colour = "darkorange4",
+                                     linewidth = 3),
+      axis.line.y = element_line(colour = "green4",
+                                 linewidth = 3))
+
+```
+
+```{r}
+frame = 15
+spe = 20
+sampling_size = 300
+test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame, sd_tol_env = 1, ninter = sampling_size)
+for (i in 1:frame) {
+  p <- plot_matrix(data.frame(test_1$obs_network[[i]]), 
+            max_size = 15)  +
+  theme(axis.text = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),
+        legend.position="none",
+        plot.background = element_blank(),
+        axis.line.x.top = element_line(colour = "darkorange4",
+                                       linewidth = 3),
+        axis.line.y = element_line(colour = "green4",
+                                   linewidth = 3))
+  if (i < 10) {
+    ggsave(paste0("figure/test0",i, ".png"), width = spe/2, height = spe/2)
+  }
+  else {
+    ggsave(paste0("figure/test",i, ".png"), width = spe/2, height = spe/2)
+  }
 }
 ```
 

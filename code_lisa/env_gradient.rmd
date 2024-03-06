@@ -27,11 +27,11 @@ library(ggplot2)
 
 ```{r}
 frame = 15
-spe = 30
-sampling_size = 200
-test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame, sd_tol_env = 1, ninter = sampling_size)
+spe = 20
+sampling_size = 300
+test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame, know_env_grad_pos = F, mean_tol_env = 2,5, sd_tol_env = 1, ninter = sampling_size)
 for (i in 1:frame) {
-  p <- plot_matrix(data.frame(test_1$th_network[[i]]), 
+  p <- plot_matrix(data.frame(test_1$obs_network[[i]]), 
             max_size = 15)  +
   theme(axis.text = element_blank(),
         axis.text.x.top = element_blank(),
@@ -104,11 +104,20 @@ cor_abund_grad <- function(frame = 10, spe = 10){
 ```
 
 ```{r}
-network <- cor_abund_grad(frame = 100, spe = 20)
+network <- cor_abund_grad(frame = 10, spe = 60)
 network$correlation
 plot(network$env_grad, network$abundance, ylim = c(0, 1), ylab = "Beta div abundance", xlab = "Distance grad env")
 ```
 La corélation entre les abondances et les liens sont quasi toujours > 80% et souvent > 90%.
+
+```{r}
+plot(network$env_grad, network$link, ylim = c(0, 1), ylab = "Beta div link", xlab = "Distance grad env")
+```
+
+
+```{r}
+plot(network$abundance, network$link, ylim = c(0, 1), ylab = "Beta div links", xlab = "Beta div abundance")
+```
 
 ```{r}
 correlation_distrib <- vector(, length = 70)

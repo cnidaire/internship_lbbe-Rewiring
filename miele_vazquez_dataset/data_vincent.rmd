@@ -19,15 +19,28 @@ The R dataset consists of the bipartite plant-pollinator interaction matrices (*
 18 seasons, 59 plants and 196 pollinators
 
 ```{r}
-season_1 <- directed.networks[1, , ]
+season_1 <- bipartite.networks[1, , ]
 # View(season_1)
-which(season_1[2,] != 0)# pas beaucoup differents de 0
+# which(season_1[2,] != 0)# pas beaucoup differents de 0
 
 # to keep only the connected species
 test <- season_1[which(rowSums(season_1) != 0), which(colSums(season_1) != 0)]
+dim(test)
+# test
 
-plot(graph_from_incidence_matrix(test), vertex.size=5)
+# plot(graph_from_incidence_matrix(test), vertex.size=5)
+
+# str(bipartite.networks)
 ```
+
+```{r}
+for (i in 1:18) {
+  sampled_season <- bipartite.networks[i, , ]
+  active_sample <- sampled_season[which(rowSums(sampled_season) != 0), which(colSums(sampled_season) != 0)]
+  print(dim(active_sample))
+}
+```
+
 
 ```{r}
 pollinator.id

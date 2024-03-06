@@ -93,10 +93,9 @@ recherche de base de donnée et de métriques dans des articles
 
 - [x] jouer avec les largeurs de gradients ainsi que avec les variances des niches
 - [x] faire en sorte que les abondance ne dépendent plus que de la variance de la niche mais aussi d'une autre variable puis rajouter de la variabilité avec un rpois de la valeur obtenue
-- [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.
+- [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degrée de specialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*"
 - [ ] ne plus trier en fonction des optimums de niche théoriques mais en fonction de leurs ordre sur le premier axe de l'AFC. En théorie même résultat mais c'est ce que l'on ferait sur des données de terrain.
 - [x] données Miele et Vasquez
-- [ ] chercher des données réelles
 - [x] métrique pour réseaux valués bipartis [[Lau et al. - 2017 - Ecological network metrics opportunities for synt.pdf|Lau 2017]] , regarder le package bipartite 
 - [ ] différentes approches comme AFC, métriques (nestedness, motifs, modularity, degree moyen), beta div afin de comparer des réseaux
 - [ ] lire bersier et al 2012 et abundances and generalization in mutualistic networks solving the chicken and egg dilemma
