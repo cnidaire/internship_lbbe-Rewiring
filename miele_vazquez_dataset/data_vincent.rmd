@@ -28,7 +28,7 @@ test <- season_1[which(rowSums(season_1) != 0), which(colSums(season_1) != 0)]
 dim(test)
 # test
 
-# plot(graph_from_incidence_matrix(test), vertex.size=5)
+plot(graph_from_incidence_matrix(test), vertex.size=5)
 
 # str(bipartite.networks)
 ```
@@ -47,3 +47,30 @@ pollinator.id
 plant.id
 ```
 
+```{r}
+library(ade4)
+```
+
+```{r}
+rownames(bipartite.networks)
+```
+
+
+```{r}
+df_network <- list()
+for (i in 1:16) {
+  df_network[rownames(bipartite.networks)[i]] <- as.array(bipartite.networks[i, , ])
+}
+str(bipartite.networks)
+```
+```{r}
+# dimnames(bipartite.networks)
+obs_netw <- lapply(1:18, function(i) bipartite.networks[i, , , drop = TRUE])
+names(obs_netw) <- dimnames(bipartite.networks[[1]])
+
+# str(obs_netw)
+
+# dim(obs_netw[[1]])
+
+plot(foucart(lapply(obs_netw, as.data.frame), scannf = T))
+```
