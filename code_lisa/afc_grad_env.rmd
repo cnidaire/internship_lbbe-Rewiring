@@ -22,20 +22,27 @@ library(ggplot2)
 
 # Analysing changes in abundance with AFC
 
+## Generating the serie of networks
+
 ```{r}
 # set.seed(0)
-nb_frame <- 10; env_grad_max = 10
-spe_resource <-40; spe_consum <- 40
+nb_frame <- 3; env_grad_max = 10
+spe_resource <- 20; spe_consum <- 20
 mean_tol_env = 2; sd_tol_env = 4
 simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum,
                                    nb_location = nb_frame, env_grad_max = env_grad_max,
-                                   know_env_grad_pos = T, ninter = 200, 
-                                   mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env)
+                                   know_env_grad_pos = T, ninter = 40, 
+                                   mean_tol = 15,
+                                   mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env,
+                                   delta = 1)
 
 row.names(simulated_network$abudance$abundance_resource) <- paste0("site",1:nb_frame)
 row.names(simulated_network$abudance$abundance_consumer) <- paste0("site",1:nb_frame)
 ```
 
+## 1st frame of the network
+
+### Th network
 
 ```{r}
 plot_matrix(data.frame(simulated_network$th_network[[1]]), 
@@ -53,6 +60,8 @@ theme(axis.text = element_blank(),
                                  linewidth = 3))
 ```
 
+### Obs network
+
 ```{r}
 plot_matrix(data.frame(simulated_network$obs_network[[1]]), 
           max_size = 15) +
@@ -69,13 +78,46 @@ theme(axis.text = element_blank(),
                                  linewidth = 3))
 ```
 
+## Trait matching
+
 ```{r}
+
+plot_matrix(data.frame(simulated_network$trait$matching_matrix), 
+          max_size = 15) +
+theme(axis.text = element_blank(),
+      axis.text.x.top = element_blank(),
+      axis.title = element_blank(),
+      axis.ticks = element_blank(),
+      panel.grid.major = element_blank(),
+      legend.position="none",
+      plot.background = element_blank(),
+      axis.line.x.top = element_line(colour = "darkorange4",
+                                     linewidth = 3),
+      axis.line.y = element_line(colour = "green4", 
+                                 linewidth = 3))
+```
+
+## Abundance
+
+### Resource's abundance
+
+```{r}
+names(simulated_network$abudance$abundance_resource) <- 1:spe_resource
 table.value(simulated_network$abudance$abundance_resource)
 ```
 
 ```{r}
+simulated_network$abudance$th_distrib_resource
+```
+
+### Consumer's abundance
+
+```{r}
+colnames(simulated_network$abudance$abundance_consumer) <- 1:spe_consum
 table.value(simulated_network$abudance$abundance_consumer)
 ```
+
+
 
 ```{r}
 afc = dudi.coa(simulated_network$abudance$abundance_resource, scannf = F, nf = 2)
@@ -84,14 +126,8 @@ scatter(afc)
 scatter(dudi.coa(simulated_network$obs_network[[1]], scannf = F, nf = 2))
 
 
-table.value(simulated_network$obs_network[[3]])
+table.value(simulated_network$obs_network[[1]])
 ```
-
-```{r}
-table.value(simulated_network$th_network[[4]])
-table.value(simulated_network$obs_network[[4]])
-```
-
 
 Ici, on a deux eigenvalues dominantes ainsi c'est top pour le graphique en 2D.
 
@@ -110,6 +146,25 @@ k_table_format <- lapply(simulated_network$th_network, as.data.frame)
 plot(foucart(lapply(simulated_network$th_network, as.data.frame), scannf = F, nf = 2))
 plot(foucart(lapply(simulated_network$obs_network, as.data.frame), scannf = F, nf = 2))
 ```
+
+```{r}
+tab = Reduce('+', simulated_network$obs_network) # afin de générer le réseau moyen
+
+afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+
+par(mfrow=c(2,2))
+table.value(simulated_network$trait$matching_matrix, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # trait matching matrix et tri selon le premier axe
+table.value(tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # réseau moyen observé
+toto = reconst(afc.tab, nf = 8) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
+table.value(toto, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # plot le réseau reconstruit
+table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # transformed average table
+
+fou1 = foucart(lapply(simulated_network$th_network, as.data.frame), scannf = F, nf = 2)
+s.class(fou1$Tli, fac = fou1$TL$L, col = rainbow(20), cellipse = 0) # analyse de foucart selon les lignes
+s.class(fou1$Tco, fac = fou1$TC$C, col = rainbow(20), cellipse = 0) # analyse de foucart selon les colonnes
+```
+
+
 ```{r}
 fou1 <- foucart(lapply(simulated_network$obs_network, as.data.frame), scannf = F, nf = 2)
 ```

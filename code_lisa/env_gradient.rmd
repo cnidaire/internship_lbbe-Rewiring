@@ -54,6 +54,27 @@ for (i in 1:frame) {
 
 ```
 
+```{r}
+library(bipartite)
+```
+
+
+```{r}
+frame = 9
+spe = 20
+sampling_size = 300
+test_1 <- env_grad_netw(nb_resource =spe , nb_consumer = spe, nb_location = frame, know_env_grad_pos = F, mean_tol_env = 2,5, sd_tol_env = 1, ninter = sampling_size)
+# for (i in 1:frame) {
+#   
+#   if (i < 10) {
+#     ggsave(paste0("figure/test0",i, ".png"), width = spe/2, height = spe/2)
+#   }
+#   else {
+#     ggsave(paste0("figure/test",i, ".png"), width = spe/2, height = spe/2)
+#   }
+# }
+```
+
 
 # Beta diversity
 

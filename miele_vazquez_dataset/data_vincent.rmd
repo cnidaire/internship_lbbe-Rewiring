@@ -55,14 +55,6 @@ library(ade4)
 rownames(bipartite.networks)
 ```
 
-
-```{r}
-df_network <- list()
-for (i in 1:16) {
-  df_network[rownames(bipartite.networks)[i]] <- as.array(bipartite.networks[i, , ])
-}
-str(bipartite.networks)
-```
 ```{r}
 # dimnames(bipartite.networks)
 obs_netw <- lapply(1:18, function(i) bipartite.networks[i, , , drop = TRUE])
@@ -74,3 +66,57 @@ names(obs_netw) <- dimnames(bipartite.networks[[1]])
 
 plot(foucart(lapply(obs_netw, as.data.frame), scannf = T))
 ```
+
+On dirait que "leip.ino" "lei.cri" "lep.nig" "dia.bar" se démarquent grandement pour ce qui est des colonnes et sph.min et lec.het pour ce qui est des lignes.
+
+## Pour chaque saison individuellement
+
+```{r}
+season <- c(1, 4, 7, 10, 13, 16)
+for (i in 0:2) {
+  plot(foucart(lapply(obs_netw, as.data.frame)[season + i], scannf = F, nf = 2))
+}
+```
+
+
+```{r}
+scatter(dudi.coa(lapply(obs_netw, as.data.frame)[[1]], scannf = F, nf = 2))
+```
+
+## Pour chaque année séparément
+
+```{r}
+for (i in 0:5) {
+  plot(foucart(lapply(obs_netw, as.data.frame)[(1+3*i):(3+3*i)], scannf = F, nf = 2))
+}
+```
+
+# Nombre d'observations
+
+On a un des réseau qui me semblent "creux" et en effet, on environ 10 fois moins d'observations que d'interactions possibles. ce qui implique un biais d'échantillonnage fort
+
+```{r}
+nobs <- c()
+for (i in 1:18) {
+  nobs <- c(nobs, sum(obs_netw[[i]]))
+}
+mean(nobs)
+
+59*196
+```
+
+# Essayer de reconstruire le réseau moyen
+
+```{r}
+tab = Reduce('+', obs_netw) # afin de générer le réseau moyen
+
+afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+
+par(mfrow=c(2,2))
+# table.value(simulated_network$trait$matching_matrix, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # trait matching matrix et tri selon le premier axe
+table.value(tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # réseau moyen observé
+toto = reconst(afc.tab, nf = 8) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
+table.value(toto, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # plot le réseau reconstruit
+table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # transformed average table
+```
+

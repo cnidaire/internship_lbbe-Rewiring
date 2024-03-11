@@ -89,6 +89,10 @@ et réunion avec Vincent et Stéphane
 
 recherche de base de donnée et de métriques dans des articles
 
+## 11 Mars
+
+Test AFC sur les données de Vincent et lecture partie correspondance analysis du bouquin de stats
+
 # Todo list
 
 - [x] jouer avec les largeurs de gradients ainsi que avec les variances des niches
