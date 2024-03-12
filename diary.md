@@ -126,16 +126,20 @@ jouer avec le delta et peut être les faire varier (genre les fixer à 0 pour la
 
 
 
-reprendre simu et garder giant connected
+- [ ] reprendre simu et garder giant connected
 
-est ce que les espèces interagissent de manière random ou non et pouvoir quantifier le changement de role des espèces entre les réseaux
+- [ ] est ce que les espèces interagissent de manière random ou non et pouvoir quantifier le changement de role des espèces entre les réseaux
 
-regarder la variance des interactions entre espèces en regardant le nombre d'interaction selon les abondances des deux espèce (le proxy, ce serait le nombre d'interactions observées pour chacune des espèces) regarder si juste effet ligne + effet colonne ou si autre effet
+- [ ] regarder la variance des interactions entre espèces en regardant le nombre d'interaction selon les abondances des deux espèce (le proxy, ce serait le nombre d'interactions observées pour chacune des espèces) regarder si juste effet ligne + effet colonne ou si autre effet
 
-attention, haute moyenne = plus haute variance
+- [ ] attention, haute moyenne = plus haute variance
 
-puis regarder si le rôle change
+- [ ] puis regarder si le rôle change
 
-regarder si les abondances des autres personnes avec laquel il interagit varie: regarder le turnover des abondances
+- [ ] regarder si les abondances des autres personnes avec lequel il interagit varie: regarder le turnover des abondances
 
-regrader ce qui change 
+- [ ] regarder ce qui change 
+
+- [ ] regarder quel est les points qui sortent toujours de l'AFC 
+
+- [ ] regarder si les proportion entre les espèces restent constante 

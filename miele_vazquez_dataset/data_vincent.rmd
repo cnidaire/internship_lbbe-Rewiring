@@ -163,24 +163,22 @@ let's do it only for the interact more than 3 time over the 18 networks (equival
 interaction_frame <- names(which(bipartite.networks[ , "con.mic","bombil11"] != 0))
 
 var_int <- function(spe_1, spe_2){
-  int_frame <- names(which(bipartite.networks[ , spe_1, spe_2] != 0))
-  if (length(int_frame) > 3) {
+  int_frame <- names(which(bipartite.networks[ , spe_1, spe_2] != 0)) # get only the frames where there is interaction
+  if (length(int_frame) > 3) { # if more than 3 frames
     int_count <- c()
     for (i in int_frame){
-      abund_1 <- sum(bipartite.networks[i, spe_1, ])
+      abund_1 <- sum(bipartite.networks[i, spe_1, ]) # abund here is to nb of int of a spe
       abund_2 <- sum(bipartite.networks[i, , spe_2])
       int_count <- c(int_count, bipartite.networks[i, spe_1, spe_2] / (abund_1 * abund_2))
     }
     return(list(mean = mean(int_count), sd = sd(int_count)))
   } 
   else {
-    return(list(mean = 0, sd = 0))
+    return(list(mean = 0, sd = 0)) # if not enough int observed in the network serie
   }
 }
 
-# var_int("con.mic", "bombil11")
-# 
-# names(which(bipartite.networks[ , 32, "bombil11"] != 0))
+# var_int("con.mic", "bombil11") # un exemple qui fonctionne bien
 
 distrib_int <- list( mean = array(NA, dim = c(59, 196)), sd = array(NA, dim = c(59, 196)))
 rownames(distrib_int$mean) <- plant.id
@@ -198,20 +196,32 @@ for (pol in pollinator.id){
 
 table.value(distrib_int$sd, grid = F)
 table.value(distrib_int$mean, grid = F)
+
+distrib_variation <- array(0, dim = c(59, 196))
+rownames(distrib_variation) <- plant.id
+colnames(distrib_variation) <- pollinator.id
+
+distrib_variation[distrib_int$sd != 0 & distrib_int$mean != 0] <- distrib_int$sd[distrib_int$sd != 0 & distrib_int$mean != 0] / distrib_int$mean[distrib_int$sd != 0 & distrib_int$mean != 0]
+
+table.value(distrib_variation)
+# distrib_int$sd != 0 & distrib_int$mean != 0
 ```
 
+```{r}
+hist(log(distrib_variation[which(distrib_variation != 0)]))
+boxplot(as.vector(distrib_variation[which(distrib_variation != 0)]))
+```
+
+## Are interaction proportion stable relativly to the abundances?
+
+Here, I wanna see if it's possible to check if the proportions of interactions relatively to the abundances is something stable or not. In this case, the abundances would be the relative abundance (frequency of observation) over the total frequency of this "part" of the graph (plant or pol). Hence I would generate for each specie a matrix with in column this value across the species and in col across the list of networks.
 
 # Todo
 
-est ce que les espèces interagissent de manière random ou non et pouvoir quantifier le changement de role des espèces entre les réseaux
-
-regarder la variance des interactions entre espèces en regardant le nombre d'interaction selon les abondances des deux espèce (le proxy, ce serait le nombre d'interactions observées pour chacune des espèces) regarder si juste effet ligne + effet colonne ou si autre effet
-
-attention, haute moyenne = plus haute variance
 
 puis regarder si le rôle change
 
 regarder si les abondances des autres personnes avec laquel il interagit varie: regarder le turnover des abondances
 
-regrader ce qui change 
+regarder ce qui change 
 
