@@ -142,6 +142,76 @@ library(bipartite)
 ```
 
 ```{r}
-visweb(bipartite.networks[1, , ],  box.border = "white")
+visweb(bipartite.networks[1, , ], box.border = "white")
 ```
+
+# Observe Data
+
+For each Of the points, I'll do it for only the first network
+
+## Are interactions between two species random or can we make a link between it and the abundance of each species participating
+
+Meaning that if we use the number of interactions of a specie as a proxy of it's abundance, is there a direct link between these abundances (hence divide by abund spe 1 * abund spe 2 of the abundance in this network)
+
+let's do it only for the interact more than 3 time over the 18 networks (equivalent to having less than 15 networks where it is != 0)
+
+*prendre une position au hasard dans le réseaux et faire des tests*
+
+*attention variance plus importante quand bcp interactions *
+
+```{r}
+interaction_frame <- names(which(bipartite.networks[ , "con.mic","bombil11"] != 0))
+
+var_int <- function(spe_1, spe_2){
+  int_frame <- names(which(bipartite.networks[ , spe_1, spe_2] != 0))
+  if (length(int_frame) > 3) {
+    int_count <- c()
+    for (i in int_frame){
+      abund_1 <- sum(bipartite.networks[i, spe_1, ])
+      abund_2 <- sum(bipartite.networks[i, , spe_2])
+      int_count <- c(int_count, bipartite.networks[i, spe_1, spe_2] / (abund_1 * abund_2))
+    }
+    return(list(mean = mean(int_count), sd = sd(int_count)))
+  } 
+  else {
+    return(list(mean = 0, sd = 0))
+  }
+}
+
+# var_int("con.mic", "bombil11")
+# 
+# names(which(bipartite.networks[ , 32, "bombil11"] != 0))
+
+distrib_int <- list( mean = array(NA, dim = c(59, 196)), sd = array(NA, dim = c(59, 196)))
+rownames(distrib_int$mean) <- plant.id
+colnames(distrib_int$mean) <- pollinator.id
+rownames(distrib_int$sd) <- plant.id
+colnames(distrib_int$sd) <- pollinator.id
+
+for (pol in pollinator.id){
+  for (pla in plant.id){
+    distrib_int$mean[pla, pol] <- var_int(pla, pol)$mean
+    distrib_int$sd[pla, pol] <- var_int(pla, pol)$sd
+  }
+}
+# pollinator.id
+
+table.value(distrib_int$sd, grid = F)
+table.value(distrib_int$mean, grid = F)
+```
+
+
+# Todo
+
+est ce que les espèces interagissent de manière random ou non et pouvoir quantifier le changement de role des espèces entre les réseaux
+
+regarder la variance des interactions entre espèces en regardant le nombre d'interaction selon les abondances des deux espèce (le proxy, ce serait le nombre d'interactions observées pour chacune des espèces) regarder si juste effet ligne + effet colonne ou si autre effet
+
+attention, haute moyenne = plus haute variance
+
+puis regarder si le rôle change
+
+regarder si les abondances des autres personnes avec laquel il interagit varie: regarder le turnover des abondances
+
+regrader ce qui change 
 
