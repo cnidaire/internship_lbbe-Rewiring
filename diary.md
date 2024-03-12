@@ -97,7 +97,7 @@ Test AFC sur les données de Vincent et lecture partie correspondance analysis d
 
 - [x] jouer avec les largeurs de gradients ainsi que avec les variances des niches
 - [x] faire en sorte que les abondance ne dépendent plus que de la variance de la niche mais aussi d'une autre variable puis rajouter de la variabilité avec un rpois de la valeur obtenue
-- [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degrée de specialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*"
+- [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degrée de specialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
 - [ ] ne plus trier en fonction des optimums de niche théoriques mais en fonction de leurs ordre sur le premier axe de l'AFC. En théorie même résultat mais c'est ce que l'on ferait sur des données de terrain.
 - [x] données Miele et Vasquez
 - [x] métrique pour réseaux valués bipartis [[Lau et al. - 2017 - Ecological network metrics opportunities for synt.pdf|Lau 2017]] , regarder le package bipartite 
@@ -107,6 +107,11 @@ Test AFC sur les données de Vincent et lecture partie correspondance analysis d
 - [x] régler les problèmes de nom dans le code pour la partie trait matching
 - [x] vérifier pourquoi il y a un tri (sort) dans les traits
 - [x] add: importFrom("stats", "dnorm", "rnorm", "runif", "rpois") and importFrom("mvtnorm", "dmvnorm") in the r file such that I dont need to modify the namespace afterward by adding @importFrom
+- [ ] Il y a encore une correlation entre généraliste et en moyenne une plus faible abondance vu que j'utilise dnrm. Il faudrait donc fixer le max et ensuite multiplier par le dnorm selon la variance. Ainsi pour fixer le pique, ce serait peut-être bien de  faire dnorm/dnorm_max
+- [ ] regarder les connected components et travailler seulement sur la composante géante
+	- [ ] pour ça regarder is.connected et components (pour obtenir les connected components) dans le package bipartite.
+- [ ] teste et regarder les papiers notamment en physique sur l’émergence de la composante géante (aussi appelée percolation)
+- [ ] tester d'aller au delà de la limite de percolation dans les simulations
 
 
 inférer le vrai réseau et comparer en se basant sur le vrai réseau obtenu avec l'AFC et monter que même si le réseau observé est différent, le trait matching est similaire
@@ -116,3 +121,21 @@ données caradonna
 correlation entre le co / le li et les traits
 
 jouer avec le delta et peut être les faire varier (genre les fixer à 0 pour la moité) et regarder si il est toujours possible d'obtenir le trait matching à partir de ça.
+
+
+
+
+
+reprendre simu et garder giant connected
+
+est ce que les espèces interagissent de manière random ou non et pouvoir quantifier le changement de role des espèces entre les réseaux
+
+regarder la variance des interactions entre espèces en regardant le nombre d'interaction selon les abondances des deux espèce (le proxy, ce serait le nombre d'interactions observées pour chacune des espèces) regarder si juste effet ligne + effet colonne ou si autre effet
+
+attention, haute moyenne = plus haute variance
+
+puis regarder si le rôle change
+
+regarder si les abondances des autres personnes avec laquel il interagit varie: regarder le turnover des abondances
+
+regrader ce qui change 

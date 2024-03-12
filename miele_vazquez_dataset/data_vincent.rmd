@@ -11,8 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(igraph)
+library(ade4)
 ```
 
+# Informations of the dataset
 
 The R dataset consists of the bipartite plant-pollinator interaction matrices (*bipartite.networks*) for 18 subseas (3 subseasons per 6 years), 18 subseasonal dependence matrices (*directed.networks*), and the plant species (*plant.id*) and pollinator species (*pollinator.id*) identification codes. The code used for the analyses (miele-JAE.R) is also provided.
 
@@ -24,52 +26,70 @@ season_1 <- bipartite.networks[1, , ]
 # which(season_1[2,] != 0)# pas beaucoup differents de 0
 
 # to keep only the connected species
-test <- season_1[which(rowSums(season_1) != 0), which(colSums(season_1) != 0)]
-dim(test)
-# test
+season_1_con <- season_1[which(rowSums(season_1) != 0), which(colSums(season_1) != 0)]
 
-plot(graph_from_incidence_matrix(test), vertex.size=5)
 
-# str(bipartite.networks)
-```
-
-```{r}
-for (i in 1:18) {
-  sampled_season <- bipartite.networks[i, , ]
-  active_sample <- sampled_season[which(rowSums(sampled_season) != 0), which(colSums(sampled_season) != 0)]
-  print(dim(active_sample))
-}
+plot(graph_from_incidence_matrix(season_1_con), vertex.size=5)
 ```
 
 
 ```{r}
-pollinator.id
-plant.id
+# pollinator.id
+# plant.id
 ```
 
-```{r}
-library(ade4)
-```
+# Analysis using the CA
 
 ```{r}
-rownames(bipartite.networks)
-```
-
-```{r}
-# dimnames(bipartite.networks)
 obs_netw <- lapply(1:18, function(i) bipartite.networks[i, , , drop = TRUE])
 names(obs_netw) <- dimnames(bipartite.networks[[1]])
 
-# str(obs_netw)
-
-# dim(obs_netw[[1]])
-
-plot(foucart(lapply(obs_netw, as.data.frame), scannf = T))
+plot(foucart(lapply(obs_netw, as.data.frame), scannf = F, nf = 2))
 ```
 
-On dirait que "leip.ino" "lei.cri" "lep.nig" "dia.bar" se démarquent grandement pour ce qui est des colonnes et sph.min et lec.het pour ce qui est des lignes.
+On dirait que "leip.ino" "lei.cri" "lep.nig" "dia.bar" se démarquent grandement pour ce qui est des colonnes et sph.min et lec.het pour ce qui est des lignes. Ce qui signifie très probablement que ce sont des espèces qui interagissent entre elles ou qui tout au moins ce sont des espèce qui sont non connéctée à la composante géante dans l'un des graphes.
 
-## Pour chaque saison individuellement
+## CA on only the giant component
+
+```{r}
+not_always_con <- c()
+for (i in 1:18) {
+  sampled_netw <- bipartite.networks[i, , ]
+  # to keep only the connected species
+  sampled_netw_con <- sampled_netw[which(rowSums(sampled_netw) != 0), which(colSums(sampled_netw) != 0)]
+  component <- igraph::components(graph_from_incidence_matrix(sampled_netw_con))
+  if (length(component$csize) != 1) {
+    print(paste("The network",i, "is not strongly connected, there is", component$no, "connected components"))
+    print(names(component$membership[which(component$membership != 1)]))
+    
+    print("are/is not part of of the giant component.")
+    not_always_con <- c(not_always_con, names(component$membership[which(component$membership != 1)]))
+  }
+}
+
+print(length(unique(not_always_con)))
+print(unique(not_always_con))
+```
+
+### Keep only giant component
+
+```{r}
+row_to_keep <- setdiff(rownames(bipartite.networks[1, , ]), not_always_con)
+# row_to_keep
+
+col_to_keep <- setdiff(colnames(bipartite.networks[1, , ]), not_always_con)
+# col_to_keep
+```
+
+
+```{r}
+obs_netw <- lapply(1:18, function(i) bipartite.networks[i, row_to_keep, col_to_keep, drop = TRUE])
+names(obs_netw) <- dimnames(bipartite.networks[[1]])
+plot(foucart(lapply(obs_netw, as.data.frame), scannf = F, nf = 2))
+```
+
+
+## Aggregated for each season
 
 ```{r}
 season <- c(1, 4, 7, 10, 13, 16)
@@ -78,12 +98,7 @@ for (i in 0:2) {
 }
 ```
 
-
-```{r}
-scatter(dudi.coa(lapply(obs_netw, as.data.frame)[[1]], scannf = F, nf = 2))
-```
-
-## Pour chaque année séparément
+## Aggregated for each year
 
 ```{r}
 for (i in 0:5) {
@@ -105,7 +120,7 @@ mean(nobs)
 59*196
 ```
 
-# Essayer de reconstruire le réseau moyen
+## Essayer de reconstruire le réseau moyen
 
 ```{r}
 tab = Reduce('+', obs_netw) # afin de générer le réseau moyen
@@ -118,5 +133,15 @@ table.value(tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # réseau m
 toto = reconst(afc.tab, nf = 8) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
 table.value(toto, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # plot le réseau reconstruit
 table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # transformed average table
+```
+
+# Visualisation avec bipartite
+
+```{r}
+library(bipartite)
+```
+
+```{r}
+visweb(bipartite.networks[1, , ],  box.border = "white")
 ```
 
