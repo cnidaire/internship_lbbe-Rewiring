@@ -194,8 +194,8 @@ for (pol in pollinator.id){
 }
 # pollinator.id
 
-table.value(distrib_int$sd, grid = F)
-table.value(distrib_int$mean, grid = F)
+table.value(distrib_int$sd, grid = F) # plot of SD
+table.value(distrib_int$mean, grid = F) # plot of Mean
 
 distrib_variation <- array(0, dim = c(59, 196))
 rownames(distrib_variation) <- plant.id
@@ -203,14 +203,14 @@ colnames(distrib_variation) <- pollinator.id
 
 distrib_variation[distrib_int$sd != 0 & distrib_int$mean != 0] <- distrib_int$sd[distrib_int$sd != 0 & distrib_int$mean != 0] / distrib_int$mean[distrib_int$sd != 0 & distrib_int$mean != 0]
 
-table.value(distrib_variation)
+table.value(distrib_variation) # SD/Mean
 # distrib_int$sd != 0 & distrib_int$mean != 0
 ```
 
 ```{r}
-hist(log(distrib_variation[which(distrib_variation != 0)]))
-boxplot(as.vector(distrib_variation[which(distrib_variation != 0)]))
-hist(as.vector(distrib_variation[which(distrib_variation != 0)]))
+hist(log(distrib_variation[which(distrib_variation != 0)]), main = "log(SD/Mean")
+boxplot(as.vector(distrib_variation[which(distrib_variation != 0)]), main = "SD/Mean")
+hist(as.vector(distrib_variation[which(distrib_variation != 0)]), main = "SD/Mean")
 ```
 
 ## Are interaction proportion stable relativly to the abundances?
@@ -227,7 +227,7 @@ By normalizing by the neutral effect, we also get rid of when the species are no
 neutral_effect <- sapply(1:18, function(i) outer(rowSums(bipartite.networks[i,,]), colSums(bipartite.networks[1,,])), simplify = "array") #nearly the same as making a matrix product between the two sum vectors but here with the array format I keep the names
 
 neutral_effect <- aperm(neutral_effect, c(3,1,2)) # by using Sapply, the time dimensionwas moved as the 3rd one
-dimnames(neutral_effect)[1] <- dimnames(bipartite.networks)[1] # to have the time names
+dimnames(neutral_effect)[1] <- dimnames(bipartite.networks)[1] # to have the time frame names
 ```
 
 ### "Non-neutral" effect
@@ -238,13 +238,8 @@ but it means that there is no interaction for each species and that there is on 
 ```{r}
 trait_effect <- sapply(1:18, function(i) bipartite.networks[i, , ] / neutral_effect[i,,], simplify = "array") # divide the observed by the neutral effect. Hence when there is a neutral effect of 0, we will have a trait effect associated of NaN as we can not divide by 0
 
-trait_effect <- aperm(trait_effect, c(3, 1, 2))
+trait_effect <- aperm(trait_effect, c(3, 1, 2)) # same as previously
 dimnames(trait_effect)[1] <- dimnames(bipartite.networks)[1]
-
-# 0.1/0
-# 0/0
-
-# trait_effect[1, , ] > 0 # semble enfin marcher
 ```
 
 ### Look at the variation of this non neutral effect
@@ -252,25 +247,15 @@ dimnames(trait_effect)[1] <- dimnames(bipartite.networks)[1]
 
 ```{r}
 var_trait <- function(spe_1, spe_2){
-  int_frame <- names(which(neutral_effect[,spe_1, spe_2] > 0))
+  int_frame <- names(which(neutral_effect[,spe_1, spe_2] > 0)) # which frame do we have coexistence of species
   if (length(int_frame) >= 3){
     pot_int <- trait_effect[int_frame, spe_1, spe_2]
     return(list(mean = mean(pot_int), sd = sd(pot_int)))
   }
   else {
-    return(list(mean = 0, sd = 0))
+    return(list(mean = 0, sd = 0)) # if not enough coexistence frames
   }
 }
-
-# names(which(neutral_effect[,"con.mic", "bombil11"] > 0))
-# (int_frame <- names(which(neutral_effect[,"con.mic", "bombil11"] > 0)))
-# trait_effect[int_frame,"con.mic", "bombil11"]
-# mean(trait_effect[int_frame,"con.mic", "bombil11"])
-# sd(trait_effect[int_frame,"con.mic", "bombil11"])
-
-# names(which(trait_effect[,"con.mic", "bombil11"] > 0))
-# names(which(bipartite.networks[ ,"con.mic", "bombil11"] != 0)) # on obtient bien le même resultat que la ligne précédente...enfin
-
 
 distrib_trait <- list( mean = array(NA, dim = c(59, 196)), sd = array(NA, dim = c(59, 196)))
 rownames(distrib_trait$mean) <- plant.id
@@ -286,9 +271,11 @@ for (pol in pollinator.id){
   }
 }
 
-hist(as.vector(distrib_trait$sd/distrib_trait$mean)) # as NaN are not displayed (when 0/0), we do not have to worry about the 0
-hist(as.vector(distrib_trait$mean)[which(as.vector(distrib_trait$mean) != 0)])
-hist(as.vector(distrib_trait$sd)[which(as.vector(distrib_trait$sd) != 0)])
+hist(as.vector(distrib_trait$sd/distrib_trait$mean), main = "SD/Mean", xlab = "SD/Mean") # as NaN are not displayed (when 0/0), we do not have to worry about the 0
+hist(as.vector(distrib_trait$mean)[which(as.vector(distrib_trait$mean) != 0)], main = "SD distribution", xlab = "SD")
+hist(as.vector(distrib_trait$sd)[which(as.vector(distrib_trait$sd) != 0)], main = "Mean distribution", xlab = "Mean")
+
+plot(as.vector(distrib_trait$mean)[which(as.vector(distrib_trait$mean) != 0)], as.vector(distrib_trait$sd)[which(as.vector(distrib_trait$sd) != 0)], main = "SD & Mean", xlab = "Mean", ylab = "SD")
 ```
 
 
