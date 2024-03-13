@@ -221,89 +221,55 @@ make a first table which is the cross abundance, = proba of meeting randomly (ne
 
 By normalizing by the neutral effect, we also get rid of when the species are not observed as we would obtain NaN due to the division by 0.
 
-```{r}
-neutral_effect <- lapply(1:18, function(i) outer(rowSums(bipartite.networks[1,,]), colSums(bipartite.networks[1,,]))) #nearly the same as making a matrix product between the two sum vectors but here with the array format I keep the names
-
-trait_effect <- lapply(1:18, function(i) bipartite.networks[1,,] / neutral_effect[[1]])
-```
+### Neutral effect
 
 ```{r}
-names(lapply(1:18, function(i) which(neutral_effect[[i]]["con.mic", "bombil11"] != 0)))
+neutral_effect <- sapply(1:18, function(i) outer(rowSums(bipartite.networks[i,,]), colSums(bipartite.networks[1,,])), simplify = "array") #nearly the same as making a matrix product between the two sum vectors but here with the array format I keep the names
+
+neutral_effect <- aperm(neutral_effect, c(3,1,2)) # by using Sapply, the time dimensionwas moved as the 3rd one
+dimnames(neutral_effect)[1] <- dimnames(bipartite.networks)[1] # to have the time names
 ```
 
+### "Non-neutral" effect
 
+Here, when we have x/y, if x = 0 -> 0, if x!=0 and y = 0 -> inf
+but it means that there is no interaction for each species and that there is on observe beteen the two of them: NONSENSE
 
 ```{r}
-neutral_effect <- sapply(1:18, function(i) outer(rowSums(bipartite.networks[1,,]), colSums(bipartite.networks[1,,])), simplify = "array") #nearly the same as making a matrix product between the two sum vectors but here with the array format I keep the names
+trait_effect <- sapply(1:18, function(i) bipartite.networks[i, , ] / neutral_effect[i,,], simplify = "array") # divide the observed by the neutral effect. Hence when there is a neutral effect of 0, we will have a trait effect associated of NaN as we can not divide by 0
 
-str(neutral_effect)
+trait_effect <- aperm(trait_effect, c(3, 1, 2))
+dimnames(trait_effect)[1] <- dimnames(bipartite.networks)[1]
 
-neutral_effect <- aperm(neutral_effect, c(3,1,2))
+# 0.1/0
+# 0/0
 
-dimnames(neutral_effect)[1] <- dimnames(bipartite.networks)[1]
-
-str(neutral_effect)
-
-str(bipartite.networks)
-
-class(neutral_effect)
+# trait_effect[1, , ] > 0 # semble enfin marcher
 ```
 
-
-
-
-
-
-
-
-
-
-```{r}
-?sapply
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### Look at the variation of this non neutral effect
 
 
 ```{r}
 var_trait <- function(spe_1, spe_2){
-  int_frame <- names(which(neutral_effect[[1]][spe_1, spe_2] != 0)) # get only the frames where there is interaction
-  if (length(int_frame) >= 2) { # if more than 3 frames
-    return(list(mean = mean(trait_effect[[1]][spe_1, spe_2]), sd = sd(trait_effect[[1]][spe_1, spe_2])))
-  } 
+  int_frame <- names(which(neutral_effect[,spe_1, spe_2] > 0))
+  if (length(int_frame) >= 3){
+    pot_int <- trait_effect[int_frame, spe_1, spe_2]
+    return(list(mean = mean(pot_int), sd = sd(pot_int)))
+  }
   else {
-    return(list(mean = 0, sd = 0)) # if not enough int observed in the network serie
+    return(list(mean = 0, sd = 0))
   }
 }
 
-var_trait <- function(spe_1, spe_2){
-  int_frame <- names(lapply(1:18, function(i) which(neutral_effect[[i]][spe_1, spe_2] != 0))) # get only the frames where there is interaction
-  if (length(int_frame) >= 3) { # if more than 3 frames
-    return(list(mean = mean(lapply(1:18, function(i) trait_effect[[i]][spe_1, spe_2])), 
-                sd = sd(lapply(1:18, function(i) trait_effect[[i]][spe_1, spe_2]))
-                ))
-  } 
-  else {
-    return(list(mean = 0, sd = 0)) # if not enough int observed in the network serie
-  }
-}
+# names(which(neutral_effect[,"con.mic", "bombil11"] > 0))
+# (int_frame <- names(which(neutral_effect[,"con.mic", "bombil11"] > 0)))
+# trait_effect[int_frame,"con.mic", "bombil11"]
+# mean(trait_effect[int_frame,"con.mic", "bombil11"])
+# sd(trait_effect[int_frame,"con.mic", "bombil11"])
+
+# names(which(trait_effect[,"con.mic", "bombil11"] > 0))
+# names(which(bipartite.networks[ ,"con.mic", "bombil11"] != 0)) # on obtient bien le même resultat que la ligne précédente...enfin
 
 
 distrib_trait <- list( mean = array(NA, dim = c(59, 196)), sd = array(NA, dim = c(59, 196)))
@@ -312,34 +278,21 @@ colnames(distrib_trait$mean) <- pollinator.id
 rownames(distrib_trait$sd) <- plant.id
 colnames(distrib_trait$sd) <- pollinator.id
 
+
 for (pol in pollinator.id){
   for (pla in plant.id){
     distrib_trait$mean[pla, pol] <- var_trait(pla, pol)$mean
     distrib_trait$sd[pla, pol] <- var_trait(pla, pol)$sd
   }
 }
-# pollinator.id
 
-which(distrib_trait$mean != 0)
-
-# table.value(distrib_trait$sd, grid = F)
-# table.value(distrib_trait$mean, grid = F)
-# 
-# distrib_variation <- array(0, dim = c(59, 196))
-# rownames(distrib_variation) <- plant.id
-# colnames(distrib_variation) <- pollinator.id
-# 
-# distrib_variation[distrib_int$sd != 0 & distrib_int$mean != 0] <- distrib_int$sd[distrib_int$sd != 0 & distrib_int$mean != 0] / distrib_int$mean[distrib_int$sd != 0 & distrib_int$mean != 0]
-# 
-# table.value(distrib_variation)
-# # distrib_int$sd != 0 & distrib_int$mean != 0
-# 
-# 
-# # hist(log(as.vector(trait_effect[!is.na(trait_effect)])))
-# # 
-# # as.vector(trait_effect[!is.na(trait_effect)])
-
+hist(as.vector(distrib_trait$sd/distrib_trait$mean)) # as NaN are not displayed (when 0/0), we do not have to worry about the 0
+hist(as.vector(distrib_trait$mean)[which(as.vector(distrib_trait$mean) != 0)])
+hist(as.vector(distrib_trait$sd)[which(as.vector(distrib_trait$sd) != 0)])
 ```
+
+
+
 
 # Todo
 
