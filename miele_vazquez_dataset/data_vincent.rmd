@@ -208,7 +208,7 @@ table.value(distrib_variation) # SD/Mean
 ```
 
 ```{r}
-hist(log(distrib_variation[which(distrib_variation != 0)]), main = "log(SD/Mean")
+hist(log(distrib_variation[which(distrib_variation != 0)]), main = "log(SD/Mean)")
 boxplot(as.vector(distrib_variation[which(distrib_variation != 0)]), main = "SD/Mean")
 hist(as.vector(distrib_variation[which(distrib_variation != 0)]), main = "SD/Mean")
 ```
@@ -272,13 +272,53 @@ for (pol in pollinator.id){
 }
 
 hist(as.vector(distrib_trait$sd/distrib_trait$mean), main = "SD/Mean", xlab = "SD/Mean") # as NaN are not displayed (when 0/0), we do not have to worry about the 0
-hist(as.vector(distrib_trait$mean)[which(as.vector(distrib_trait$mean) != 0)], main = "SD distribution", xlab = "SD")
-hist(as.vector(distrib_trait$sd)[which(as.vector(distrib_trait$sd) != 0)], main = "Mean distribution", xlab = "Mean")
+hist(as.vector(distrib_trait$mean)[which(as.vector(distrib_trait$mean) != 0)], main = "Mean distribution", xlab = "Mean")
+hist(as.vector(distrib_trait$sd)[which(as.vector(distrib_trait$sd) != 0)], main = "SD distribution", xlab = "SD")
 
 plot(as.vector(distrib_trait$mean)[which(as.vector(distrib_trait$mean) != 0)], as.vector(distrib_trait$sd)[which(as.vector(distrib_trait$sd) != 0)], main = "SD & Mean", xlab = "Mean", ylab = "SD")
 ```
 
+### Same without the neutral effect
 
+only plot the number of interactions from bipartite.network
+
+```{r}
+barplot((table(as.vector(bipartite.networks)[as.vector(bipartite.networks != 0)] )), main = "Distribution of non 0 interactions accross the network", ylab = "number of interacting species couple", xlab = "number of interactions")
+
+# table(as.vector(bipartite.networks)[as.vector(bipartite.networks != 0)] )
+```
+
+```{r}
+bipartite_mean <- apply(bipartite.networks, c(2,3), mean)
+bipartite_sd <- apply(bipartite.networks, c(2,3), sd)
+```
+
+```{r}
+barplot(table(as.vector(bipartite_sd/bipartite_mean)), main = "SD/Mean", xlab = "SD/Mean") # as NaN are not displayed (when 0/0), we do not have to worry about the 0
+
+# table(as.vector(bipartite_sd/bipartite_mean))
+
+barplot(table(as.vector(bipartite_mean)[which(as.vector(bipartite_mean) != 0)]), main = "Mean number of interaction's distribution", ylab = "Number of interacting species couple", xlab = "Mean")
+
+table(as.vector(bipartite_mean)[which(as.vector(bipartite_mean) != 0)])
+
+barplot(table(as.vector(bipartite_sd)[which(as.vector(bipartite_sd) != 0)]), main = "SD of the number of interaction's distribution accross the network", ylab = "Number of interacting species couple", xlab = "SD")
+
+# table(as.vector(bipartite_sd)[which(as.vector(bipartite_sd) != 0)])
+
+plot(as.vector(bipartite_mean)[which(as.vector(bipartite_mean) != 0)], as.vector(bipartite_sd)[which(as.vector(bipartite_sd) != 0)], main = "SD & Mean", xlab = "Mean", ylab = "SD")
+```
+
+### Interaction VS neutral effect
+
+```{r}
+plot(bipartite.networks, neutral_effect, xlab = "number of interactions", ylab = "neutral effect", main = "Interaction VS Neutral effect")
+plot(log(bipartite.networks), log(neutral_effect), xlab = "number of interactions", ylab = "neutral effect", main = "Interaction VS Neutral effect \n double log scale")
+```
+```{r}
+cor(as.vector(bipartite.networks), as.vector(neutral_effect), method = "spearman")
+cor(as.vector(bipartite.networks), as.vector(neutral_effect), method = "pearson")
+```
 
 
 # Todo
