@@ -307,19 +307,57 @@ barplot(table(as.vector(bipartite_sd)[which(as.vector(bipartite_sd) != 0)]), mai
 # table(as.vector(bipartite_sd)[which(as.vector(bipartite_sd) != 0)])
 
 plot(as.vector(bipartite_mean)[which(as.vector(bipartite_mean) != 0)], as.vector(bipartite_sd)[which(as.vector(bipartite_sd) != 0)], main = "SD & Mean", xlab = "Mean", ylab = "SD")
+
+abline( lm(as.vector(bipartite_sd)[which(as.vector(bipartite_sd) != 0)]~as.vector(bipartite_mean)[which(as.vector(bipartite_mean) != 0)]), col = "red")
 ```
 
 ### Interaction VS neutral effect
 
 ```{r}
 plot(bipartite.networks, neutral_effect, xlab = "number of interactions", ylab = "neutral effect", main = "Interaction VS Neutral effect")
+
+abline(lm(as.vector(neutral_effect) ~ as.vector(bipartite.networks)), col = "red")
+
+conf_int <- confint(lm(as.vector(neutral_effect) ~ as.vector(bipartite.networks)))
+
+abline(conf_int[,1], col = "blue")
+abline(conf_int[,2], col = "blue")
+
 plot(log(bipartite.networks), log(neutral_effect), xlab = "number of interactions", ylab = "neutral effect", main = "Interaction VS Neutral effect \n double log scale")
 ```
+
 ```{r}
 cor(as.vector(bipartite.networks), as.vector(neutral_effect), method = "spearman")
 cor(as.vector(bipartite.networks), as.vector(neutral_effect), method = "pearson")
 ```
 
+We can see that there is many interactions that are not linearly correlated with the neutral effect. It means that these couple of species are interacting more or less than what would be expected if the interaction were only driven by the neutral effects. It is indeed related as the correlation coefficient is of 0.62 but it also depends on the trait matching and a good trait matching can increase the interaction probability and reciprocally.
+
+```{r}
+lm(as.vector(neutral_effect) ~ as.vector(bipartite.networks))
+confint(lm(as.vector(neutral_effect) ~ as.vector(bipartite.networks)), level = 0.95)
+```
+
+
+The equation of the linear regression is $y = 822x+165$
+
+let's look at the interactions that have more than 500,000 as a neutral effect score and less than 500 Interactions
+
+```{r}
+(out_layer <- which(neutral_effect > 500000 & bipartite.networks <500, arr.ind = T))
+```
+
+We don't care about the dimension 1 as it is the time frame
+
+```{r}
+interest_spe <- list(pla = array(NA, dim = dim(out_layer)[1]), pol = array(NA, dim = dim(out_layer)[1]))
+for (i in 1:dim(out_layer)[1]){
+  interest_spe$pla[i] <- dimnames(bipartite.networks)[[2]][out_layer[i, 2]]
+  interest_spe$pol[i] <- dimnames(bipartite.networks)[[3]][out_layer[i, 3]]
+}
+interest_spe$pla
+interest_spe$pol
+```
 
 # Todo
 
