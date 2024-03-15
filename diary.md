@@ -93,6 +93,10 @@ recherche de base de donnée et de métriques dans des articles
 
 Test AFC sur les données de Vincent et lecture partie correspondance analysis du bouquin de stats
 
+## jusqu'au 14
+
+observation du jeu de données de Vincent
+
 # Todo list
 
 - [x] jouer avec les largeurs de gradients ainsi que avec les variances des niches
@@ -143,3 +147,10 @@ jouer avec le delta et peut être les faire varier (genre les fixer à 0 pour la
 - [ ] regarder quel est les points qui sortent toujours de l'AFC 
 
 - [ ] regarder si les proportion entre les espèces restent constante 
+
+frund distance beta st distance sur le gradient environmental, regarder sensibilité au delta
+beta os correspondrait au rewiring et serait donc attendu proche de 0, si on peut montrer qu'il est observé dans des réseaux générés dans lesquels il n'y a pas de rewiring: bingo!
+regarder méthodes etude rewiring
+
+quest que le rewiring 
+methodes usuelles analyse rewiring (mesure de beta)

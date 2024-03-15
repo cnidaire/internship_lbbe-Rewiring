@@ -221,3 +221,18 @@ Est probablement important pour comparer les réseaux suivant des gradients, ce 
 # Interrogation
 
 Par contre je ne sais pas si plutôt que les abondances, ce serait les abondances relatives des espèces avec lesquelles elle peut potentiellement interagir, ce qui impliquerait la notion de devoir rechercher une nouvelle espèce mais ça il faudrait l'appuyer avec des articles et je n'en suis pas sûr.
+
+# Point de vue actuel
+
+$\beta_{ST}$ = species turnover
+$\beta_{OS}$ = changing interactions among species shared among sites $\Leftrightarrow$ rewiring
+
+"The latter makes a strong case for using network approaches and investing the enormous effort in empirically recording interactions, as it highlights that knowing which species are there may not allow to predict interactions in a simple way (Poisot et al. 2015) and that interactions may be lost without losing species (Tylianakis et al. 2010)." [[Ecosphere - 2021 - Fründ - Dissimilarity of species interaction networks  how to partition rewiring and species turnover.pdf|Frund 2021]]
+[[Poisot et al. - 2012 - The dissimilarity of species interaction networks.pdf|Poisot 2012]] They assume that $\beta_{WholeNetwork} = \beta_{SpeciesTurnover} + \beta_{coOccuringSpecies}$
+In this case, we mainly suggested that it would be due to a sampling bias and that the more species you are able to interact with, the higher the probability of randomly losing an interaction is when the sampling power is low. Hence a ow sampling power would translate in a high $\beta_{OS}$. *Should be tested* For example by fixing the trait matching and environnemental gradient and then varying the sampling power and see if there is modifications.
+
+The concept of meta web is strongly related to the trait matching matrix as the later represent the possibility of two species to interact together. However there is no notion of phenology and hence even if some species can interact in theory, they might never encounter one another as the environnemental niche might not overlap. 
+Nonetheless, knowing the traits distribution of the species and their position along the environnemental gradient might be more informative than just the metaweb. As it is giving the potentiality of interactions occurring and then we the phenology is linked to the abundances
+
+"specially as recent research highlighted how knowing the food-web structure is key in predicting both the functioning (The´bault & Loreau 2003) and the consequences of warming on functioning (Sarmento et al. 2010) in complex ecosystems." [[Poisot et al. - 2012 - The dissimilarity of species interaction networks.pdf|Poisot 2012]] 
+
