@@ -8,11 +8,13 @@ transform the correlated variables into new variable uncorrelated one with anoth
 
 On continuous data
 
-### Correspondence analysis (AFC: analyse factorielle des correspondences)
+### Correspondence Analysis (AFC: analyse factorielle des correspondences)
 
 **Le truce sur lequel je vais bosser**
 
 conceptually similar to ACP but rather applies on categorical data. If more than two categorical variable: multiple correspondence analysis.
+
+This method is base don the distance of the $\chi^2$ instead of the euclidian distance of the PCA. Hence
 
 
 ### Factor analysis (Analyse factorielle)
