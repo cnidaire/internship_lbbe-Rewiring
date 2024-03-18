@@ -99,18 +99,10 @@ observation du jeu de données de Vincent
 
 # Todo list
 
-- [x] jouer avec les largeurs de gradients ainsi que avec les variances des niches
-- [x] faire en sorte que les abondance ne dépendent plus que de la variance de la niche mais aussi d'une autre variable puis rajouter de la variabilité avec un rpois de la valeur obtenue
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degrée de specialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
 - [ ] ne plus trier en fonction des optimums de niche théoriques mais en fonction de leurs ordre sur le premier axe de l'AFC. En théorie même résultat mais c'est ce que l'on ferait sur des données de terrain.
-- [x] données Miele et Vasquez
-- [x] métrique pour réseaux valués bipartis [[Lau et al. - 2017 - Ecological network metrics opportunities for synt.pdf|Lau 2017]] , regarder le package bipartite 
 - [ ] différentes approches comme AFC, métriques (nestedness, motifs, modularity, degree moyen), beta div afin de comparer des réseaux
 - [ ] lire bersier et al 2012 et abundances and generalization in mutualistic networks solving the chicken and egg dilemma
-- [x] récupérer les trait matching théorique ainsi que pour les niches
-- [x] régler les problèmes de nom dans le code pour la partie trait matching
-- [x] vérifier pourquoi il y a un tri (sort) dans les traits
-- [x] add: importFrom("stats", "dnorm", "rnorm", "runif", "rpois") and importFrom("mvtnorm", "dmvnorm") in the r file such that I dont need to modify the namespace afterward by adding @importFrom
 - [ ] Il y a encore une correlation entre généraliste et en moyenne une plus faible abondance vu que j'utilise dnrm. Il faudrait donc fixer le max et ensuite multiplier par le dnorm selon la variance. Ainsi pour fixer le pique, ce serait peut-être bien de  faire dnorm/dnorm_max
 - [ ] regarder les connected components et travailler seulement sur la composante géante
 	- [ ] pour ça regarder is.connected et components (pour obtenir les connected components) dans le package bipartite.
@@ -154,3 +146,28 @@ regarder méthodes etude rewiring
 
 quest que le rewiring 
 methodes usuelles analyse rewiring (mesure de beta)
+
+
+## 17 mars: optimisation linux et wifi Arnaud
+
+- plugins firefox: tree tabs + group tabs
+- Wifi:
+	-  lspci  pour voir les périphériques (VGA, USB, SATA, réseau, wireless)
+	-  tail -f /var/log/syslog | grep NetworkManager
+	-  /etc/init.d/networking restart  (stop ou start ou ....)
+	- termes qui reviennent souvent avec le wifi: supplicant
+	-  Carte réseau RTL8188EE...
+	- module du noyau:
+		- lsmod
+		- modprobe -r rtl8188ee rtl_wifi rtl_pci
+		- modprobe rtl8188ee rtl_wifi rtl_pci
+	-  /etc/init.d/networking stop ;  /etc/init.d/networking start
+- Bluetooth: pas de bluetooth
+	- https://h30434.www3.hp.com/t5/Notebook-Wireless-and-Networking/Bluetooth-Capability/td-p/5789312
+	- https://support.hp.com/fr-fr/document/c04940877
+	- https://doc.ubuntu-fr.org/bluetooth_materiel-soutenu pour le cas où tu voudrais acheter un dongle USB bluetooth
+- Espace disque
+	- df -h (pour voir ce qui est monté et combien il reste)
+	- mount (pour voir ce qui est monté)
+	- cfdisk (pour voir les partitions)
+ 
