@@ -86,7 +86,6 @@ rm_unique_netw <- function(frame_1, frame_2){
                which(colSums(simulated_network$obs_network[[frame_2]]) == 0))
   col_in_both <- c(1:dim(simulated_network$obs_network[[frame_1]])[2])
   col_in_both <- col_in_both[!(col_in_both %in% abs_col)]
-  
   return(list(row_to_keep = row_in_both, col_to_keep = col_in_both))
 }
 
@@ -95,7 +94,7 @@ filtered_location <- rm_unique_netw(1,2)
 # table.value(simulated_network$obs_network[[1]][filtered_location$row_to_keep,filtered_location$col_to_keep])
 # table.value(simulated_network$obs_network[[2]][filtered_location$row_to_keep,filtered_location$col_to_keep])
 
-betalinkr(abind::abind(simulated_network$obs_network[c(1,2)], along = 3))
+betalinkr_multi(abind::abind(simulated_network$obs_network[], along = 3), partitioning = "commondenom")
 ```
 
 

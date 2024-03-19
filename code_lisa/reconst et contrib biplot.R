@@ -19,9 +19,9 @@ reconst_afc <- function (dudi, nf = 1, ...)
     pc <- dudi$cw
     n <- dudi$N
     #res0 <- outer(pl, pc) * n
-    res0 <- matrix(1, length(pl), length(pl))
-    res <- data.frame(res0-1)
-    names(res) <- names(dudi$tab)
+    res0 <- matrix(1, length(pl), length(pc))
+    res <- data.frame(res0-1) # <=> matrix(0, length(pl), length(pc))
+    names(res) <- names(dudi$tab) # col.names?
     row.names(res) <- row.names(dudi$tab)
     #res0 <- outer(pl, pc) * n
     if (nf == 0) 

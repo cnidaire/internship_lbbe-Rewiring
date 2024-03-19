@@ -1,0 +1,129 @@
+---
+title: "reconstruct_trait_simu"
+author: "Rémi"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(NetworkEnvGradGeneration)
+library(ade4)
+```
+
+
+```{r}
+##################################################"
+## reconst.coa reconstitue le tableau original Nij
+## ici on reconstitue les ecarts entre pij observé et théorique pi.p.j
+## (pij - pi.p.j) pour reconst_afc ou normés par le chi2 ((pij - pi.p.j)/pi.p.j)) pour reconst_afc2
+##################################################"
+
+library(ade4)
+
+reconst_afc <- function (dudi, nf = 1, ...) 
+{
+    ## reconst (pij - pi.p.j)/pi.p.j
+    if (!inherits(dudi, "dudi")) 
+        stop("Object of class 'dudi' expected")
+    if (nf > dudi$nf) 
+        stop(paste(nf, "factors need >", dudi$nf, "factors available\n"))
+    if (!inherits(dudi, "coa")) 
+        stop("Object of class 'dudi' expected")
+    pl <- dudi$lw
+    pc <- dudi$cw
+    n <- dudi$N
+    #res0 <- outer(pl, pc) * n
+    res0 <- matrix(1, length(pl), length(pc)) # c'est bien pc?
+    res <- data.frame(res0-1) # pourquoi pas direct matr(0, pl,pc)?
+    names(res) <- names(dudi$tab) # col.names?
+    row.names(res) <- row.names(dudi$tab)
+    #res0 <- outer(pl, pc) * n
+    if (nf == 0) 
+        return(res)
+    for (i in 1:nf) {
+        xli <- dudi$li[, i]
+        yc1 <- dudi$c1[, i] # pourquoi li et C1 et pas l1/c1, ou li/co? 
+        res <- res + outer(xli, yc1) * res0
+    }
+    return(res)
+} 
+
+
+reconst_afc2 <- function (dudi, nf = 1, ...) 
+{
+    ## reconst (pij - pi.p.j)
+    if (!inherits(dudi, "dudi")) 
+        stop("Object of class 'dudi' expected")
+    if (nf > dudi$nf) 
+        stop(paste(nf, "factors need >", dudi$nf, "factors available\n"))
+    if (!inherits(dudi, "coa")) 
+        stop("Object of class 'dudi' expected")
+    pl <- dudi$lw
+    pc <- dudi$cw
+    n <- dudi$N
+    res0 <- outer(pl, pc) * n
+    res <- data.frame(res0 - 1)
+    names(res) <- names(dudi$tab)
+    row.names(res) <- row.names(dudi$tab)
+    if (nf == 0) 
+        return(res)
+    for (i in 1:nf) {
+        xli <- dudi$li[, i]
+        yc1 <- dudi$c1[, i]
+        res <- res + outer(xli, yc1) * res0
+    }
+    return(res)
+}
+```
+
+# Generate Network
+
+```{r}
+nb_frame <- 4; env_grad_max = 10
+spe_resource <- 60; spe_consum <- 60
+mean_tol_env = 2; sd_tol_env = 4
+simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum,
+                                   nb_location = nb_frame, env_grad_max = env_grad_max,
+                                   know_env_grad_pos = T, ninter = 1000, 
+                                   mean_tol = 15,
+                                   mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env,
+                                   delta = 1)
+
+row.names(simulated_network$abudance$abundance_resource) <- paste0("site",1:nb_frame)
+row.names(simulated_network$abudance$abundance_consumer) <- paste0("site",1:nb_frame)
+```
+
+```{r}
+tab = Reduce('+', simulated_network$obs_network) # afin de générer le réseau moyen
+
+afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+
+par(mfrow=c(2,2))
+table.value(simulated_network$trait$matching_matrix, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # trait matching matrix et tri selon le premier axe
+table.value(tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # réseau moyen observé
+toto = reconst_afc(afc.tab, nf = 8) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
+table.value(toto, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8) # plot le réseau reconstruit
+table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # transformed average table
+```
+
+```{r}
+cor(simulated_network$trait$trait_resource, afc.tab$li)
+```
+
+```{r}
+scatter(afc.tab)
+```
+
+
+```{r}
+library(adegraphics)
+table.value(afc.tab$tab, coordsx = rank(afc.tab$co[,1]), coordsy  = rank(afc.tab$li[,1]), method = "color", ppoint.cex = 0.2) # transformed average table
+
+image(simulated_network$trait$matching_matrix [order(afc.tab$li[,1]), order(afc.tab$co[,1])])
+
+```
+
