@@ -148,7 +148,7 @@ quest que le rewiring
 methodes usuelles analyse rewiring (mesure de beta)
 
 
-## 17 mars: optimisation linux et wifi Arnaud
+## 17 mars: optimisation linux et wifi avec Papa
 
 - plugins firefox: tree tabs + group tabs
 - Wifi:
@@ -170,4 +170,12 @@ methodes usuelles analyse rewiring (mesure de beta)
 	- df -h (pour voir ce qui est monté et combien il reste)
 	- mount (pour voir ce qui est monté)
 	- cfdisk (pour voir les partitions)
- 
+
+- [ ] regarder la correlation entre les traits plantes avec les lignes obtenues
+- [ ] même chose pour le colonnes et les traits des pollinisateurs
+- [ ] filtrer les espèces qui n'interagissent qu'avec une seule personne pour ne garder que la composante géante
+- [ ] regarder la corrélations des moyennes avec les axes avec des boxplots quand on fair plusieurs tirages
+- [ ] faire une heatmap afin de comparer les 
+- [ ] faire varier delta et évaluer l'impact sur la capacité à évaluer 
+- [ ] corréler un/les traits au gradient environnemental: $t_2=a^2t_1+(1-a)^2*\epsilon$
+- [ ] trouver des métriques telles que le nombre d'espèces aillant leur trait moyen à l’intérieur de deux écarts types ($\Leftrightarrow 95.45$), et regarder ensuite le lien avec le changement de role (position dans l'AFC) selon la largeur de la niche.
