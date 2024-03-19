@@ -111,7 +111,8 @@ table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # t
 ```
 
 ```{r}
-cor(simulated_network$trait$trait_resource, afc.tab$li)
+cor(simulated_network$trait$trait_resource, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+cor(simulated_network$trait$trait_consumer[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
 ```
 
 ```{r}
