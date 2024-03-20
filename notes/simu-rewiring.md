@@ -90,18 +90,3 @@ Ainsi, si il y a une nouvelle espèce qui est plus favorable que celles présent
 ## autres commentaires: 
 
 l'AFC permet de discriminer entre le trait matching et les abondances vu qu'en faisant un $\chi^2$ on obtient: $\frac{P_{ij}- P_{i.}P{.j} }{P{i.}P{.j}}$
-
-## Choses à faire
-
-### Code:
-
-Ajouter un troisième gradient d’environnement qui permettra de tirer les abondances des espèces et animaux en lisant la distribution en certains points. Dans ce cas ci, les animaux et plantes auront des distributions normales évidement.
-
-Ensuite injecter les abondances et récupérer le trait matching afin de pouvoir réutiliser les mêmes traits pour les différentes régions du gradient environnemental.
-
-Ce qui implique modifier la fonction de Lisa.
-
-### Biblio
-
-- demander à Lisa ce quelle fait, ce sur quoi elle travaille, pourquoi elle a développé ce code, etc.
-- Regarder dans le biblio le point de vue et la définition sur le rewiring de chaque personnes.

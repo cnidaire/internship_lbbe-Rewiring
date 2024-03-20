@@ -147,8 +147,8 @@ trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
                             nb_resource = 40, nb_consumer = 100) {
   ### Initialize the gradient for axis 2 ###
   # The length of the second gradient is a fraction of the length of the first gradient
-  gradmin2 <- (1 - ratio_grad) / 2 * le_grad
-  gradmax2 <- le_grad - (1 - ratio_grad) / 2 * le_grad
+  gradmin2 <- 0
+  gradmax2 <- le_grad - (1 - ratio_grad) * le_grad
   # For the columns, we include a buffer that is also on axis 2
   # (if buffer = 0 then gradmin/max2_buffer and gradmin/max2 are equal)
   gradmin2_buffer <- -buffer + gradmin2
@@ -169,16 +169,13 @@ trait_match_mat <- function(le_grad = 100, ratio_grad = 0.8,
   # Fill array p
 
   # -> first dimension
-  # Generate environmental optima for each species
+  # Generate Trait 1 optima for each species
   trait_consumer[, 1, 1] <- runif(nb_consumer, min = 0 - buffer, max = le_grad + buffer)
-  # Generate random niche widths for each species
+  # Generate random trait's niche widths for each species
   trait_consumer[, 2, 1] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
   # -> second dimension
-  trait_consumer[, 1, 2] <- runif(nb_consumer,
-                     min = gradmin2_buffer,
-                     max = gradmax2_buffer
-  )
+  trait_consumer[, 1, 2] <- runif(nb_consumer, min = gradmin2_buffer, max = gradmax2_buffer)
   trait_consumer[, 2, 2] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
   ### Probability matrix (only matching) ###

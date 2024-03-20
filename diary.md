@@ -1,4 +1,4 @@
-# Journal de bord
+e./# Journal de bord
 ## 26 Janvier
 
 bosse les cours de stat multi-variée de Timothée pour me faire une idée de ce que c'est
@@ -93,13 +93,47 @@ recherche de base de donnée et de métriques dans des articles
 
 Test AFC sur les données de Vincent et lecture partie correspondance analysis du bouquin de stats
 
-## jusqu'au 14
+## jusqu'au 14 mars
 
 observation du jeu de données de Vincent
 
+## 17 mars: optimisation linux et wifi avec Papa
+
+- plugins firefox: tree tabs + group tabs
+- Wifi:
+	-  lspci  pour voir les périphériques (VGA, USB, SATA, réseau, wireless)
+	-  tail -f /var/log/syslog | grep NetworkManager
+	-  /etc/init.d/networking restart  (stop ou start ou ....)
+	- termes qui reviennent souvent avec le wifi: supplicant
+	-  Carte réseau RTL8188EE...
+	- module du noyau:
+		- lsmod
+		- modprobe -r rtl8188ee rtl_wifi rtl_pci
+		- modprobe rtl8188ee rtl_wifi rtl_pci
+	-  /etc/init.d/networking stop ;  /etc/init.d/networking start
+- Bluetooth: pas de bluetooth
+	- https://h30434.www3.hp.com/t5/Notebook-Wireless-and-Networking/Bluetooth-Capability/td-p/5789312
+	- https://support.hp.com/fr-fr/document/c04940877
+	- https://doc.ubuntu-fr.org/bluetooth_materiel-soutenu pour le cas où tu voudrais acheter un dongle USB bluetooth
+- Espace disque
+	- df -h (pour voir ce qui est monté et combien il reste)
+	- mount (pour voir ce qui est monté)
+	- cfdisk (pour voir les partitions)
+
+
+## Jusqu'au 20 mars
+
+retour sur les données simulées:
+- reconstitution du trait matching à partir de l'AFC sur les réseaux générés
+- resoudre init splash qui mon bouffe tout mon CPU
+
+On retrouve bien une surestimation des spécialistes quand la puissance d'échantillonnage est trop faible et de plus on à l'impression qu'il y a plein de petites composantes au lieu d'une géante.
+
+Il semblerait aussi que bien que ce qui perturbe l'AFC, ce ne soit pas que les éléments ne faisant pas partie de la composante géante mais aussi ceux qui ont un degré de 1 et qui sont eux même liés à des points qui sont faiblement connectés. dans ce cas, cela ne correspondra peut-être pas à la composante principale mais peut-être la 2eme, 3eme, etc. Ce qui peut être gênant dans notre cas car on s'attendrait à ce que les premières composantes soient le traits organisant les interactions et seulement plus bas ce genre de bruit.
+
 # Todo list
 
-- [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degrée de specialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
+- [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
 - [ ] ne plus trier en fonction des optimums de niche théoriques mais en fonction de leurs ordre sur le premier axe de l'AFC. En théorie même résultat mais c'est ce que l'on ferait sur des données de terrain.
 - [ ] différentes approches comme AFC, métriques (nestedness, motifs, modularity, degree moyen), beta div afin de comparer des réseaux
 - [ ] lire bersier et al 2012 et abundances and generalization in mutualistic networks solving the chicken and egg dilemma
@@ -148,28 +182,7 @@ quest que le rewiring
 methodes usuelles analyse rewiring (mesure de beta)
 
 
-## 17 mars: optimisation linux et wifi avec Papa
 
-- plugins firefox: tree tabs + group tabs
-- Wifi:
-	-  lspci  pour voir les périphériques (VGA, USB, SATA, réseau, wireless)
-	-  tail -f /var/log/syslog | grep NetworkManager
-	-  /etc/init.d/networking restart  (stop ou start ou ....)
-	- termes qui reviennent souvent avec le wifi: supplicant
-	-  Carte réseau RTL8188EE...
-	- module du noyau:
-		- lsmod
-		- modprobe -r rtl8188ee rtl_wifi rtl_pci
-		- modprobe rtl8188ee rtl_wifi rtl_pci
-	-  /etc/init.d/networking stop ;  /etc/init.d/networking start
-- Bluetooth: pas de bluetooth
-	- https://h30434.www3.hp.com/t5/Notebook-Wireless-and-Networking/Bluetooth-Capability/td-p/5789312
-	- https://support.hp.com/fr-fr/document/c04940877
-	- https://doc.ubuntu-fr.org/bluetooth_materiel-soutenu pour le cas où tu voudrais acheter un dongle USB bluetooth
-- Espace disque
-	- df -h (pour voir ce qui est monté et combien il reste)
-	- mount (pour voir ce qui est monté)
-	- cfdisk (pour voir les partitions)
 
 - [ ] regarder la correlation entre les traits plantes avec les lignes obtenues
 - [ ] même chose pour le colonnes et les traits des pollinisateurs
