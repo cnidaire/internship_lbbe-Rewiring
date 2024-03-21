@@ -54,7 +54,7 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   ### resource gradient ###
   env_grad_resource <- array(0, dim = c(nb_resource, 2)) # two col, 1st: mean, 2nd: sd
   # Generate environmental optima for each species
-  env_grad_resource[, 1] <- sort(runif(nb_resource, min = 0, max = 1))
+  env_grad_resource[, 1] <- runif(nb_resource, min = 0, max = 1)
   # Generate random niche widths for each species
   env_grad_resource[, 2] <- abs(rnorm(nb_resource, mean = mean_tol_env, sd = sd_tol_env))
 
@@ -62,7 +62,7 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   ### Consumer gradient ###
   env_grad_consumer <- array(0, dim = c(nb_consumer, 2)) # two col, 1st: mean, 2nd: sd
   # Generate environmental optima for each species
-  env_grad_consumer[, 1] <- sort(runif(nb_consumer, min = 0.1, max = 0.1))
+  env_grad_consumer[, 1] <- runif(nb_consumer, min = 0, max = 1)
   # Generate random niche widths for each species
   env_grad_consumer[, 2] <- abs(rnorm(nb_consumer, mean = mean_tol_env, sd = sd_tol_env))
 
@@ -168,7 +168,7 @@ trait_match_mat <- function(ratio_grad = 0.8,
 
   # -> first dimension
   # Generate Trait 1 optima for each species
-  trait_consumer[, 1, 1] <- corr_env_trait * trait_env_con[,1] + (1 - corr_env_trait) * rnorm(nb_resource, param_epsilon[1], param_epsilon[2])
+  trait_consumer[, 1, 1] <- corr_env_trait * trait_env_con[,1] + (1 - corr_env_trait) * rnorm(nb_consumer, param_epsilon[1], param_epsilon[2])
   # Generate random trait's niche widths for each species
   trait_consumer[, 2, 1] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
@@ -350,7 +350,7 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
     mean_tol = mean_tol, sd_tol = sd_tol,
     nb_resource = nb_resource, nb_consumer = nb_consumer,
     corr_env_trait= corr_env_trait, param_epsilon = param_epsilon,
-    trait_env_res = abundance$abundance_resource, trait_env_con = abundance$abundance_consumer
+    trait_env_res = abundance$th_distrib_resource, trait_env_con = abundance$th_distrib_consumer
   )
   th_env_netw <- list()
   for (i in 1:nb_location) {
