@@ -9,15 +9,14 @@ env_grad_netw(
   nb_consumer = 100,
   nb_location = 3,
   know_env_grad_pos = TRUE,
-  mean_tol_env = 1,
-  sd_tol_env = 1,
-  env_grad_min = 0,
-  env_grad_max = 10,
+  mean_tol_env = 0.1,
+  sd_tol_env = 0.1,
   magn_res_min = 20,
   magn_res_max = 200,
   magn_con_min = 100,
   magn_con_max = 10000,
-  le_grad = 100,
+  corr_env_trait = 0,
+  param_epsilon = c(0.5, 0.1),
   ratio_grad = 0.8,
   buffer = 1,
   mean_tol = 2,
@@ -36,13 +35,9 @@ env_grad_netw(
 \item{know_env_grad_pos}{Boolean, If True: then evenly spaced sampling along the environmental
 gradient, otherwise, uniformly drawn position along the gradient}
 
-\item{mean_tol_env}{Numeric, Mean of the standard deviation of the niche tolerance}
+\item{mean_tol_env}{Numeric, Mean of the standard deviation of the niche tolerance for an environmental gradient between 0 and 1}
 
-\item{sd_tol_env}{Numeric, Mean of the standard deviation of the niche tolerance}
-
-\item{env_grad_min}{Numeric, Maximum value of the gradient in arbitrary unit}
-
-\item{env_grad_max}{Numeric, Minimum value of the gradient in arbitrary unit}
+\item{sd_tol_env}{Numeric, Standard deviation of the standard deviation of the niche tolerance for an environmental gradient between 0 and 1}
 
 \item{magn_res_min}{Numeric, Lower bound of the order of magnitude of size of a resource population}
 
@@ -52,7 +47,9 @@ gradient, otherwise, uniformly drawn position along the gradient}
 
 \item{magn_con_max}{Numeric, Higher bound of the order of magnitude of size of a consumer population}
 
-\item{le_grad}{Numeric, Higher bound of the first trait gradient}
+\item{corr_env_trait}{Numeric, weight given on the correlation between the environment gradient and the trait one}
+
+\item{param_epsilon}{Vector of two values, containing the mean and sd of the epsilon of correlation of the first trait}
 
 \item{ratio_grad}{Numeric between 0 and 1, Ratio between the first and second gradient}
 

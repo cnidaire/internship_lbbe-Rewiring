@@ -9,10 +9,8 @@ abund_env_grad(
   nb_resource = 40,
   nb_consumer = 100,
   nb_location = 3,
-  mean_tol_env = 1,
-  sd_tol_env = 1,
-  env_grad_min = 0,
-  env_grad_max = 10,
+  mean_tol_env = 0.1,
+  sd_tol_env = 0.1,
   magn_res_min = 20,
   magn_res_max = 200,
   magn_con_min = 100,
@@ -29,13 +27,9 @@ gradient, otherwise, uniformly drawn position along the gradient}
 
 \item{nb_location}{Numeric, Number of location along the gradient (i.e. number of networks)}
 
-\item{mean_tol_env}{Numeric, Mean of the standard deviation of the niche tolerance}
+\item{mean_tol_env}{Numeric, Mean of the standard deviation of the niche tolerance for an environmental gradient between 0 and 1}
 
-\item{sd_tol_env}{Numeric, Standard deviation of the standard deviation of the niche tolerance}
-
-\item{env_grad_min}{Numeric, Maximum value of the gradient in arbitrary unit}
-
-\item{env_grad_max}{Numeric, Minimum value of the gradient in arbitrary unit}
+\item{sd_tol_env}{Numeric, Standard deviation of the standard deviation of the niche tolerance for an environmental gradient between 0 and 1}
 
 \item{magn_res_min}{Numeric, Lower bound of the order of magnitude of size of a resource population}
 
@@ -55,6 +49,5 @@ separately for the consumer and the resources.
 }
 \examples{
 abund_env_grad(nb_resource = 40, nb_consumer = 100, nb_location = 3,
-               mean_tol_env = 1, sd_tol_env = 1,
-               env_grad_min = 0, env_grad_max = 10)
+               mean_tol_env = 1, sd_tol_env = 1)
 }
