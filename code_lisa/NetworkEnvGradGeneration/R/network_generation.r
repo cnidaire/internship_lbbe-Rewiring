@@ -57,7 +57,9 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   env_grad_resource[, 1] <- runif(nb_resource, min = 0, max = 1)
   # Generate random niche widths for each species
   env_grad_resource[, 2] <- abs(rnorm(nb_resource, mean = mean_tol_env, sd = sd_tol_env))
-
+  # Assign names
+  dimnames(env_grad_resource)[[1]] <- paste0("res", 1:nb_resource)
+  dimnames(env_grad_resource)[[2]] <- c("mean", "sd")
 
   ### Consumer gradient ###
   env_grad_consumer <- array(0, dim = c(nb_consumer, 2)) # two col, 1st: mean, 2nd: sd
@@ -65,6 +67,9 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   env_grad_consumer[, 1] <- runif(nb_consumer, min = 0, max = 1)
   # Generate random niche widths for each species
   env_grad_consumer[, 2] <- abs(rnorm(nb_consumer, mean = mean_tol_env, sd = sd_tol_env))
+  # Assign names
+  dimnames(env_grad_consumer)[[1]] <- paste0("con", 1:nb_consumer)
+  dimnames(env_grad_consumer)[[2]] <- c("mean", "sd")
 
   ### Obtain abundances from a given position along the gradient ###
   if (know_env_grad_pos) {
@@ -86,6 +91,10 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
     }
   }
 
+  # Assign names
+  dimnames(abund_resource)[[1]] <- paste0("loc", 1:nb_location)
+  dimnames(abund_resource)[[2]] <- paste0("res", 1:nb_resource)
+
   ### Abundance Consumer ###
   # Generate the magnitude of the abundance of consumer species
   magn_con <- runif(nb_consumer, magn_con_min, magn_con_max)
@@ -99,6 +108,10 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
     }
   }
 
+  # Assign names
+  dimnames(abund_consumer)[[1]] <- paste0("loc", 1:nb_location)
+  dimnames(abund_consumer)[[2]] <- paste0("con", 1:nb_consumer)
+
   ### Results ###
   abundance <- list(
     abundance_resource = abund_resource,
@@ -106,7 +119,7 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
     th_distrib_resource = env_grad_resource,
     th_distrib_consumer = env_grad_consumer,
     magnitude_resource = magn_res,
-    magnitude_consumler = magn_con
+    magnitude_consumer = magn_con
   )
   return(abundance)
 }
@@ -151,6 +164,9 @@ trait_match_mat <- function(ratio_grad = 0.8,
   # For each resource, generate a trait gradient value at random (uniform), correlated for the first one and non correlated for the second one
   trait_resource[, 1] <- corr_env_trait * trait_env_res[,1] + (1 - corr_env_trait) * runif(nb_resource, 0, 1)
   trait_resource[, 2] <- runif(nb_resource, min = gradmin2, max = gradmax2)
+  # Assign names
+  dimnames(trait_resource)[[1]] <- paste0("res", 1:nb_resource)
+  dimnames(trait_resource)[[2]] <- c("trait_1", "trait_2")
 
   ### Consumer species trait gradient ###
   # Initialize an array for the optima and tolerances of the traits of the species
@@ -168,6 +184,10 @@ trait_match_mat <- function(ratio_grad = 0.8,
   # -> second dimension
   trait_consumer[, 1, 2] <- runif(nb_consumer, min = gradmin2, max = gradmax2)
   trait_consumer[, 2, 2] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
+
+  # Assign names for both
+  dimnames(trait_consumer)[[1]] <- paste0("con", 1:nb_consumer)
+  dimnames(trait_consumer)[[2]] <- c("mean", "sd")
 
   ### Probability matrix (only matching) ###
   # Initialize empty community matrix
@@ -193,6 +213,10 @@ trait_match_mat <- function(ratio_grad = 0.8,
   # Quick patch (in case there are species with zero obs that became NA at the division step)
   matching_matrix[is.na(matching_matrix)] <- 0
 
+  # Assign names
+  dimnames(matching_matrix)[[1]] <- paste0("res", 1:nb_resource)
+  dimnames(matching_matrix)[[2]] <- paste0("con", 1:nb_consumer)
+
   ### Results ###
   trait <- list(matching_matrix = matching_matrix,
                 trait_resource = trait_resource,
@@ -213,13 +237,17 @@ trait_match_mat <- function(ratio_grad = 0.8,
 #' @param abund_consumer Array, consumer abundance along the gradient
 #' @param matching_matrix Matrix, Array containing the probabilities of species interactions only based on trait matching
 #' @param delta Numeric, weight of trait matching relatively to abundance
+#' @param nb_resource Numeric, Number of resources in the bipartite network
+#' @param nb_consumer Numeric, Number of consumers in the bipartite network
+
 #'
 #' @return Matrix, Theoretical interaction probability taking in account trait matching and abundances
 #'
 #' @export
 
 
-int_count_th <- function(location, abund_resource, abund_consumer, matching_matrix, delta = 1) {
+int_count_th <- function(location, abund_resource, abund_consumer, matching_matrix, delta = 1,
+                         nb_resource, nb_consumer) {
   ### Theoretical interaction count (based on abundances) ###
   # This code makes sense only for interaction matrices because the abundance of
   # resource species is a limiting factor here.
@@ -237,6 +265,10 @@ int_count_th <- function(location, abund_resource, abund_consumer, matching_matr
   # Create a vector of probabilities that takes into account the matching
   p_mix <- ab_mix / sum(ab_mix)
   p_mix[is.na(p_mix)] <- 0 # Handle divisions per zero
+
+  # Assign names
+  dimnames(p_mix)[[1]] <- paste0("res", 1:nb_resource)
+  dimnames(p_mix)[[2]] <- paste0("con", 1:nb_consumer)
 
   ### Results ###
   return(p_mix)
@@ -263,19 +295,23 @@ int_count_th <- function(location, abund_resource, abund_consumer, matching_matr
 #' @param th_network  Matrix, Theoretical interaction probability taking in account trait matching and abundances
 #' @param ninter Numeric, number of interactions observed on the network
 #' @param nb_resource Numeric, Number of resources in the bipartite network
-#'
+#' @param nb_consumer Numeric, Number of consumers in the bipartite network
+#' #'
 #' @return  Matrix, Observed interactions across an environmental gradient
 #'
 #' @export
 
 
-sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
+sampling <- function(th_network, ninter = 100, nb_resource, nb_consumer){
   obs_network_vect <- stats::rmultinom(
     n = 1,
     size = ninter,
     prob = as.numeric(th_network)
   )
   obs_network <- matrix(obs_network_vect, nrow = nb_resource, byrow = FALSE) # Reformat to a matrix
+  # Assign names
+    dimnames(obs_network)[[1]] <- paste0("res", 1:nb_resource)
+    dimnames(obs_network)[[2]] <- paste0("con", 1:nb_consumer)
   return(obs_network)
 }
 
@@ -336,21 +372,27 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
     magn_con_min = magn_con_min, magn_con_max = magn_con_max
   )
   trait <- trait_match_mat(ratio_grad = ratio_grad,
-    mean_tol = mean_tol, sd_tol = sd_tol,
-    nb_resource = nb_resource, nb_consumer = nb_consumer,
-    corr_env_trait= corr_env_trait,
-    trait_env_res = abundance$th_distrib_resource, trait_env_con = abundance$th_distrib_consumer
+                           mean_tol = mean_tol, sd_tol = sd_tol,
+                           nb_resource = nb_resource, nb_consumer = nb_consumer,
+                           corr_env_trait= corr_env_trait,
+                           trait_env_res = abundance$th_distrib_resource,
+                           trait_env_con = abundance$th_distrib_consumer
   )
   th_env_netw <- list()
   for (i in 1:nb_location) {
     th_env_netw[[i]] <- int_count_th(i,
                                      abund_resource = abundance$abundance_resource,
                                      abund_consumer = abundance$abundance_consumer,
-                                     matching_matrix = trait$matching_matrix)
+                                     matching_matrix = trait$matching_matrix,
+                                     nb_resource = nb_resource,
+                                     nb_consumer = nb_consumer)
   }
   obs_env_netw <- list()
   for (i in 1:nb_location) {
-    obs_env_netw[[i]] <- sampling(th_env_netw[[i]], ninter = ninter, nb_resource = nb_resource)
+    obs_env_netw[[i]] <- sampling(th_env_netw[[i]],
+                                  ninter = ninter,
+                                  nb_resource = nb_resource,
+                                  nb_consumer = nb_consumer)
   }
   return(list(abudance = abundance, th_network = th_env_netw, obs_network = obs_env_netw, trait = trait))
 }

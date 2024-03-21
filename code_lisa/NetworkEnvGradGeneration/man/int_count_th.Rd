@@ -9,7 +9,9 @@ int_count_th(
   abund_resource,
   abund_consumer,
   matching_matrix,
-  delta = 1
+  delta = 1,
+  nb_resource,
+  nb_consumer
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ int_count_th(
 \item{matching_matrix}{Matrix, Array containing the probabilities of species interactions only based on trait matching}
 
 \item{delta}{Numeric, weight of trait matching relatively to abundance}
+
+\item{nb_resource}{Numeric, Number of resources in the bipartite network}
+
+\item{nb_consumer}{Numeric, Number of consumers in the bipartite network}
 }
 \value{
 Matrix, Theoretical interaction probability taking in account trait matching and abundances

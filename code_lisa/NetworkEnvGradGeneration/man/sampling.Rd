@@ -4,7 +4,7 @@
 \alias{sampling}
 \title{Sampling with Multinomial}
 \usage{
-sampling(th_network, ninter = 100, nb_resource = nb_resource)
+sampling(th_network, ninter = 100, nb_resource, nb_consumer)
 }
 \arguments{
 \item{th_network}{Matrix, Theoretical interaction probability taking in account trait matching and abundances}
@@ -12,6 +12,9 @@ sampling(th_network, ninter = 100, nb_resource = nb_resource)
 \item{ninter}{Numeric, number of interactions observed on the network}
 
 \item{nb_resource}{Numeric, Number of resources in the bipartite network}
+
+\item{nb_consumer}{Numeric, Number of consumers in the bipartite network
+#'}
 }
 \value{
 Matrix, Observed interactions across an environmental gradient
