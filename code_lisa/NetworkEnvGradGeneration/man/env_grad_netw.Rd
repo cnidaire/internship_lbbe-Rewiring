@@ -16,11 +16,9 @@ env_grad_netw(
   magn_con_min = 100,
   magn_con_max = 10000,
   corr_env_trait = 0,
-  param_epsilon = c(0.5, 0.1),
   ratio_grad = 0.8,
-  buffer = 1,
-  mean_tol = 2,
-  sd_tol = 10,
+  mean_tol = 0.1,
+  sd_tol = 1,
   delta = 1,
   ninter = 100
 )
@@ -49,11 +47,7 @@ gradient, otherwise, uniformly drawn position along the gradient}
 
 \item{corr_env_trait}{Numeric, weight given on the correlation between the environment gradient and the trait one}
 
-\item{param_epsilon}{Vector of two values, containing the mean and sd of the epsilon of correlation of the first trait}
-
 \item{ratio_grad}{Numeric between 0 and 1, Ratio between the first and second gradient}
-
-\item{buffer}{Numeric, Enable the mean of the trait to fall outside of the gradient by the buffer value}
 
 \item{mean_tol}{Numeric, Mean of the standard deviation of the trait tolerance}
 

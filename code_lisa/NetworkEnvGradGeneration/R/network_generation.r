@@ -125,11 +125,9 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
 #' @param ratio_grad Numeric between 0 and 1, Ratio between the first and second gradient
 #' @param mean_tol Numeric, Mean of the standard deviation of the trait tolerance
 #' @param sd_tol  Numeric, Standard deviation of the standard deviation of the trait tolerance
-#' @param buffer Numeric, Enable the mean of the trait to fall outside of the gradient by the buffer value
 #' @param nb_resource Numeric, Number of resource in the bipartite network
 #' @param nb_consumer Numeric, Number of consumer in the bipartite network
 #' @param corr_env_trait Numeric, weight given on the correlation between the environment gradient and the trait one
-#' @param param_epsilon Vector of two values, containing the mean and sd of the epsilon of correlation of the first trait
 #' @param trait_env_res Matrix, obtained from abund_env_grad containing the th traits of the resource
 #' @param trait_env_con Matrix, obtained from abund_env_grad containing the th traits of the consumer
 #'
@@ -139,24 +137,19 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
 #' @export
 trait_match_mat <- function(ratio_grad = 0.8,
                             mean_tol = 0.1, sd_tol = 1,
-                            buffer = 1,
                             nb_resource = 40, nb_consumer = 100,
-                            corr_env_trait= 0, param_epsilon = c(0.5,0.1),
+                            corr_env_trait= 0,
                             trait_env_res, trait_env_con) {
   ### Initialize the gradient for axis 2 ###
   # The length of the second gradient is a fraction of the length of the first gradient
   gradmin2 <- 0
   gradmax2 <- ratio_grad
-  # For the columns, we include a buffer that is also on axis 2
-  # (if buffer = 0 then gradmin/max2_buffer and gradmin/max2 are equal)
-  gradmin2_buffer <- -buffer + gradmin2
-  gradmax2_buffer <- buffer + gradmax2
 
   ### Resource species trait gradient ###
   # Initialize empty trait values matrix
   trait_resource <- matrix(0, nrow = nb_resource, ncol = 2)
   # For each resource, generate a trait gradient value at random (uniform), correlated for the first one and non correlated for the second one
-  trait_resource[, 1] <- corr_env_trait * trait_env_res[,1] + (1 - corr_env_trait) * rnorm(nb_resource, param_epsilon[1], param_epsilon[2])
+  trait_resource[, 1] <- corr_env_trait * trait_env_res[,1] + (1 - corr_env_trait) * runif(nb_resource, 0, 1)
   trait_resource[, 2] <- runif(nb_resource, min = gradmin2, max = gradmax2)
 
   ### Consumer species trait gradient ###
@@ -168,12 +161,12 @@ trait_match_mat <- function(ratio_grad = 0.8,
 
   # -> first dimension
   # Generate Trait 1 optima for each species
-  trait_consumer[, 1, 1] <- corr_env_trait * trait_env_con[,1] + (1 - corr_env_trait) * rnorm(nb_consumer, param_epsilon[1], param_epsilon[2])
+  trait_consumer[, 1, 1] <- corr_env_trait * trait_env_con[,1] + (1 - corr_env_trait) * runif(nb_consumer, 0, 1)
   # Generate random trait's niche widths for each species
   trait_consumer[, 2, 1] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
   # -> second dimension
-  trait_consumer[, 1, 2] <- runif(nb_consumer, min = gradmin2_buffer, max = gradmax2_buffer)
+  trait_consumer[, 1, 2] <- runif(nb_consumer, min = gradmin2, max = gradmax2)
   trait_consumer[, 2, 2] <- abs(rnorm(nb_consumer, mean = mean_tol, sd = sd_tol))
 
   ### Probability matrix (only matching) ###
@@ -311,9 +304,7 @@ sampling <- function(th_network, ninter = 100, nb_resource = nb_resource){
 #' @param magn_con_min Numeric, Lower bound of the order of magnitude of size of a consumer population
 #' @param magn_con_max Numeric, Higher bound of the order of magnitude of size of a consumer population
 #' @param corr_env_trait Numeric, weight given on the correlation between the environment gradient and the trait one
-#' @param param_epsilon Vector of two values, containing the mean and sd of the epsilon of correlation of the first trait
 #' @param ratio_grad Numeric between 0 and 1, Ratio between the first and second gradient
-#' @param buffer Numeric, Enable the mean of the trait to fall outside of the gradient by the buffer value
 #' @param mean_tol Numeric, Mean of the standard deviation of the trait tolerance
 #' @param sd_tol Numeric, Standard deviation of the standard deviation of the trait tolerance
 #' @param delta Numeric, weight of trait matching relatively to abundance
@@ -332,10 +323,9 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
                           mean_tol_env = 0.1, sd_tol_env = 0.1,
                           magn_res_min = 20, magn_res_max = 200,
                           magn_con_min = 100, magn_con_max = 10000,
-                          corr_env_trait= 0, param_epsilon = c(0.5,0.1),
+                          corr_env_trait= 0,
                           ratio_grad = 0.8,
-                          buffer = 1,
-                          mean_tol = 2, sd_tol = 10,
+                          mean_tol = 0.1, sd_tol = 1,
                           delta = 1,
                           ninter = 100) {
   abundance <- abund_env_grad(
@@ -346,10 +336,9 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
     magn_con_min = magn_con_min, magn_con_max = magn_con_max
   )
   trait <- trait_match_mat(ratio_grad = ratio_grad,
-    buffer = buffer,
     mean_tol = mean_tol, sd_tol = sd_tol,
     nb_resource = nb_resource, nb_consumer = nb_consumer,
-    corr_env_trait= corr_env_trait, param_epsilon = param_epsilon,
+    corr_env_trait= corr_env_trait,
     trait_env_res = abundance$th_distrib_resource, trait_env_con = abundance$th_distrib_consumer
   )
   th_env_netw <- list()

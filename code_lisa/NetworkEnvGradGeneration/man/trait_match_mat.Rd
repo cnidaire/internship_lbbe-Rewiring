@@ -8,11 +8,9 @@ trait_match_mat(
   ratio_grad = 0.8,
   mean_tol = 0.1,
   sd_tol = 1,
-  buffer = 1,
   nb_resource = 40,
   nb_consumer = 100,
   corr_env_trait = 0,
-  param_epsilon = c(0.5, 0.1),
   trait_env_res,
   trait_env_con
 )
@@ -24,15 +22,11 @@ trait_match_mat(
 
 \item{sd_tol}{Numeric, Standard deviation of the standard deviation of the trait tolerance}
 
-\item{buffer}{Numeric, Enable the mean of the trait to fall outside of the gradient by the buffer value}
-
 \item{nb_resource}{Numeric, Number of resource in the bipartite network}
 
 \item{nb_consumer}{Numeric, Number of consumer in the bipartite network}
 
 \item{corr_env_trait}{Numeric, weight given on the correlation between the environment gradient and the trait one}
-
-\item{param_epsilon}{Vector of two values, containing the mean and sd of the epsilon of correlation of the first trait}
 
 \item{trait_env_res}{Matrix, obtained from abund_env_grad containing the th traits of the resource}
 
