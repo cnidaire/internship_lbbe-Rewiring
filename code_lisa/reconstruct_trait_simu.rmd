@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(NetworkEnvGradGeneration)
 library(ade4)
+library(igraph)
 ```
 
 
@@ -83,29 +84,19 @@ reconst_afc2 <- function (dudi, nf = 1, ...)
 # Generate Network
 
 ```{r}
-nb_frame <- 4; env_grad_max = 10
-spe_resource <- 40; spe_consum <- 60
-mean_tol_env = 4; sd_tol_env = 4
-simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum,
-                                   nb_location = nb_frame, env_grad_max = env_grad_max,
-                                   know_env_grad_pos = T, ninter = 1000, 
-                                   mean_tol = 20,
-                                   mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env,
-                                   delta = 1)
+simulated_network <- env_grad_netw(nb_resource = 40 , nb_consumer = 60,
+                                   nb_location = 16,
+                                   know_env_grad_pos = F, ninter = 240, 
+                                   mean_tol = 0.2, sd_tol = 0.2,
+                                   mean_tol_env = 0.2, sd_tol_env = 0.3,
+                                   delta = 1, corr_env_trait = 0)
 
-simulated_network$obs_network <- lapply(simulated_network$obs_network, function(arr) {
-  dimnames(arr)[[1]] <- paste0("pla", 1:spe_resource)
-  dimnames(arr)[[2]] <- paste0("pol", 1:spe_consum)
-  return(arr)
-})
 ```
+
 
 ## Extract the giant component
 
-```{r}
-library(igraph)
-```
-
+### Extract the components that are not always part of the giant component
 
 ```{r}
 not_always_con <- c()
@@ -124,18 +115,40 @@ for (i in 1:nb_frame) {
 
 print(length(unique(not_always_con)))
 print(unique(not_always_con))
-# 
-# which.max(table(component$membership))
-# which.max(component$csize)
 length(unique(not_always_con))/(spe_consum + spe_resource) * 100
 ```
 
 ```{r}
-ade4::table.value(simulated_network$obs_network[[4]])
+filter_giant_component <- function(simu_netw){
+  # On observed data
+  simu_netw$obs_giant_compo <- lapply(simu_netw$obs_network, function(arr){
+    arr[!dimnames(arr)[[1]] %in% unique(not_always_con),
+        !dimnames(arr)[[2]] %in% unique(not_always_con)]
+  })
+  
+  # On the trait matching matrix
+  simu_netw$trait$giant_compo <- simu_netw$trait$matching_matrix[!dimnames(simu_netw$obs_network[[1]])[[1]] %in% unique(not_always_con),
+                                                                                !dimnames(simu_netw$obs_network[[1]])[[2]] %in% unique(not_always_con)]
+  
+  # On the resource traits
+  simu_netw$trait$resource_giant_compo <- simu_netw$trait$trait_resource[!dimnames(simu_netw$trait$trait_resource)[[1]] %in% unique(not_always_con),]
+  
+  #On the consumer traits
+  simu_netw$trait$consumer_giant_compo <- simu_netw$trait$trait_consumer[!dimnames(simu_netw$trait$trait_consumer)[[1]] %in% unique(not_always_con),,] 
+}
+
+filter_giant_component(simulated_network)
+
+
+```
+
+
+```{r}
+ade4::table.value(simulated_network$obs_giant_compo[[1]])
 ```
 
 ```{r}
-sampled_netw <- Reduce('+', simulated_network$obs_network)
+sampled_netw <- Reduce('+', simulated_network$obs_giant_compo)
 # to keep only the connected species
 sampled_netw_con <- sampled_netw[which(rowSums(sampled_netw) != 0), which(colSums(sampled_netw) != 0)]
 component <- igraph::components(graph_from_incidence_matrix(sampled_netw_con))
@@ -156,21 +169,25 @@ degree(graph_from_incidence_matrix(sampled_netw))
 
 
 ```{r}
-tab = Reduce('+', simulated_network$obs_network) # afin de générer le réseau moyen
+tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
 
 afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
 
 par(mfrow=c(2,2))
-ade4::table.value(simulated_network$trait$matching_matrix, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # trait matching matrix et tri selon le premier axe
+ade4::table.value(simulated_network$trait$giant_compo, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8) # trait matching matrix et tri selon le premier axe
 ade4::table.value(tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # réseau moyen observé
 toto = reconst_afc(afc.tab, nf = 8) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
 ade4::table.value(toto, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8) # plot le réseau reconstruit
 ade4::table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # transformed average table
 ```
 
+
+
 ```{r}
-cor(simulated_network$trait$trait_resource, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
-cor(simulated_network$trait$trait_consumer[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+# afc.tab$li
+
+cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
 ```
 
 ```{r}
