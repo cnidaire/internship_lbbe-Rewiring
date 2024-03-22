@@ -253,11 +253,8 @@ int_count_th <- function(location, abund_resource, abund_consumer, matching_matr
   # resource species is a limiting factor here.
   # It makes less sense in the context of species x sites association, unless we consider
   # resources in the different sites are limited and a site has a limited number of species.
-  prop_row <- abund_resource[location, ] / sum(abund_resource[location, ]) # Get the proportion of each plant (its "availability")
-  ab_neutral <- prop_row %*% t(abund_consumer[location, ]) # Get the predicted abundance -> the birds
-  # choose a plant only based on its availability
-  # Each bird abundance is exactly abund_consumer and the plants abundances are proportional to
-  # abund_resource
+  prop_row <- abund_resource[location, ] / sum(abund_resource[location, ]) # Get the proportion of each resource (its "availability")
+  ab_neutral <- prop_row %*% t(abund_consumer[location, ]) # Get the predicted interaction solely based on the neutral effect
 
   ### Probability matrix (matching and abundance) ###
   # these theoretical abundances of interactions must then be confronted to the probability of interactions
