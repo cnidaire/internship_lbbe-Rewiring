@@ -125,11 +125,23 @@ observation du jeu de données de Vincent
 
 retour sur les données simulées:
 - reconstitution du trait matching à partir de l'AFC sur les réseaux générés
-- resoudre init splash qui mon bouffe tout mon CPU
+- resoudre init splash qui mon bouffe tout mon CPU:
+	- depends de snapd qui est une merde propriétaire qui rajoute une couche sur apt
+		- snap remove 
+		- snap remove gtk-common-themes
+		- snap remove gnome-3-34-1804
+		- snap remove core18
+	- n'a pas marché, j'ai peur de tout casser mais ça reste pénible
 
 On retrouve bien une surestimation des spécialistes quand la puissance d'échantillonnage est trop faible et de plus on à l'impression qu'il y a plein de petites composantes au lieu d'une géante.
 
 Il semblerait aussi que bien que ce qui perturbe l'AFC, ce ne soit pas que les éléments ne faisant pas partie de la composante géante mais aussi ceux qui ont un degré de 1 et qui sont eux même liés à des points qui sont faiblement connectés. dans ce cas, cela ne correspondra peut-être pas à la composante principale mais peut-être la 2eme, 3eme, etc. Ce qui peut être gênant dans notre cas car on s'attendrait à ce que les premières composantes soient le traits organisant les interactions et seulement plus bas ce genre de bruit.
+
+# 21-22
+
+- fixer les gradients de traits et environmental entre 0 et 1
+- remise au propre du packet
+- filtrer la composante géante sur les données simulées
 
 # Todo list
 
@@ -184,10 +196,10 @@ methodes usuelles analyse rewiring (mesure de beta)
 
 
 
-- [ ] regarder la correlation entre les traits plantes avec les lignes obtenues
-- [ ] même chose pour le colonnes et les traits des pollinisateurs
+- [x] regarder la correlation entre les traits plantes avec les lignes obtenues
+- [x] même chose pour le colonnes et les traits des pollinisateurs
 - [ ] filtrer les espèces qui n'interagissent qu'avec une seule personne pour ne garder que la composante géante
-- [ ] regarder la corrélations des moyennes avec les axes avec des boxplots quand on fair plusieurs tirages
+- [ ] regarder la corrélations des moyennes avec les axes avec des boxplots quand on fait plusieurs tirages
 - [ ] faire une heatmap afin de comparer les 
 - [ ] faire varier delta et évaluer l'impact sur la capacité à évaluer 
 - [ ] corréler un/les traits au gradient environnemental: $t_2=a^2t_1+(1-a)^2*\epsilon$

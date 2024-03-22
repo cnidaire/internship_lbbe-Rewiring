@@ -84,9 +84,12 @@ reconst_afc2 <- function (dudi, nf = 1, ...)
 # Generate Network
 
 ```{r}
-simulated_network <- env_grad_netw(nb_resource = 40 , nb_consumer = 60,
-                                   nb_location = 16,
-                                   know_env_grad_pos = F, ninter = 240, 
+nb_frame = 16
+spe_resource = 70
+spe_consumer = 200
+simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                   nb_location = nb_frame,
+                                   know_env_grad_pos = F, ninter = 1400, 
                                    mean_tol = 0.2, sd_tol = 0.2,
                                    mean_tol_env = 0.2, sd_tol_env = 0.3,
                                    delta = 1, corr_env_trait = 0)
@@ -99,46 +102,54 @@ simulated_network <- env_grad_netw(nb_resource = 40 , nb_consumer = 60,
 ### Extract the components that are not always part of the giant component
 
 ```{r}
-not_always_con <- c()
-for (i in 1:nb_frame) {
-  sampled_netw <- simulated_network$obs_network[[i]]
-  # to keep only the connected species
-  sampled_netw_con <- sampled_netw[which(rowSums(sampled_netw) != 0), which(colSums(sampled_netw) != 0)]
-  component <- igraph::components(graph_from_incidence_matrix(sampled_netw_con))
-  if (length(component$csize) != 1) {
-    # print(paste("The network",i, "is not strongly connected, there is", component$no, "connected components"))
-    # print(names(component$membership[which(component$membership != which.max(component$csize))]))
-    # print("are not part of of the giant component.")
-    not_always_con <- c(not_always_con, names(component$membership[which(component$membership != which.max(component$csize))]))
+
+connected_compo <- function(simu_netw, nb_frame){
+  not_always_con <- c()
+  for (i in 1:nb_frame) {
+    sampled_netw <- simu_netw$obs_network[[i]]
+    # to keep only the connected species
+    sampled_netw_con <- sampled_netw[which(rowSums(sampled_netw) != 0), which(colSums(sampled_netw) != 0)]
+    component <- igraph::components(graph_from_incidence_matrix(sampled_netw_con))
+    if (length(component$csize) != 1) {
+      # print(paste("The network",i, "is not strongly connected, there is", component$no, "connected components"))
+      # print(names(component$membership[which(component$membership != which.max(component$csize))]))
+      # print("are not part of of the giant component.")
+      not_always_con <- c(not_always_con, names(component$membership[which(component$membership != which.max(component$csize))]))
+    }
   }
+  
+  print(paste(length(unique(not_always_con))/(spe_consumer + spe_resource) * 100,"% of the species will be removed because there is some frames where they are not part of the giant component"))
+  return(unique(not_always_con))
 }
 
-print(length(unique(not_always_con)))
-print(unique(not_always_con))
-length(unique(not_always_con))/(spe_consum + spe_resource) * 100
+not_giant_compo <- connected_compo(simulated_network, nb_frame)
 ```
 
 ```{r}
-filter_giant_component <- function(simu_netw){
+filter_giant_component <- function(simu_netw, not_giant_comp){
   # On observed data
   simu_netw$obs_giant_compo <- lapply(simu_netw$obs_network, function(arr){
-    arr[!dimnames(arr)[[1]] %in% unique(not_always_con),
-        !dimnames(arr)[[2]] %in% unique(not_always_con)]
+    arr[!dimnames(arr)[[1]] %in% unique(not_giant_comp),
+        !dimnames(arr)[[2]] %in% unique(not_giant_comp)]
   })
   
   # On the trait matching matrix
-  simu_netw$trait$giant_compo <- simu_netw$trait$matching_matrix[!dimnames(simu_netw$obs_network[[1]])[[1]] %in% unique(not_always_con),
-                                                                                !dimnames(simu_netw$obs_network[[1]])[[2]] %in% unique(not_always_con)]
+  simu_netw$trait$trait_mat_giant_compo <- simu_netw$trait$matching_matrix[!dimnames(simu_netw$obs_network[[1]])[[1]] %in% unique(not_giant_comp),
+                                                                                !dimnames(simu_netw$obs_network[[1]])[[2]] %in% unique(not_giant_comp)]
   
   # On the resource traits
-  simu_netw$trait$resource_giant_compo <- simu_netw$trait$trait_resource[!dimnames(simu_netw$trait$trait_resource)[[1]] %in% unique(not_always_con),]
+  simu_netw$trait$resource_giant_compo <- simu_netw$trait$trait_resource[!dimnames(simu_netw$trait$trait_resource)[[1]] %in% unique(not_giant_comp),]
   
   #On the consumer traits
-  simu_netw$trait$consumer_giant_compo <- simu_netw$trait$trait_consumer[!dimnames(simu_netw$trait$trait_consumer)[[1]] %in% unique(not_always_con),,] 
+  simu_netw$trait$consumer_giant_compo <- simu_netw$trait$trait_consumer[!dimnames(simu_netw$trait$trait_consumer)[[1]] %in% unique(not_giant_comp),,]
+  
+  return(simu_netw)
 }
 
-filter_giant_component(simulated_network)
+simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
 
+# not_giant_compo
+# simulated_network$trait$trait_mat_giant_compo
 
 ```
 
@@ -174,7 +185,7 @@ tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le rés
 afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
 
 par(mfrow=c(2,2))
-ade4::table.value(simulated_network$trait$giant_compo, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8) # trait matching matrix et tri selon le premier axe
+ade4::table.value(simulated_network$trait$trait_mat_giant_compo, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8) # trait matching matrix et tri selon le premier axe
 ade4::table.value(tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # réseau moyen observé
 toto = reconst_afc(afc.tab, nf = 8) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
 ade4::table.value(toto, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8) # plot le réseau reconstruit
