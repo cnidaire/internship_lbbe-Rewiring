@@ -198,6 +198,10 @@ ade4::table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]
 # afc.tab$li
 
 cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+
+simulated_network$trait$resource_giant_compo
+afc.tab$li
+
 cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
 ```
 
@@ -211,6 +215,79 @@ library(adegraphics)
 adegraphics::table.value(afc.tab$tab, coordsx = rank(afc.tab$co[,1]), coordsy  = rank(afc.tab$li[,1]), method = "color", ppoint.cex = 0.2) # transformed average table
 
 image(simulated_network$trait$matching_matrix [order(afc.tab$li[,1]), order(afc.tab$co[,1])])
+
+```
+
+
+```{r}
+tr1x1_line <- c()
+tr1x2_line <- c()
+tr1x3_line <- c()
+tr1x4_line <- c()
+
+tr2x1_line <- c()
+tr2x2_line <- c()
+tr2x3_line <- c()
+tr2x4_line <- c()
+
+tr1x1_col <- c()
+tr1x2_col <- c()
+tr1x3_col <- c()
+tr1x4_col <- c()
+
+tr2x1_col <- c()
+tr2x2_col <- c()
+tr2x3_col <- c()
+tr2x4_col <- c()
+
+for (i in 1:10) {
+  nb_frame = 4
+  spe_resource = 50
+  spe_consumer = 100
+  simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                     nb_location = nb_frame,
+                                     know_env_grad_pos = F, ninter = 5000, 
+                                     mean_tol = 0.2, sd_tol = 0.2,
+                                     mean_tol_env = 0.5, sd_tol_env = 0.3,
+                                     delta = 1, corr_env_trait = 0,
+                                     ratio_grad = 0.8)
+  
+  not_giant_compo <- connected_compo(simulated_network, nb_frame)
+  simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
+  
+  
+  tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
+  afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+  
+  (corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li)) # resource correlation with the rows of the CA depending on the axis
+  (corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co)) # consumer correlation with the columns of the CA depending on the axis
+  
+  tr1x1_line <- c(tr1x1_line, abs(corr_line[1,1]))
+  tr1x2_line <- c(tr1x2_line, abs(corr_line[1,2]))
+  tr1x3_line <- c(tr1x3_line, abs(corr_line[1,3]))
+  tr1x4_line <- c(tr1x4_line, abs(corr_line[1,4]))
+  
+  tr2x1_line <- c(tr2x1_line, abs(corr_line[2,1]))
+  tr2x2_line <- c(tr2x2_line, abs(corr_line[2,2]))
+  tr2x3_line <- c(tr2x3_line, abs(corr_line[2,3]))
+  tr2x4_line <- c(tr2x4_line, abs(corr_line[2,4]))
+
+  tr1x1_col <- c(tr1x1_col, abs(corr_col[1,1]))
+  tr1x2_col <- c(tr1x2_col, abs(corr_col[1,2]))
+  tr1x3_col <- c(tr1x3_col, abs(corr_col[1,3]))
+  tr1x4_col <- c(tr1x4_col, abs(corr_col[1,4]))
+  
+  tr2x1_col <- c(tr2x1_col, abs(corr_col[2,1]))
+  tr2x2_col <- c(tr2x2_col, abs(corr_col[2,2]))
+  tr2x3_col <- c(tr2x3_col, abs(corr_col[2,3]))
+  tr2x4_col <- c(tr2x4_col, abs(corr_col[2,4]))
+}
+# par(mfrow = c(2,1))
+boxplot(tr1x1_line, tr1x2_line, tr1x3_line, tr1x4_line, names = c("Tr1 axe1", "Tr1 axe2", "Tr1 axe3", "Tr1 axe4"), main = "Correlation between trait 1 and axes for line species (res)", ylim = c(0,1))
+boxplot(tr1x1_line, tr2x2_line, tr2x3_line, tr2x4_line, names = c("Tr2 axe1", "Tr2 axe2", "Tr2 axe3", "Tr2 axe4"), main = "Correlation between trait 2 and axes for line species (res)", ylim = c(0,1))
+
+boxplot(tr1x1_col, tr1x2_col, tr1x3_col, tr1x4_col, names = c("Tr1 axe1", "Tr1 axe2", "Tr1 axe3", "Tr1 axe4"), main = "Correlation between trait 1 and axes for column species (con)", ylim = c(0,1))
+boxplot(tr1x1_col, tr2x2_col, tr2x3_col, tr2x4_col, names = c("Tr2 axe1", "Tr2 axe2", "Tr2 axe3", "Tr2 axe4"), main = "Correlation between trait 2 and axes for column species (con)", ylim = c(0,1))
 
 ```
 

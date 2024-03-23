@@ -1,4 +1,4 @@
-e./# Journal de bord
+# Journal de bord
 ## 26 Janvier
 
 bosse les cours de stat multi-variée de Timothée pour me faire une idée de ce que c'est
@@ -137,11 +137,19 @@ On retrouve bien une surestimation des spécialistes quand la puissance d'échan
 
 Il semblerait aussi que bien que ce qui perturbe l'AFC, ce ne soit pas que les éléments ne faisant pas partie de la composante géante mais aussi ceux qui ont un degré de 1 et qui sont eux même liés à des points qui sont faiblement connectés. dans ce cas, cela ne correspondra peut-être pas à la composante principale mais peut-être la 2eme, 3eme, etc. Ce qui peut être gênant dans notre cas car on s'attendrait à ce que les premières composantes soient le traits organisant les interactions et seulement plus bas ce genre de bruit.
 
-# 21-22
+## 21-22
 
 - fixer les gradients de traits et environmental entre 0 et 1
 - remise au propre du packet
 - filtrer la composante géante sur les données simulées
+
+## 23 mars
+
+Observation des comportement sur de multiples simulation
+- effet de mean_tol_env, quand il augmente, le premier axe va expliquer de mieux en mieux les traits 1 et 2
+- Je n'arrive pas à trouver que le trait 1 est corrélé au premier axe et que le trait 2 au 2ème
+ en fait j'ai l'impression que le premier axe va être un mélange du premier et du deuxième et de même pour les suivants et que l"on n'obtient pas une séparation des traits suivant les axes: **à discuter avec Lisa**
+
 
 # Todo list
 
@@ -198,18 +206,12 @@ méthodes usuelles analyse rewiring (mesure de beta)
 
 - [x] regarder la correlation entre les traits plantes avec les lignes obtenues
 - [x] même chose pour le colonnes et les traits des pollinisateurs
-- [ ] filtrer les espèces qui n'interagissent qu'avec une seule personne pour ne garder que la composante géante
 - [ ] regarder la corrélations des moyennes avec les axes avec des boxplots quand on fait plusieurs tirages
-- [ ] faire une heatmap afin de comparer les 
-- [ ] faire varier delta et évaluer l'impact sur la capacité à évaluer 
-- [ ] corréler un/les traits au gradient environnemental: $t_2=a^2t_1+(1-a)^2*\epsilon$
+	- [ ] **étudier la dépendance de ces correlations avec les paramètres d'entrée**
+- [ ] faire une heatmap afin de comparer le trait matching th avec celui reconstruit
+- [ ] faire varier delta et évaluer l'impact sur la capacité à évaluer les traits
+- [x] corréler un/les traits au gradient environnemental: $t_2=a^2t_1+(1-a)^2*\epsilon$
 - [ ] trouver des métriques telles que le nombre d'espèces aillant leur trait moyen à l’intérieur de deux écarts types ($\Leftrightarrow 95.45$), et regarder ensuite le lien avec le changement de role (position dans l'AFC) selon la largeur de la niche.
-
-
-- [ ] regarder ma distribution des corrélation entre traits et les premiers axes de l'AFC selon la puissance d’échantillonnages
 - [ ] **Ce qui nous intéresse, j'ai plus l'impression que c'est la matrice de trait matching plutôt que de retrouver les trait donc si on arrive à quasi la reconstruire, c'est gagné même si les traits sont répartis entre les 2-4 premiers axes tant que l'on arrive à reconstruire le trait matching th**
-- [ ] faire des heatmap pour comparer le trait matching th avec celui reconstruit
-- [ ] regarder le lien entre le changement de rôle et la largeur de la niche ou du nombre d'espèces aillant leurs otpimum dans les $2\sigma$ 
-- [ ] faire varier $\delta$ pour voir si les traits sont aussi bien reconstruits (même graphes que pour la puissance d'échantillonage mais avec $\delta$)
 - [ ] regarder le "volume" en n dimension occupé par l'espèce pour voir le changement de rôle dans les différentes frames
-- [ ] 
+- [ ] Essayer de trouver un moyen de connaitre % d'explication des axes pour l'AFC
