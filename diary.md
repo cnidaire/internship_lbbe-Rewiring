@@ -146,12 +146,12 @@ Il semblerait aussi que bien que ce qui perturbe l'AFC, ce ne soit pas que les �
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
-- [ ] ne plus trier en fonction des optimums de niche théoriques mais en fonction de leurs ordre sur le premier axe de l'AFC. En théorie même résultat mais c'est ce que l'on ferait sur des données de terrain.
+- [x] ne plus trier en fonction des optimums de niche théoriques mais en fonction de leurs ordre sur le premier axe de l'AFC. En théorie même résultat mais c'est ce que l'on ferait sur des données de terrain.
 - [ ] différentes approches comme AFC, métriques (nestedness, motifs, modularity, degree moyen), beta div afin de comparer des réseaux
 - [ ] lire bersier et al 2012 et abundances and generalization in mutualistic networks solving the chicken and egg dilemma
-- [ ] Il y a encore une correlation entre généraliste et en moyenne une plus faible abondance vu que j'utilise dnrm. Il faudrait donc fixer le max et ensuite multiplier par le dnorm selon la variance. Ainsi pour fixer le pique, ce serait peut-être bien de  faire dnorm/dnorm_max
-- [ ] regarder les connected components et travailler seulement sur la composante géante
-	- [ ] pour ça regarder is.connected et components (pour obtenir les connected components) dans le package bipartite.
+- [x] Il y a encore une correlation entre généraliste et en moyenne une plus faible abondance vu que j'utilise dnrm. Il faudrait donc fixer le max et ensuite multiplier par le dnorm selon la variance. Ainsi pour fixer le pique, ce serait peut-être bien de  faire dnorm/dnorm_max
+- [x] regarder les connected components et travailler seulement sur la composante géante
+	- [x] pour ça regarder is.connected et components (pour obtenir les connected components) dans le package bipartite.
 - [ ] teste et regarder les papiers notamment en physique sur l’émergence de la composante géante (aussi appelée percolation)
 - [ ] tester d'aller au delà de la limite de percolation dans les simulations
 
@@ -174,7 +174,7 @@ jouer avec le delta et peut être les faire varier (genre les fixer à 0 pour la
 
 - [ ] regarder la variance des interactions entre espèces en regardant le nombre d'interaction selon les abondances des deux espèce (le proxy, ce serait le nombre d'interactions observées pour chacune des espèces) regarder si juste effet ligne + effet colonne ou si autre effet
 
-- [ ] attention, haute moyenne = plus haute variance
+- [x] attention, haute moyenne = plus haute variance
 
 - [ ] puis regarder si le rôle change
 
@@ -191,7 +191,7 @@ beta os correspondrait au rewiring et serait donc attendu proche de 0, si on peu
 regarder méthodes etude rewiring
 
 quest que le rewiring 
-methodes usuelles analyse rewiring (mesure de beta)
+méthodes usuelles analyse rewiring (mesure de beta)
 
 
 
@@ -204,3 +204,12 @@ methodes usuelles analyse rewiring (mesure de beta)
 - [ ] faire varier delta et évaluer l'impact sur la capacité à évaluer 
 - [ ] corréler un/les traits au gradient environnemental: $t_2=a^2t_1+(1-a)^2*\epsilon$
 - [ ] trouver des métriques telles que le nombre d'espèces aillant leur trait moyen à l’intérieur de deux écarts types ($\Leftrightarrow 95.45$), et regarder ensuite le lien avec le changement de role (position dans l'AFC) selon la largeur de la niche.
+
+
+- [ ] regarder ma distribution des corrélation entre traits et les premiers axes de l'AFC selon la puissance d’échantillonnages
+- [ ] **Ce qui nous intéresse, j'ai plus l'impression que c'est la matrice de trait matching plutôt que de retrouver les trait donc si on arrive à quasi la reconstruire, c'est gagné même si les traits sont répartis entre les 2-4 premiers axes tant que l'on arrive à reconstruire le trait matching th**
+- [ ] faire des heatmap pour comparer le trait matching th avec celui reconstruit
+- [ ] regarder le lien entre le changement de rôle et la largeur de la niche ou du nombre d'espèces aillant leurs otpimum dans les $2\sigma$ 
+- [ ] faire varier $\delta$ pour voir si les traits sont aussi bien reconstruits (même graphes que pour la puissance d'échantillonage mais avec $\delta$)
+- [ ] regarder le "volume" en n dimension occupé par l'espèce pour voir le changement de rôle dans les différentes frames
+- [ ] 
