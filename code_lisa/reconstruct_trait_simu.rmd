@@ -198,11 +198,10 @@ ade4::table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]
 # afc.tab$li
 
 cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
-
-simulated_network$trait$resource_giant_compo
-afc.tab$li
-
 cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+
+s.corcircle(afc.tab$co)
+s.corcircle(cor(simulated_network$trait$resource_giant_compo, afc.tab$li))
 ```
 
 ```{r}
@@ -240,15 +239,15 @@ tr2x2_col <- c()
 tr2x3_col <- c()
 tr2x4_col <- c()
 
-for (i in 1:10) {
+for (i in 1:30) {
   nb_frame = 4
   spe_resource = 50
   spe_consumer = 100
   simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                      nb_location = nb_frame,
                                      know_env_grad_pos = F, ninter = 5000, 
-                                     mean_tol = 0.2, sd_tol = 0.2,
-                                     mean_tol_env = 0.5, sd_tol_env = 0.3,
+                                     mean_tol = 0.1, sd_tol = 0.1,
+                                     mean_tol_env = 0.1, sd_tol_env = 0.1,
                                      delta = 1, corr_env_trait = 0,
                                      ratio_grad = 0.8)
   
@@ -289,5 +288,27 @@ boxplot(tr1x1_line, tr2x2_line, tr2x3_line, tr2x4_line, names = c("Tr2 axe1", "T
 boxplot(tr1x1_col, tr1x2_col, tr1x3_col, tr1x4_col, names = c("Tr1 axe1", "Tr1 axe2", "Tr1 axe3", "Tr1 axe4"), main = "Correlation between trait 1 and axes for column species (con)", ylim = c(0,1))
 boxplot(tr1x1_col, tr2x2_col, tr2x3_col, tr2x4_col, names = c("Tr2 axe1", "Tr2 axe2", "Tr2 axe3", "Tr2 axe4"), main = "Correlation between trait 2 and axes for column species (con)", ylim = c(0,1))
 
+```
+
+```{r}
+s.corcircle(afc.tab$co)
+afc.tab$li
+```
+
+
+```{r}
+# detach("package:adegraphics", unload = TRUE)
+if(!adegraphicsLoaded()) {
+  data (olympic)
+  dudi1 <- dudi.pca(olympic$tab, scan = FALSE) # a normed PCA
+  par(mfrow = c(2, 2))
+  s.corcircle(dudi1$co, lab = names(olympic$tab))
+  s.corcircle(dudi1$co, cgrid = 0, full = FALSE, clab = 0.8)
+  s.corcircle(dudi1$co, lab = as.character(1:11), cgrid = 2,
+    full = FALSE, sub = "Correlation circle", csub = 2.5,
+    possub = "bottomleft", box = TRUE)
+  s.arrow(dudi1$co, clab = 1)
+  par(mfrow = c(1, 1))
+}
 ```
 
