@@ -334,9 +334,33 @@ s.corcircle(corr_col)
 ade4::table.value(tab, clegend = 0)
 scatter(afc.tab)
 
-plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5)
 
-simulated_network
+centrality <- closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+
+
+# color depending on the centrality
+fine = 50 # this will adjust the resolving power.
+pal = colorRampPalette(c('red','green'))
+
+#this gives you the colors you want for every point
+graphCol = pal(fine)[as.numeric(cut(log(centrality),breaks = fine))]
+
+# now you just need to plot it with those colors
+plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5, vertex.color=graphCol)
+
+
+# plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5)
+
+
+
+# for (i in 1:nb_frame){
+#   print(simulated_network$obs_giant_compo[[i]]["res33", "con17"])
+# }
+
+closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+sort(closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0])))
+
+degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
 
 fou1 = foucart(lapply(simulated_network$obs_giant_compo, as.data.frame), scannf = F, nf = 2)
 plot(fou1)
