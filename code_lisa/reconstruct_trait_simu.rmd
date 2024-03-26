@@ -337,9 +337,9 @@ scatter(afc.tab)
 
 centrality <- closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
 
-
+sort(centrality)
 # color depending on the centrality
-fine = 50 # this will adjust the resolving power.
+fine = 10 # this will adjust the resolving power.
 pal = colorRampPalette(c('red','green'))
 
 #this gives you the colors you want for every point
@@ -348,21 +348,69 @@ graphCol = pal(fine)[as.numeric(cut(log(centrality),breaks = fine))]
 # now you just need to plot it with those colors
 plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5, vertex.color=graphCol)
 
-
-# plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5)
-
-
-
 # for (i in 1:nb_frame){
 #   print(simulated_network$obs_giant_compo[[i]]["res33", "con17"])
 # }
 
-closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
-sort(closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0])))
+# closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+# sort(closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0])))
 
 degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
 
-fou1 = foucart(lapply(simulated_network$obs_giant_compo, as.data.frame), scannf = F, nf = 2)
+fou1 = foucart(lapply(simulated_network$obs_giant_compo, as.data.frame), scannf = F, nf = 4)
+plot(fou1, yax = 2)
+```
+
+```{r}
+print("for consummer")
+vert_a = names(which(degree(graph_from_incidence_matrix(tab)) == 1))
+vert_a_con <- grep("con", vert_a, value = T)
+conn_vert_b_con <- c()
+vert_b_res <- c()
+vert_a_b_con <- c()
+for(a in vert_a_con){
+  vert_a_b_con <- c(vert_a_b_con, tab[which(tab[,a] !=0), a])
+  conn_vert_b_con <- c(conn_vert_b_con, rowSums(tab)[names(which(tab[,a] !=0))])
+}
+vert_a_con
+vert_a_b_con
+conn_vert_b_con
+
+
+
+
+```
+
+
+```{r}
+print("for resource")
+vert_a_res <- grep("res", vert_a, value = T)
+vert_b_res <- c()
+conn_vert_b_res <- c()
+vert_b_res <- c()
+for(a in vert_a_res){
+  vert_a_b <- which(tab[a,] !=0)
+  vert_b_res <- c(vert_b_res, vert_a_b)
+  conn_vert_b_res <- c(conn_vert_b_res, colSums(tab)[names(vert_a_b)])
+}
+vert_a_res
+vert_b_res
+conn_vert_b_res
+```
+
+
+```{r}
+dim(simulated_network$obs_giant_compo[[1]])
+```
+
+
+```{r}
+filt_netw <- rep(list(NA), nb_frame)
+for (i in 1:nb_frame) {
+  filt_netw[[i]] <- simulated_network$obs_giant_compo[[1]][,-which(colnames(simulated_network$obs_giant_compo[[1]]) == "con17")]
+}
+# filt_netw
+fou1 = foucart(lapply(filt_netw, as.data.frame), scannf = F, nf = 5)
 plot(fou1)
 ```
 
