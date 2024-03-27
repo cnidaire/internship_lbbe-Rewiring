@@ -150,6 +150,26 @@ Observation des comportement sur de multiples simulation
 - Je n'arrive pas à trouver que le trait 1 est corrélé au premier axe et que le trait 2 au 2ème
  en fait j'ai l'impression que le premier axe va être un mélange du premier et du deuxième et de même pour les suivants et que l"on n'obtient pas une séparation des traits suivant les axes: **à discuter avec Lisa**
 
+## 26 mars
+
+certains axes lors de simulations sortent semblent très influencés par un sous ensemble d'espèces. J'ai d'abord pensé que cela pouvait correspondre à une histoire de centralité mais dans les fait, certains points encore moins centraux ne perturbent pas pour autant l'AFC. Du coup je me suis dit que cela pouvait être un impact des vertex (a) de degré 1 liés à un autre vertex (b) principalement relié à a et aillant des liens peu puissant avec les autres vertices. Cela fonctionnait mieux mais certain étaient détectés mais sont considérés comme centraux (pour b) et du coup ne perturbaient pas l'AFC. Et au contraire, certains n'aillant pas un degré de 1 le perturbaient.
+
+Ma théorie et que l'AFC est perturbée car bien que l'on n'ai qu'une composante principale, on est dans un cas un peu hybride où un sous groupe d'espèces sont fortement reliées entre elles et peu avec le reste du réseau. Cela reviendrait à avoir un cas un peu plus complexe que celui où nous avons plusieurs composantes et dans ce cas, l'axe perturbé en question représenterais l'organisation de ce sous groupe d'espèces. Dans notre cas, le détecter est une première étape mais il faudrait aussi faire en sorte de ne pas regarder cet axe et peut-être regarder la structure de ce sous groupe après et dans tout les cas donner la composition des espèces formant un cluster séparé.
+
+Si c'est le cas, il faudrait regarder le clustering pondéré du réseau afin d'essayer de découvrir des structure à l’intérieur du réseau. Du coup je lis l'article : "The architecture of complex weighted networks" de Barrat 2008 car il semble être à l'origine de la méthode de clustering barrat qui fonctionne sur les graphes pondérés
+
+## 27 mars: biblio sur le clustering
+
+It seems clear to me that the fact that there is some smaller scale structures is perturbing the CA and hence it is harder to find a common structure as there is some smaller scale ones. 
+https://igraph.org/c/doc/igraph-Community.html
+*"Clustering methods differ in their ability to detect patterns in ecological networks" from Leger 2015*
+"This latter kind of subgroup is usually referred to as compartment (Krause et al. 2003) or module (Olesen et al. 2007)." So what I'm looking for is either compartments or modules. It has more nuance than the explanation of Vincent.
+
+Selon cet article, le plus approprié pour des graphes bipartis pondérés, ce serait le stochastic block model qui vient de l'article "UNCOVERING LATENT STRUCTURE IN VALUED GRAPHS: A VARIATIONAL APPROACH" de Mariadassou, Robin & Vacher 2010
+
+J'ai l'impression que ce qui m’intéresse, ce serait de faire du partitionnement spectral (spectral clustering)
+
+le fait de se séparer de ces sous ensemble qui peut me sembler gênant. Dans ce cas, j'ai l'impression que ce qui ressort dans les valeurs propres, est cette structure qui n'est pas représentative de la structure globale. Mais en même temps s'en débarrasser est problématique car c'est une structure qui est bel et bien présente dans le metaweb mais qui est modulaire. Et dans ce cas,  elle est importante et in ne peut pas s'en débarrasser pour la même justification que quand elle est séparée clairement de la composante géante puisque une modification interne à cette composante impacteras aussi la composante géante bien que façon minime je pense. 
 
 # Todo list
 

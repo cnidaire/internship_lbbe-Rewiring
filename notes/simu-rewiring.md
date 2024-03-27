@@ -94,3 +94,9 @@ l'AFC permet de discriminer entre le trait matching et les abondances vu qu'en f
 
 optimum environemental = 0.1
 cercle de correlation
+
+valeur absolue correlation faire attention aux inversions d'axes sur le cercle des correlations
+projetter les espèces sur le réseau moyen et regarder la variation (taille de l’enveloppe convexe) et comparer à la beta-diversité
+
+hypervolume package R
+

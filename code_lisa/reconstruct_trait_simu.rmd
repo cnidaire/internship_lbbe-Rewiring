@@ -357,9 +357,46 @@ plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), ver
 
 degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
 
-fou1 = foucart(lapply(simulated_network$obs_giant_compo, as.data.frame), scannf = F, nf = 4)
-plot(fou1, yax = 2)
+fou1 = foucart(lapply(simulated_network$obs_giant_compo, as.data.frame), scannf = F, nf = 5)
+plot(fou1, xax = 1)
+
+# boxplot.stats(afc.tab$l1[,"RS2"])
+ax_position <- afc.tab$l1[,"RS1"]
+# which(ax_position < quantile(ax_position, 0.025))
+# which(ax_position > quantile(ax_position, 0.975))
+which(ax_position < mean(ax_position) - 3 * sd(ax_position))
+which(ax_position >mean(ax_position) + 3 * sd(ax_position))
+afc.tab$l1
+hist(ax_position)
+quantile(ax_position)
+
+ax_position <- afc.tab$c1[,"CS1"]
+# which(ax_position < quantile(ax_position, 0.025))
+# which(ax_position > quantile(ax_position, 0.975))
+which(ax_position < mean(ax_position) - 3 * sd(ax_position))
+which(ax_position >mean(ax_position) + 3 * sd(ax_position))
+afc.tab$c1
+hist(ax_position)
+quantile(ax_position)
 ```
+
+```{r}
+transitivity(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), type = "barrat")
+```
+
+```{r}
+cluster_spe <- cluster_louvain(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+cluster_spe$membership
+palette <- rainbow(max(cluster_spe$membership))
+plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5, vertex.color = palette[cluster_spe$membership])
+```
+```{r}
+cluster_spe <- cluster_edge_betweenness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+cluster_spe$membership
+palette <- rainbow(max(cluster_spe$membership))
+plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5, vertex.color = palette[cluster_spe$membership])
+```
+
 
 ```{r}
 print("for consummer")
@@ -377,32 +414,21 @@ vert_a_b_con
 conn_vert_b_con
 
 
-
-
-```
-
-
-```{r}
 print("for resource")
+vert_a = names(which(degree(graph_from_incidence_matrix(tab)) == 1))
 vert_a_res <- grep("res", vert_a, value = T)
-vert_b_res <- c()
 conn_vert_b_res <- c()
 vert_b_res <- c()
+vert_a_b_res <- c()
 for(a in vert_a_res){
-  vert_a_b <- which(tab[a,] !=0)
-  vert_b_res <- c(vert_b_res, vert_a_b)
-  conn_vert_b_res <- c(conn_vert_b_res, colSums(tab)[names(vert_a_b)])
+  vert_a_b_res <- c(vert_a_b_res, tab[a, which(tab[a,] !=0)])
+  conn_vert_b_res <- c(conn_vert_b_res, colSums(tab)[names(which(tab[a,] !=0))])
 }
 vert_a_res
-vert_b_res
+vert_a_b_res
 conn_vert_b_res
+
 ```
-
-
-```{r}
-dim(simulated_network$obs_giant_compo[[1]])
-```
-
 
 ```{r}
 filt_netw <- rep(list(NA), nb_frame)
