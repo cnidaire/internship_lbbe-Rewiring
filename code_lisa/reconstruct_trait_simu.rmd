@@ -185,6 +185,53 @@ ade4::table.value(toto, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csiz
 ade4::table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # transformed average table
 ```
 
+```{r}
+library(ggplot2)
+library(tidyr)
+```
+
+```{r}
+toto
+toto$res <- rownames(toto)
+reconstructed = pivot_longer(toto, cols = starts_with("con"), names_to = "con")
+reconstructed$res <- as.factor(reconstructed$res)
+reconstructed$con <- as.factor(reconstructed$con)
+str(reconstructed)
+
+ggplot(reconstructed, aes("res", "con", fill = "value")) + geom_tile()
+```
+
+```{r}
+# Dummy data
+x <- LETTERS[1:20]
+y <- paste0("var", seq(1,20))
+data <- expand.grid(X=x, Y=y)
+data$Z <- runif(400, 0, 5)
+ 
+data
+# Heatmap 
+ggplot(data, aes(X, Y, fill= Z)) + 
+  geom_tile()
+```
+
+
+
+```{r}
+# Example data frame
+df <- data.frame(
+  individual = c("A", "B", "C"),
+  value1 = c(10, 20, 30),
+  value2 = c(15, 25, 35)
+)
+
+# Reshape the data frame from wide to long format
+long_df <- pivot_longer(df, cols = starts_with("value"), names_to = "variable", values_to = "value")
+
+# Print the resulting long format data frame
+print(long_df)
+print(df)
+
+```
 
 
 ```{r}
