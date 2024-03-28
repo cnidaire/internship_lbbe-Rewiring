@@ -289,31 +289,15 @@ s.corcircle(cor(simulated_network$trait$resource_giant_compo, afc.tab$li))
 ```
 
 
-```{r}
-# detach("package:adegraphics", unload = TRUE)
-if(!adegraphicsLoaded()) {
-  data (olympic)
-  dudi1 <- dudi.pca(olympic$tab, scan = FALSE) # a normed PCA
-  par(mfrow = c(2, 2))
-  s.corcircle(dudi1$co, lab = names(olympic$tab))
-  s.corcircle(dudi1$co, cgrid = 0, full = FALSE, clab = 0.8)
-  s.corcircle(dudi1$co, lab = as.character(1:11), cgrid = 2,
-    full = FALSE, sub = "Correlation circle", csub = 2.5,
-    possub = "bottomleft", box = TRUE)
-  s.arrow(dudi1$co, clab = 1)
-  par(mfrow = c(1, 1))
-}
-```
-
 # Take care of the weird axes
 
 ```{r}
-nb_frame = 5
+nb_frame = 20
 spe_resource = 50
 spe_consumer = 50
 simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                    nb_location = nb_frame,
-                                   know_env_grad_pos = F, ninter = 500, 
+                                   know_env_grad_pos = T, ninter = 5000, 
                                    mean_tol = 0.1, sd_tol = 0.1,
                                    mean_tol_env = 0.1, sd_tol_env = 0.1,
                                    delta = 1, corr_env_trait = 0,
@@ -328,6 +312,9 @@ afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
 
 (corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li)) # resource correlation with the rows of the CA depending on the axis
 (corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co)) # consumer correlation with the columns of the CA depending on the axis
+
+plot(RV.randtest(data.frame(simulated_network$trait$resource_giant_compo), afc.tab$li))
+plot(RV.randtest(data.frame(simulated_network$trait$consumer_giant_compo), afc.tab$co))
 
 s.corcircle(corr_line)
 s.corcircle(corr_col)
@@ -348,6 +335,8 @@ graphCol = pal(fine)[as.numeric(cut(log(centrality),breaks = fine))]
 # now you just need to plot it with those colors
 plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5, vertex.color=graphCol)
 
+# plot(graph_from_incidence_matrix(simulated_network$obs_giant_compo[[1]][]))
+
 # for (i in 1:nb_frame){
 #   print(simulated_network$obs_giant_compo[[i]]["res33", "con17"])
 # }
@@ -355,7 +344,8 @@ plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), ver
 # closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
 # sort(closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0])))
 
-degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+which(degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))>5)
+degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))>5
 
 fou1 = foucart(lapply(simulated_network$obs_giant_compo, as.data.frame), scannf = F, nf = 5)
 plot(fou1, xax = 1)
@@ -378,7 +368,29 @@ which(ax_position >mean(ax_position) + 3 * sd(ax_position))
 afc.tab$c1
 hist(ax_position)
 quantile(ax_position)
+
+cluster_spe <- cluster_edge_betweenness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+dendPlot(cluster_spe)
+
+barplot(fou1$eig)
+table.value(ifelse(tab> 0, 1,0), ppoint.cex=0.5)
 ```
+
+```{r}
+s.arrow(diag(sqrt(fou1$cw)) %*% as.matrix(fou1$c1), label = rownames(fou1$l1))
+s.label(fou1$li, add.plot = TRUE)
+
+## à faire avec foucart
+
+cor(diag(sqrt(fou1$cw)) %*% as.matrix(fou1$c1), simulated_network$trait$resource_giant_compo)
+
+hist(simulated_network$trait$resource_giant_compo)
+
+## second
+s.arrow(diag(sqrt(fou1$lw)) %*% as.matrix(fou1$l1), label = rownames(fou1$l1))
+s.label(fou1$co, add.plot = TRUE)
+```
+
 
 ```{r}
 transitivity(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), type = "barrat")
@@ -392,9 +404,15 @@ plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), ver
 ```
 ```{r}
 cluster_spe <- cluster_edge_betweenness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+dendPlot(cluster_spe)
 cluster_spe$membership
 palette <- rainbow(max(cluster_spe$membership))
 plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), vertex.size=5, vertex.color = palette[cluster_spe$membership])
+dendPlot(cluster_spe)
+```
+
+```{r}
+spe
 ```
 
 

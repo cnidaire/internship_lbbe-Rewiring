@@ -152,6 +152,8 @@ Observation des comportement sur de multiples simulation
 
 ## 26 mars
 
+j'ai d'abord essayé de trouver une méthode pour repérer les outlier à partir des coordonnées des points sur les différents axes puis test pour regarder leurs centralité, leurs degrés puis visuellement quel étaient ceux qui sortaient et regarder leurs propriétés dans le réseau moyen.
+
 certains axes lors de simulations sortent semblent très influencés par un sous ensemble d'espèces. J'ai d'abord pensé que cela pouvait correspondre à une histoire de centralité mais dans les fait, certains points encore moins centraux ne perturbent pas pour autant l'AFC. Du coup je me suis dit que cela pouvait être un impact des vertex (a) de degré 1 liés à un autre vertex (b) principalement relié à a et aillant des liens peu puissant avec les autres vertices. Cela fonctionnait mieux mais certain étaient détectés mais sont considérés comme centraux (pour b) et du coup ne perturbaient pas l'AFC. Et au contraire, certains n'aillant pas un degré de 1 le perturbaient.
 
 Ma théorie et que l'AFC est perturbée car bien que l'on n'ai qu'une composante principale, on est dans un cas un peu hybride où un sous groupe d'espèces sont fortement reliées entre elles et peu avec le reste du réseau. Cela reviendrait à avoir un cas un peu plus complexe que celui où nous avons plusieurs composantes et dans ce cas, l'axe perturbé en question représenterais l'organisation de ce sous groupe d'espèces. Dans notre cas, le détecter est une première étape mais il faudrait aussi faire en sorte de ne pas regarder cet axe et peut-être regarder la structure de ce sous groupe après et dans tout les cas donner la composition des espèces formant un cluster séparé.
@@ -170,6 +172,38 @@ Selon cet article, le plus approprié pour des graphes bipartis pondérés, ce s
 J'ai l'impression que ce qui m’intéresse, ce serait de faire du partitionnement spectral (spectral clustering)
 
 le fait de se séparer de ces sous ensemble qui peut me sembler gênant. Dans ce cas, j'ai l'impression que ce qui ressort dans les valeurs propres, est cette structure qui n'est pas représentative de la structure globale. Mais en même temps s'en débarrasser est problématique car c'est une structure qui est bel et bien présente dans le metaweb mais qui est modulaire. Et dans ce cas,  elle est importante et in ne peut pas s'en débarrasser pour la même justification que quand elle est séparée clairement de la composante géante puisque une modification interne à cette composante impacteras aussi la composante géante bien que façon minime je pense. 
+
+https://lrouviere.github.io/TUTO_GRAPHES/correction/clust-spec.html
+
+peut peut-être fonctionner avec dendPlot(cluster_edge_betweenness(graph))
+
+ceux qui foutent la merde sont quasi toujours dans le même cluster! 
+Quand l'AFC fonctionne bien, on a de grands groupes et inversement. C'est aussi réciproque quand on regarde le dendro en premier
+Ça fonctionne super bien!
+quelques cas peu satisfaisants, surtout, cela peut permettre d'identifier la sous structure qui pose problème mais pas de la détecter pre-AFC
+
+
+## 28 mars: same
+
+apparently community detection and spectral clustering are two different things
+En fait, je pense que le clustering c'est super important et je pense que ça apporte une information super intéressante sur les sous communautés et si possible sur les espèces qui ont  des rôles qui ont à l'interface des différentes communautés. Ce qui pourrait être intéressant, ce serait de voir le lien entre ça et les trait ou les niches environnementales.
+
+"Community detection in networks: A user guide" from Fortunato 2016
+"For networks characterized by NCPs (network community profile) like the one in Fig. 19 (left) the most pronounced communities are fairly small in size. Such small clusters are weakly connected to the rest of the network, often by a single edge (in this case they are called whiskers), and form the periphery of the graph. Large clusters have comparatively lower quality and melt into a big core. Large communities can often be split in parts with lower conductance, so they can be considered conglomerates of smaller communities."
+It indeed seems like there is a core periphery structure and that the species perturbing the signal are whiskers
+Au vu de l'article de Vincent "Core-periphery dynamics in plant-pollinators networks"
+
+Je pense que la detection de communauté devrais fonctionner assez bien sur la matrice de trait matching je pense.
+
+et discussion avec Stéphane:
+- pas besoin de repérer les communautés normalement la matrice de trait matching devrait fonctionner correctement
+- problème de modularité potentielle:
+	- si plusieurs gros modules : les faire séparément
+	- si un gros et plusieurs petits: virer les petits en applicant par example un filtre sur le degré
+- vérifier que la matrice de trait matching est bien reconstruite en regardant une distance RV
+- chercher un indice de modularité pour pouvoir comment la puissance d’échantillonnage et le nombre de frames l'influence
+
+
 
 # Todo list
 
