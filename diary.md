@@ -203,7 +203,27 @@ et discussion avec Stéphane:
 - vérifier que la matrice de trait matching est bien reconstruite en regardant une distance RV
 - chercher un indice de modularité pour pouvoir comment la puissance d’échantillonnage et le nombre de frames l'influence
 
+## 29 mars
 
+- [ ] faire un RV sur les matrices de trait matching et comprendre ce à quoi ça correspond
+- [ ] lier l’échantillonnage et l'indice de  modularité (on s'attend à ce que quand on augmente l'échantillonnage, l'indice de modularité diminue mais on n'a pas encore trop d'indice de modularité mais je pense que ça peut se faire avec du clustering top down)
+- [ ] faire un test en virant les espèces degré inférieur à 5. afin de n'obtenir que ceux qui ne font parti de la communauté principale
+- [ ] regarder la modularité pour voir si c'est impacté par le nombre de sites échantillonnés aussi
+
+Il semblerais que le coef rv de correlation entre les traits théorique et reconstruits ne soit pas impacté par la puissance d’échantillonnage
+
+## 30 mars
+
+tirer abondances suivant loi logistique plutot que normale
+produit de deux logistoques dans les deux sens -> quatre param mais permet d'avoir des optimums longs
+
+effet neutre = champ moyen (mean field
+
+vérifier la reconstruction, je pense que dans le chi 2, il y a une racine et pas un carré sour la fraction)
+
+## 2 avril
+
+J'ai pris du temps pour comprendre la décomposition en valeurs singulières et pour commencer à poser les maths et comprendre ce que la simulation fait.
 
 # Todo list
 
