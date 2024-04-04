@@ -214,9 +214,8 @@ Il semblerais que le coef rv de correlation entre les traits théorique et recon
 
 ## 30 mars
 
-tirer abondances suivant loi logistique plutot que normale
-produit de deux logistoques dans les deux sens -> quatre param mais permet d'avoir des optimums longs
-
+tirer abondances suivant loi logistique plutôt que normale
+produit de deux logistiques dans les deux sens -> quatre param mais permet d'avoir des optimums longs
 effet neutre = champ moyen (mean field
 
 vérifier la reconstruction, je pense que dans le chi 2, il y a une racine et pas un carré sour la fraction)
@@ -224,6 +223,13 @@ vérifier la reconstruction, je pense que dans le chi 2, il y a une racine et pa
 ## 2 avril
 
 J'ai pris du temps pour comprendre la décomposition en valeurs singulières et pour commencer à poser les maths et comprendre ce que la simulation fait.
+
+## 3 avril
+
+continuer de lire les maths et essayer de comprendre ce que je dois faire pour écrire les maths proprement pour la partie simulation
+
+**il faut peut-être retirer la couche d’échantillonnage.** Du point de vue biologique, lorsque l'on tire les abondances, ce que lo'n fait en fait est définir le nombre d'espèces qui vont passer par le transect d'étude et ensuite, ces espèces ont un probabilité d'interaction qui va dépendre du trait matching. Il n'y a donc aucun besoin de rajouter une couche d'échantillonnage artificiel dessus. Ça n'a aucun sens biologique.
+Cependant je ne pense pas que ça change la distribution au final, on a juste plus moyen de donner un poids plus ou moins important au trait matching en comparaison à l'effet neutre
 
 # Todo list
 

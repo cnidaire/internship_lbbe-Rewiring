@@ -100,3 +100,23 @@ projetter les espèces sur le réseau moyen et regarder la variation (taille de 
 
 hypervolume package R
 
+# Pose du problème et conceptualisation de la simulation
+
+## Pose du problème:
+Nous voulons simuler des données réalistes qui suivent ce que l'on suppose principes régissant les interactions entre les espèces. Qui sont:
+- *L'effet neutre*: correspond à la chance que deux espèces se rencontrent de manière aléatoire, ce qui revient à la théorie du champ moyen qui est utilisée en physique et en théorie des probability (mean field theory)
+- *trait matching*: ce dernier correspond à probabilité d'interaction entre deux espèces, elle est donc liée au trait que l'on considère comme physique tels ceux mesurables et usuellement considérés en écologie (longueur et largeur de bec et diamètre du fruit par exemple). Il est aussi impacté par d'autres facteurs que l'on peut plus difficilement nommer "trait matching" au sens commun du terme comme l’appétence d'une espèce pour une autre ou le goût qui impactent aussi la probabilité d'une espèce à interagir avec une autre mais qui est plus difficilement mesurable.
+
+## Hypothèses
+Nous considérons ici que les espèces sont uniformément réparties dans le milieu et que le transect d'observation est représentatif de la zone d'étude (ainsi que les espèces sont uniformément distribuées dans l'espace).
+
+Nous considérons aussi que les niches fondamentales et réalisées sont les mêmes lors de la génération des données.
+
+On suppose que les espèce la distribution de la niche des espèces suit une lois normale et que la taille de la population n'est impactée que par la position de l'espèce sur le gradient environnemental et n'est pas impactée par d'autre facteurs tels que la limitation dé ressource, la prédation, le parasitisme et autres.
+
+Aussi, on suppose que la quantité d'interactions observées ne dépend que de l'affinité d'une espèce pour l'autre ainsi que des abondance. Par exemple, on ne prend pas en compte les phénomènes d'exclusion spatiale lié à la compétition.
+## Simulation
+
+### Abondances
+
+On tire d'abord la distribution de chaque espèce dans sur le gradient environnemental
