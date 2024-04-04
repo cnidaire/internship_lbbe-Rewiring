@@ -231,6 +231,11 @@ continuer de lire les maths et essayer de comprendre ce que je dois faire pour �
 **il faut peut-être retirer la couche d’échantillonnage.** Du point de vue biologique, lorsque l'on tire les abondances, ce que lo'n fait en fait est définir le nombre d'espèces qui vont passer par le transect d'étude et ensuite, ces espèces ont un probabilité d'interaction qui va dépendre du trait matching. Il n'y a donc aucun besoin de rajouter une couche d'échantillonnage artificiel dessus. Ça n'a aucun sens biologique.
 Cependant je ne pense pas que ça change la distribution au final, on a juste plus moyen de donner un poids plus ou moins important au trait matching en comparaison à l'effet neutre
 
+## 4 avril
+regarder les Max Likelihood Estimators ( $\Leftrightarrow$ Max A posteriori Estimation) pour poisson et la loi binomiale pour s'assurer que l'on fait bien la bonne chose. (donc c'est un peu de stat bayésiennes et normalement vu que mes supposition ne me semblent pas aberrantes sur les distributions ça permet de s'assurer que c'est la meilleur estimateur et que ça converge).
+
+
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux

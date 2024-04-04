@@ -115,6 +115,11 @@ Nous considérons aussi que les niches fondamentales et réalisées sont les mê
 On suppose que les espèce la distribution de la niche des espèces suit une lois normale et que la taille de la population n'est impactée que par la position de l'espèce sur le gradient environnemental et n'est pas impactée par d'autre facteurs tels que la limitation dé ressource, la prédation, le parasitisme et autres.
 
 Aussi, on suppose que la quantité d'interactions observées ne dépend que de l'affinité d'une espèce pour l'autre ainsi que des abondance. Par exemple, on ne prend pas en compte les phénomènes d'exclusion spatiale lié à la compétition.
+
+Ne prends pas en compte une saturation du nombre d'interactions: ce qui signifie qu'un même individu peut faire un nombre d'interactions improbable en interagissant avec tout les autres individus techniquement. Ce qui n'est peut-être pas trop aberrant pour les plantes pollinisateurs mais qui devient irréaliste pour les interactions trophique.
+
+Si loi binomiale, on suppose que tout les individus sont présents en même temps sur le transect. Ce qui n'est là aussi probablement  pas le cas sur des temps d'observation un peu long
+
 ## Simulation
 
 ### Abondances

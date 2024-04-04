@@ -1,0 +1,41 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+# Rémi's version
+
+## Reconstructing abundance vectors
+
+Using Single Value Decomposition
+
+creation of dummy abundance vectors
+
+```{r}
+a_i <- matrix(c(1, 2, 3, 4, 5, 6))
+a_j <- matrix(c(1, 2, 3, 4, 5, 6))
+(A_ij <- a_i %*% t(a_j))
+```
+
+```{r}
+# Décomposition en valeurs singulières (SVD)
+svd_result <- svd(A_ij)
+
+# Extraction de U, Sigma et V
+U <- svd_result$u
+Sigma <- diag(svd_result$d)
+V <- svd_result$v
+
+# Affichage des résultats
+print("Vecteurs ai:")
+print(U)
+print("Vecteurs aj:")
+print(V)
+print("Vecteurs sigma:")
+print(Sigma)
+```
+
+```{r}
+U %*% Sigma %*% V
+```
