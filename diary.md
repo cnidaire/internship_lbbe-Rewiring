@@ -234,7 +234,18 @@ Cependant je ne pense pas que ça change la distribution au final, on a juste pl
 ## 4 avril
 regarder les Max Likelihood Estimators ( $\Leftrightarrow$ Max A posteriori Estimation) pour poisson et la loi binomiale pour s'assurer que l'on fait bien la bonne chose. (donc c'est un peu de stat bayésiennes et normalement vu que mes supposition ne me semblent pas aberrantes sur les distributions ça permet de s'assurer que c'est la meilleur estimateur et que ça converge).
 
+Aussi, vérifier si il n'y a pas moyen d'obtenir une décomposition de la matrice obtenue par le produit de tenseurs en appliquant une SVD dessus. Du coup je me tourne vers les tenseurs et j'essaie de comprendre ce que ça représente.  
 
+## 5 avril
+
+raisons pour lesquelles on ne peut pas reconstruire la matrice de trait matching de façon unique à partir de celle observée si on n'a pas d'autre porpriétés que le produit terme à terme de matching et abondance:
+1. **Non-unique solutions**: For any given C, there could be multiple pairs of matrices A and B that would multiply element-wise to give C. This means that without additional constraints or information, you cannot uniquely determine A and B.
+    
+2. **Loss of Information**: When you perform element-wise multiplication (also known as Hadamard product) of two matrices A and B to get C, you lose the information about the original matrices. Each element of C is obtained by multiplying the corresponding elements of A and B, so you cannot recover A and B from C alone.
+    
+3. **Zeroes Mask**: Even if you know some elements of A or B are zeros, you cannot infer the exact locations of these zeroes from C alone, because a product of non-zero elements can still result in zero.
+
+Contraintes que l'on a: les abondances sont des entiers naturels et le trait matching est des valeurs entre 0 et 1.
 
 # Todo list
 
