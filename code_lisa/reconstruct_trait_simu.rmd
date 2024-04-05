@@ -86,10 +86,10 @@ reconst_afc2 <- function (dudi, nf = 1, ...)
 ```{r}
 nb_frame = 16
 spe_resource = 70
-spe_consumer = 200
+spe_consumer = 190
 simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                    nb_location = nb_frame,
-                                   know_env_grad_pos = F, ninter = 1400, 
+                                   know_env_grad_pos = F, ninter = 2400, 
                                    mean_tol = 0.2, sd_tol = 0.2,
                                    mean_tol_env = 0.2, sd_tol_env = 0.3,
                                    delta = 1, corr_env_trait = 0)
@@ -114,7 +114,7 @@ connected_compo <- function(simu_netw, nb_frame){
   print(paste(length(unique(not_always_con))/(spe_consumer + spe_resource) * 100,"% of the species will be removed because there is some frames where they are not part of the giant component"))
   return(unique(not_always_con))
 }
-sampled_netw
+# sampled_netw
 not_giant_compo <- connected_compo(simulated_network, nb_frame)
 ```
 
@@ -180,9 +180,23 @@ afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
 par(mfrow=c(2,2))
 ade4::table.value(simulated_network$trait$trait_mat_giant_compo, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8) # trait matching matrix et tri selon le premier axe
 ade4::table.value(tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # réseau moyen observé
-toto = reconst_afc(afc.tab, nf = 8) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
+toto = reconst_afc(afc.tab, nf = 6) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
 ade4::table.value(toto, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8) # plot le réseau reconstruit
 ade4::table.value(afc.tab$tab, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1])) # transformed average table
+```
+
+```{r}
+afc.tab=dudi.coa(tab, nf = 18, scannf = T)
+```
+
+
+```{r}
+toto = reconst_afc(afc.tab, nf = 4)
+plot(RV.randtest(toto, data.frame(simulated_network$trait$trait_mat_giant_compo), nrepet = 999))
+
+rv <- RV.randtest(toto, data.frame(simulated_network$trait$trait_mat_giant_compo), nrepet = 999)
+
+rv$obs
 ```
 
 ```{r}
@@ -191,6 +205,7 @@ library(tidyr)
 ```
 
 ```{r}
+toto = reconst_afc(afc.tab, nf = 12) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
 toto
 toto$res <- rownames(toto)
 reconstructed = pivot_longer(toto, cols = starts_with("con"), names_to = "con")
@@ -198,20 +213,24 @@ reconstructed$res <- as.factor(reconstructed$res)
 reconstructed$con <- as.factor(reconstructed$con)
 str(reconstructed)
 
-ggplot(reconstructed, aes("res", "con", fill = "value")) + geom_tile()
+# hist(reconstructed$value)
+
+reconstructed$value[which(reconstructed$value < 0)] <- 0
+
+ggplot(reconstructed, aes(x = res, y = con, fill = value)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue")
 ```
 
 ```{r}
-# Dummy data
-x <- LETTERS[1:20]
-y <- paste0("var", seq(1,20))
-data <- expand.grid(X=x, Y=y)
-data$Z <- runif(400, 0, 5)
- 
-data
-# Heatmap 
-ggplot(data, aes(X, Y, fill= Z)) + 
-  geom_tile()
+# ade4::table.value(simulated_network$trait$trait_mat_giant_compo[rank(afc.tab$li[,1]), rank(afc.tab$co[,1])])
+# rank(afc.tab$li[,1])
+
+trait_mat <- as.data.frame(simulated_network$trait$trait_mat_giant_compo)
+trait_mat$res <- rownames(simulated_network$trait$trait_mat_giant_compo)
+trait_mat <- pivot_longer(trait_mat, cols = starts_with("con"), names_to = "con")
+trait_mat$res <- as.factor(trait_mat$res)
+trait_mat$con <- as.factor(trait_mat$con)
+
+ggplot(trait_mat, aes(x = res, y = con, fill = value)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue")
 ```
 
 
@@ -424,6 +443,11 @@ table.value(ifelse(tab> 0, 1,0), ppoint.cex=0.5)
 ```
 
 ```{r}
+
+```
+
+
+```{r}
 s.arrow(diag(sqrt(fou1$cw)) %*% as.matrix(fou1$c1), label = rownames(fou1$l1))
 s.label(fou1$li, add.plot = TRUE)
 
@@ -505,3 +529,63 @@ fou1 = foucart(lapply(filt_netw, as.data.frame), scannf = F, nf = 5)
 plot(fou1)
 ```
 
+
+# correlation trait matching reconstruit et th
+
+```{r}
+rv_distrib <- c()
+for (i in 1:30) {
+  nb_frame = 10
+  spe_resource = 100
+  spe_consumer = 100
+  simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                     nb_location = nb_frame,
+                                     know_env_grad_pos = T, ninter = 50000, 
+                                     mean_tol = 0.1, sd_tol = 0.1,
+                                     mean_tol_env = 0.1, sd_tol_env = 0.1,
+                                     delta = 1, corr_env_trait = 0,
+                                     ratio_grad = 0.7)
+  
+  not_giant_compo <- connected_compo(simulated_network, nb_frame)
+  simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
+  
+  
+  tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
+  afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+  
+  toto = reconst_afc(afc.tab, nf = 4)
+  
+  # plot(RV.randtest(toto, data.frame(simulated_network$trait$trait_mat_giant_compo), nrepet = 999))
+  
+  rv <- RV.randtest(toto, data.frame(simulated_network$trait$trait_mat_giant_compo), nrepet = 100)
+  
+  rv_distrib <- c(rv_distrib, rv$obs)
+  # rv$obs 
+}
+hist(rv_distrib)
+median(rv_distrib)
+```
+
+
+```{r}
+rv_distrib <- c()
+for (i in 1:1) {
+  nb_frame = 2
+  spe_resource = 100
+  spe_consumer = 100
+  simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                     nb_location = nb_frame,
+                                     know_env_grad_pos = T, ninter = 20000, 
+                                     mean_tol = 0.1, sd_tol = 0.1,
+                                     mean_tol_env = 0.1, sd_tol_env = 0.1,
+                                     delta = 1, corr_env_trait = 0,
+                                     ratio_grad = 0.7)
+  
+  not_giant_compo <- connected_compo(simulated_network, nb_frame)
+  simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
+  
+  
+  tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
+  afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+}
+```
