@@ -247,6 +247,14 @@ raisons pour lesquelles on ne peut pas reconstruire la matrice de trait matching
 
 Contraintes que l'on a: les abondances sont des entiers naturels et le trait matching est des valeurs entre 0 et 1.
 
+La SVD et donc la CA va décomposer la matrice en des produits de vecteurs pondérés. cependant, je ne pense pas pour autant que l'on puisse dire que l'on retrouve les traits d'origine vu qu'il n'ont pas été obtenus par une somme de produits de vecteurs. En effet, je pense que l'on peut bien se débarrasser du champ moyen en calculant des distances de Chi 2. Vu que le produit de la somme sur le lignes et les colones est le meilleur estimateur des abondances que l'on ai sous la main (même si il n'est pas incroyable) vu qu'il est bien perturbé par le trait matching et ça va devenir encore pire si le trait matching et les abondances sont corrélées, vu que 
+
+
+Réunion avec Stéphane:
+- faire des tests en simulant des données avec des fortes variances pour qu'il y ait beaucoup de similarité entre les lieux
+- comparer les rangs des trait reconstruits par colonne vu qu'il sont normalisés par colonne pour la matrice de trait matching théorique et faire une correlation ou trouver une corrélation sur les rangs
+- tester la reconstruction des traits à partir de la matrice de trait matching théorique pour vérifier empiriquement que l'on est bien capable de reconstruire les trait bien que je ne trouve pas de façon de le faire de manière calculatoire au vu de comment on calcule les affinités.
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
