@@ -649,3 +649,46 @@ boxplot(col_corr_mean, ylim = c(0,1))
 boxplot(col_corr_median, ylim = c(0,1))
 ```
 
+
+# Tester empiriquement reconstruction traits depuis trait matching th
+
+```{r}
+ratio_grad = 0.7
+mean_tol_env = 0.1
+ninter = 2500
+nb_frame = 10
+
+spe_resource = 50
+spe_consumer = 50
+simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                   nb_location = nb_frame,
+                                   know_env_grad_pos = T, ninter = ninter, 
+                                   mean_tol = 0.1, sd_tol = 0.1,
+                                   mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
+                                   delta = 1, corr_env_trait = 0,
+                                   ratio_grad = ratio_grad)
+
+not_giant_compo <- connected_compo(simulated_network, nb_frame)
+simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
+
+ade4::table.value(simulated_network$trait$matching_matrix)
+
+afc.tab=dudi.coa(simulated_network$trait$matching_matrix, nf = 4, scannf = F)
+
+reconst_trait_match = reconst_afc(afc.tab, nf = 4) 
+
+ade4::table.value(reconst_trait_match)
+
+column_corr <- sapply(1:ncol(reconst_trait_match), function(i) {
+    cor(reconst_trait_match[,i], simulated_network$trait$matching_matrix[,i])
+  })
+
+boxplot(column_corr)
+
+corr_line <- cor(simulated_network$trait$trait_resource, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+corr_col <- cor(simulated_network$trait$trait_consumer[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+
+print(corr_col)
+print(corr_line)
+```
+

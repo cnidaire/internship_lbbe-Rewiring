@@ -264,6 +264,7 @@ Journée de séminaires étudiants à Laennec
 - [x] regarder les correlations par colones
 - [ ] tester la reconstruction des traits en partant directement de la matrice de trait matching pour vérifier que la méthode de reconstruction fonctionne bien.
 
+nettoyage de mes fichiers mais pas du contenu
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
