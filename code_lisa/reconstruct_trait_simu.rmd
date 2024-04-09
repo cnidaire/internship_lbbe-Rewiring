@@ -91,7 +91,7 @@ simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = sp
                                    nb_location = nb_frame,
                                    know_env_grad_pos = F, ninter = 2400, 
                                    mean_tol = 0.2, sd_tol = 0.2,
-                                   mean_tol_env = 10, sd_tol_env = 0.3,
+                                   mean_tol_env = 100, sd_tol_env = 0.3,
                                    delta = 1, corr_env_trait = 0)
 
 ```
@@ -548,19 +548,27 @@ median(rv_distrib)
 ```
 
 
+# For différent parameters, try out the correlation between the reconsytructed axes and the theoritical traits
+
 ```{r}
+tr1ax1 <- c()
+tr2ax2 <- c()
 rv_distrib <- c()
-for (i in 1:1) {
-  nb_frame = 2
-  spe_resource = 100
-  spe_consumer = 100
+ratio_grad = 0.7
+mean_tol_env = 0.1
+ninter = 2500
+nb_frame = 2
+
+for (i in 1:100) {
+  spe_resource = 50
+  spe_consumer = 50
   simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                      nb_location = nb_frame,
-                                     know_env_grad_pos = T, ninter = 20000, 
+                                     know_env_grad_pos = T, ninter = ninter, 
                                      mean_tol = 0.1, sd_tol = 0.1,
-                                     mean_tol_env = 0.1, sd_tol_env = 0.1,
+                                     mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
                                      delta = 1, corr_env_trait = 0,
-                                     ratio_grad = 0.7)
+                                     ratio_grad = ratio_grad)
   
   not_giant_compo <- connected_compo(simulated_network, nb_frame)
   simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
@@ -568,5 +576,76 @@ for (i in 1:1) {
   
   tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
   afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+  
+    
+  corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+  corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+  tr1ax1 <- c(tr1ax1, corr_line[1,1])
+  tr2ax2 <- c(tr2ax2, corr_line[2,2])
 }
+print(tr1ax1)
+jpeg(file= paste0("~/Images/trait_reconstruction_performance/simu",num_simu,"_1.jpeg"))
+boxplot(abs(tr1ax1), ylim = c(0,1), main = paste0("Absolute correlation between trait 1 and ax 1 when the \n environement variance is ", mean_tol_env, " folds the gradient size (flat distrib) \n ratio_grad = ", ratio_grad, ", ", nb_frame, " frames, ", ninter, " obs each"))
+dev.off()
+
+print(tr2ax2)
+jpeg(file= paste0("~/Images/trait_reconstruction_performance/simu",num_simu,"_2.jpeg"))
+boxplot(abs(tr2ax2), ylim = c(0,1), main = paste0("Absolute correlation between trait 2 and ax 2 when the \n environement variance is ", mean_tol_env, " folds the gradient size (flat distrib) \n ratio_grad = ", ratio_grad, ", ", nb_frame, " frames, ", ninter, " obs each"))
+dev.off()
+
+num_simu = num_simu + 1
 ```
+
+
+# correlation
+
+```{r}
+ratio_grad = 0.7
+mean_tol_env = 0.1
+ninter = 2500
+nb_frame = 10
+
+col_corr_mean <- c()
+col_corr_median <- c()
+
+for (i in 1:100) {
+  spe_resource = 50
+  spe_consumer = 50
+  simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                     nb_location = nb_frame,
+                                     know_env_grad_pos = T, ninter = ninter, 
+                                     mean_tol = 0.1, sd_tol = 0.1,
+                                     mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
+                                     delta = 1, corr_env_trait = 0,
+                                     ratio_grad = ratio_grad)
+  
+  not_giant_compo <- connected_compo(simulated_network, nb_frame)
+  simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
+  
+  
+  tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
+  afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+  
+    
+  corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+  corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+  tr1ax1 <- c(tr1ax1, corr_line[1,1])
+  tr2ax2 <- c(tr2ax2, corr_line[2,2])
+  
+  reconst_trait_match = reconst_afc(afc.tab, nf = 12) # pour reconstruire le réseau moyen à partir des positions sur l'AFC mais on voudrait plustôt obtenir le trait matching
+  
+  # ade4::table.value(reconst_trait_match, x = rank(afc.tab$co[,1]), y = rank(afc.tab$li[,1]), csize = 0.8)
+  
+  column_corr <- sapply(1:ncol(reconst_trait_match), function(i) {
+    cor(reconst_trait_match[,i], simulated_network$trait$trait_mat_giant_compo[,i])
+  })
+  col_corr_median <- c(col_corr_median, median(column_corr))
+  col_corr_mean <- c(col_corr_mean, mean(column_corr))
+  # boxplot(abs(column_corr), ylim = c(0,1))
+  # print(which(is.na(column_corr)))
+}
+
+boxplot(col_corr_mean, ylim = c(0,1))
+boxplot(col_corr_median, ylim = c(0,1))
+```
+
