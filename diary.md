@@ -267,11 +267,15 @@ Journée de séminaires étudiants à Laennec
 
 nettoyage de mes fichiers (retirer ceux qui ne sont plus utiles) mais pas du contenu
 
+est ce que je passe tout en log pour que le produit du matching des deux traits individuellement se transforme en une somme?
+
 ## 10 avril
 
 procust pour la correlation entre les axes avec une rotation pres
 relier beta div
 verifier qu'il y a bien un eigengap quand la correlation entre les traits et les axes est bonne
+poser au propre ce que j'ai compris jusque là, sur le modèle, l'encodage via l'AFC qui est une méthode basée sur la SVD, qu'il y a l'émergance de modules quand les environement
+
 
 # Todo list
 
