@@ -262,9 +262,17 @@ Journée de séminaires étudiants à Laennec
 - [x] simuler données avec beaucoup de variance et tester la reconstruction de traits
 	- done it so it actually works super well on the first axes with the first trait. However, it is slightly worse foe the second one and we can assume that would also be decreasing for other traits if there appended to be some.
 - [x] regarder les correlations par colones
-- [ ] tester la reconstruction des traits en partant directement de la matrice de trait matching pour vérifier que la méthode de reconstruction fonctionne bien.
+- [x] tester la reconstruction des traits en partant directement de la matrice de trait matching pour vérifier que la méthode de reconstruction fonctionne bien.
+	- bah c'est pas terrible
 
-nettoyage de mes fichiers mais pas du contenu
+nettoyage de mes fichiers (retirer ceux qui ne sont plus utiles) mais pas du contenu
+
+## 10 avril
+
+procust pour la correlation entre les axes avec une rotation pres
+relier beta div
+verifier qu'il y a bien un eigengap quand la correlation entre les traits et les axes est bonne
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
