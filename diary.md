@@ -278,6 +278,9 @@ poser au propre ce que j'ai compris jusque là, sur le modèle, l'encodage via l
 
 lire Interaction network rewiring and species’ contributions to community-scale flexibility
 
+## 11 avril
+
+continuer le compte rendu et essayer de comprendre pourquoi la CA fonctionne alors que l'on n'a pas une somme mais un produite dans le construction de la matrice de trait matching.
 
 # Todo list
 
