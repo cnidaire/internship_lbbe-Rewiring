@@ -517,11 +517,11 @@ plot(fou1)
 rv_distrib <- c()
 for (i in 1:30) {
   nb_frame = 10
-  spe_resource = 100
-  spe_consumer = 100
+  spe_resource = 50
+  spe_consumer = 50
   simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                      nb_location = nb_frame,
-                                     know_env_grad_pos = T, ninter = 50000, 
+                                     know_env_grad_pos = T, ninter = 5000, 
                                      mean_tol = 0.1, sd_tol = 0.1,
                                      mean_tol_env = 0.1, sd_tol_env = 0.1,
                                      delta = 1, corr_env_trait = 0,
@@ -551,6 +551,7 @@ median(rv_distrib)
 # For différent parameters, try out the correlation between the reconsytructed axes and the theoritical traits
 
 ```{r}
+num_simu = 10
 tr1ax1 <- c()
 tr2ax2 <- c()
 rv_distrib <- c()
@@ -559,7 +560,7 @@ mean_tol_env = 0.1
 ninter = 2500
 nb_frame = 2
 
-for (i in 1:100) {
+for (i in 1:50) {
   spe_resource = 50
   spe_consumer = 50
   simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
@@ -584,18 +585,181 @@ for (i in 1:100) {
   tr2ax2 <- c(tr2ax2, corr_line[2,2])
 }
 print(tr1ax1)
-jpeg(file= paste0("~/Images/trait_reconstruction_performance/simu",num_simu,"_1.jpeg"))
+# jpeg(file= paste0("~/Images/trait_reconstruction_performance/simu",num_simu,"_1.jpeg"))
 boxplot(abs(tr1ax1), ylim = c(0,1), main = paste0("Absolute correlation between trait 1 and ax 1 when the \n environement variance is ", mean_tol_env, " folds the gradient size (flat distrib) \n ratio_grad = ", ratio_grad, ", ", nb_frame, " frames, ", ninter, " obs each"))
-dev.off()
+# dev.off()
 
 print(tr2ax2)
-jpeg(file= paste0("~/Images/trait_reconstruction_performance/simu",num_simu,"_2.jpeg"))
+# jpeg(file= paste0("~/Images/trait_reconstruction_performance/simu",num_simu,"_2.jpeg"))
 boxplot(abs(tr2ax2), ylim = c(0,1), main = paste0("Absolute correlation between trait 2 and ax 2 when the \n environement variance is ", mean_tol_env, " folds the gradient size (flat distrib) \n ratio_grad = ", ratio_grad, ", ", nb_frame, " frames, ", ninter, " obs each"))
-dev.off()
+# dev.off()
 
 num_simu = num_simu + 1
 ```
 
+```{r}
+parameters <- c(0.01, 0.1, 1, 10, 100)
+nb_rep = 50
+
+
+param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1) <- as.character(parameters)
+
+param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2) <- as.character(parameters)
+
+for (param in parameters) {
+  tr1ax1 <- c()
+  tr2ax2 <- c()
+  rv_distrib <- c()
+  ratio_grad = 0.7
+  # mean_tol_env = 0.1
+  mean_tol_env = param
+  ninter = 2500
+  nb_frame = 2
+  
+  for (i in 1:nb_rep) {
+    spe_resource = 50
+    spe_consumer = 50
+    simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                       nb_location = nb_frame,
+                                       know_env_grad_pos = T, ninter = ninter, 
+                                       mean_tol = 0.1, sd_tol = 0.1,
+                                       mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
+                                       delta = 1, corr_env_trait = 0,
+                                       ratio_grad = ratio_grad)
+    
+    not_giant_compo <- connected_compo(simulated_network, nb_frame)
+    simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
+    
+    
+    tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
+    afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+    
+      
+    corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+    corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+    tr1ax1 <- c(tr1ax1, corr_line[1,1])
+    tr2ax2 <- c(tr2ax2, corr_line[2,2])
+  }
+  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
+  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+  
+}
+# param_tr1ax1
+boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on mean tol env")
+# param_tr2ax2
+boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on mean tol env")
+```
+
+```{r}
+parameters <- c(250, 2500, 25000)
+nb_rep = 50
+
+
+param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1) <- as.character(parameters)
+
+param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2) <- as.character(parameters)
+
+for (param in parameters) {
+  tr1ax1 <- c()
+  tr2ax2 <- c()
+  rv_distrib <- c()
+  ratio_grad = 0.7
+  mean_tol_env = 1
+  # ninter = 2500
+  ninter = param
+  nb_frame = 2
+  
+  for (i in 1:nb_rep) {
+    spe_resource = 50
+    spe_consumer = 50
+    simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                       nb_location = nb_frame,
+                                       know_env_grad_pos = T, ninter = ninter, 
+                                       mean_tol = 0.1, sd_tol = 0.1,
+                                       mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
+                                       delta = 1, corr_env_trait = 0,
+                                       ratio_grad = ratio_grad)
+    
+    not_giant_compo <- connected_compo(simulated_network, nb_frame)
+    simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
+    
+    
+    tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
+    afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+    
+      
+    corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+    corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+    tr1ax1 <- c(tr1ax1, corr_line[1,1])
+    tr2ax2 <- c(tr2ax2, corr_line[2,2])
+  }
+  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
+  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+  
+}
+# param_tr1ax1
+boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on \n the   number of observations per frames")
+# param_tr2ax2
+boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on \n the number of observations per frames")
+```
+
+```{r}
+parameters <- c(2, 4, 10, 20)
+nb_rep = 50
+
+
+param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1) <- as.character(parameters)
+
+param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2) <- as.character(parameters)
+
+for (param in parameters) {
+  tr1ax1 <- c()
+  tr2ax2 <- c()
+  rv_distrib <- c()
+  ratio_grad = 0.7
+  mean_tol_env = 1
+  ninter = 2500
+  nb_frame = param
+  
+  for (i in 1:nb_rep) {
+    spe_resource = 50
+    spe_consumer = 50
+    simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
+                                       nb_location = nb_frame,
+                                       know_env_grad_pos = T, ninter = ninter, 
+                                       mean_tol = 0.1, sd_tol = 0.1,
+                                       mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
+                                       delta = 1, corr_env_trait = 0,
+                                       ratio_grad = ratio_grad)
+    
+    not_giant_compo <- connected_compo(simulated_network, nb_frame)
+    simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
+    
+    
+    tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
+    afc.tab=dudi.coa(tab, nf = 18, scannf = FALSE)
+    
+      
+    corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+    corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+    tr1ax1 <- c(tr1ax1, corr_line[1,1])
+    tr2ax2 <- c(tr2ax2, corr_line[2,2])
+  }
+  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
+  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+  
+}
+# param_tr1ax1
+boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on \n the   number of frames")
+# param_tr2ax2
+boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on \n the number of frames")
+```
 
 # correlation
 
@@ -663,7 +827,7 @@ spe_consumer = 50
 simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                    nb_location = nb_frame,
                                    know_env_grad_pos = T, ninter = ninter, 
-                                   mean_tol = 0.1, sd_tol = 0.1,
+                                   mean_tol = 0.7, sd_tol = 0.1,
                                    mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
                                    delta = 1, corr_env_trait = 0,
                                    ratio_grad = ratio_grad)
@@ -672,6 +836,33 @@ not_giant_compo <- connected_compo(simulated_network, nb_frame)
 simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
 
 ade4::table.value(simulated_network$trait$matching_matrix)
+
+############################# avec log ###########################################
+# 
+# afc.tab=dudi.coa(log(simulated_network$trait$matching_matrix + 1), nf = 4, scannf = F)
+# # afc.tab=dudi.coa(simulated_network$trait$matching_matrix, nf = 4, scannf = F)
+# 
+# reconst_trait_match = reconst_afc(afc.tab, nf = 4) 
+# 
+# ade4::table.value(reconst_trait_match)
+# 
+# column_corr <- sapply(1:ncol(reconst_trait_match), function(i) {
+#     cor(reconst_trait_match[,i], simulated_network$trait$matching_matrix[,i])
+#   })
+# 
+# boxplot(column_corr, ylim = c(0, 1))
+# 
+# corr_line <- cor(simulated_network$trait$trait_resource, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
+# corr_col <- cor(simulated_network$trait$trait_consumer[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
+# 
+# print(corr_col)
+# print(corr_line)
+# 
+# scatter(afc.tab)
+# 
+# # log(matrix(c(1:25), ncol = 5, nrow = 5)) + 1
+
+################################ sans log ###########################################
 
 afc.tab=dudi.coa(simulated_network$trait$matching_matrix, nf = 4, scannf = F)
 
@@ -683,12 +874,24 @@ column_corr <- sapply(1:ncol(reconst_trait_match), function(i) {
     cor(reconst_trait_match[,i], simulated_network$trait$matching_matrix[,i])
   })
 
-boxplot(column_corr)
+boxplot(column_corr, ylim = c(0, 1))
 
 corr_line <- cor(simulated_network$trait$trait_resource, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
 corr_col <- cor(simulated_network$trait$trait_consumer[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
 
 print(corr_col)
 print(corr_line)
+
+scatter(afc.tab)
+
+# log(matrix(c(1:25), ncol = 5, nrow = 5)) + 1
+```
+
+
+
+## effet des parametres sur l
+
+```{r}
+
 ```
 
