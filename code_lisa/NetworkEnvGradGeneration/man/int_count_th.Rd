@@ -9,7 +9,7 @@ int_count_th(
   abund_resource,
   abund_consumer,
   matching_matrix,
-  delta = 1,
+  delta,
   nb_resource,
   nb_consumer
 )

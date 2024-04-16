@@ -246,7 +246,7 @@ trait_match_mat <- function(ratio_grad = 0.8,
 #' @export
 
 
-int_count_th <- function(location, abund_resource, abund_consumer, matching_matrix, delta = 1,
+int_count_th <- function(location, abund_resource, abund_consumer, matching_matrix, delta,
                          nb_resource, nb_consumer) {
   ### Theoretical interaction count (based on abundances) ###
   # This code makes sense only for interaction matrices because the abundance of
@@ -381,6 +381,7 @@ env_grad_netw <- function(nb_resource = 40, nb_consumer = 100,
                                      abund_resource = abundance$abundance_resource,
                                      abund_consumer = abundance$abundance_consumer,
                                      matching_matrix = trait$matching_matrix,
+                                     delta = delta,
                                      nb_resource = nb_resource,
                                      nb_consumer = nb_consumer)
   }
