@@ -73,9 +73,13 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
 
   ### Obtain abundances from a given position along the gradient ###
   if (know_env_grad_pos) {
-    site_coordonates <- seq(from = 0, to = 1, by = 1 / (nb_location - 1))
+    if (nb_location != 1){
+      site_coordinates <- seq(from = 0, to = 1, by = 1 / (nb_location - 1))
+    } else {
+      site_coordinates <- 0.5
+    }
   } else {
-    site_coordonates <- sort(runif(n = nb_location, min = 0, max = 1))
+    site_coordinates <- sort(runif(n = nb_location, min = 0, max = 1))
   }
 
   ### Abundance Resource ###
@@ -85,7 +89,7 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   abund_resource <- array(0, c(nb_location, nb_resource))
   for (site in 1:nb_location) {
     for (resource in 1:nb_resource) {
-      abund_resource[site, resource] <- rpois(1, dnorm(site_coordonates[site],
+      abund_resource[site, resource] <- rpois(1, dnorm(site_coordinates[site],
                                                        mean = env_grad_resource[resource, 1],
                                                        sd = env_grad_resource[resource, 2]) * magn_res[resource])
     }
@@ -102,7 +106,7 @@ abund_env_grad <- function(know_env_grad_pos = TRUE,
   abund_consumer <- array(0, c(nb_location, nb_consumer))
   for (site in 1:nb_location) {
     for (consumer in 1:nb_consumer) {
-      abund_consumer[site, consumer] <- rpois(1, dnorm(site_coordonates[site],
+      abund_consumer[site, consumer] <- rpois(1, dnorm(site_coordinates[site],
                                                        mean = env_grad_consumer[consumer, 1],
                                                        sd = env_grad_consumer[consumer, 2]) * magn_con[consumer])
     }
