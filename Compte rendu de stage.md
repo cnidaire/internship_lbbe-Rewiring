@@ -26,8 +26,21 @@ SVD enables to obtain a sum of the vector product of rank one matrices, enabling
 
 In the case where the organized information is a sum of products of vectors, it would even be possible to retrieve theses vectors up to a rotation, as long as these are orthogonal.
 
+Also, the regular SVD considers 0 as information whereas in our case, it is rather an absence of information, and that's one of the main reasons for using CA
+
 ## Correspondance analysis (AFC)
 [course on Correspondance Analysis](https://statmath.wu.ac.at/courses/CAandRelMeth/caipA.pdf)
+
+### 1:
+contingency table transformed into a contribution table by a poisson $\chi^2$ 
+$\chi^2 = \frac{O_{ij} -  E_{ij}}{\sqrt{E_{ij}}} = \sqrt{f_{++}}[\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}]$
+
+$\overline{Q} = [\overline{q}_{ij}] = [\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}] = \frac{\chi_{ij}}{\sqrt{f_{++}}}$
+
+
+### 2:
+
+
 Conceptually similar to Principal Component Analysis, but applies to categorical data rather than continuous data
 
 CA has to ba applied to a contingency matrix whereas SVD can be applied to any matrix

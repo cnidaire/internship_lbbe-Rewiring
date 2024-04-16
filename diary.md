@@ -280,7 +280,46 @@ lire Interaction network rewiring and species’ contributions to community-scal
 
 ## 11 avril
 
-continuer le compte rendu et essayer de comprendre pourquoi la CA fonctionne alors que l'on n'a pas une somme mais un produite dans le construction de la matrice de trait matching.
+continuer le compte rendu et essayer de comprendre pourquoi la CA fonctionne alors que l'on n'a pas une somme mais un produite dans le construction de la matrice de trait matching. 
+
+Paperasse pour le GDR ecostat
+
+## 12 avril 
+J'ai essayé de comprendre si ça fonctionne bien pour la reconstruction du gradient mais je ne comprend toujours pas si c'est le cas. En tout cas, si nous avons des traits qui se recouvrent bien, même de la cas du trait matching théorique (ce que je ne comprend pas parce que dans ce cas là nous n'avons pas de vrais 0 donc il ne devrait pas y avoir de problèmes normalement).
+Si on a aussi un ratio entre les deux gradient suffisamment faible, on arrive bien à différencier et ordonner les gradients et dans ce cas là, on reconstruit aussi mieux les traits. mais c'est un paramètre qui a moins d'impact que mean_tol pour les traits 
+
+avec mean_tol = 0.5
+
+On peut imaginer que si nous sommes bien dans le cas d'un produit au lieu d'une somme pour le trait matching, dans ce cas là peut-être que l'on arrive quand même à reconstruire quelque chose qui ressemble de loin aux traits et que quand on fait une correlation, ce n'est pas trop mal. 
+Sinon, ça fonctionne bien en le transformant le produit en somme mais je ne comprends pas pù ça se fait.
+
+**Hypothèse :**
+En même temps si on garde l'hypothèse de la somme, ça fait juste que tout se ressemble et dans ce cas là si il y a le même poids pour les deux, alors je pense que l'on a juste quelque chose qui reconstruit les optimums et que ce sont quasi touts les mêmes, donc que ce soit une somme ou un produit, j'ai l'intuition que la correlation ne sera pas trop impactée lors de la reconstruction.
+
+## 13 avril
+
+Je ne comprends pas pourquoi mes correlations sont aussi faibles et pourquoi ça fonctionne , du coup je fais une pause dans les stats et je vais regarder la taille de l'hypervolume. occupé par les espèces.
+
+Même si c'est gênant car vu qu'il 'y a pas d'eigengap, les premier axes no sont peut être pas représentatifs de l'organisation générale.
+
+
+Pour ce qui est de trouver la taille de l'hypervolume, il semblerait que je doive trouver l'enveloppe convexe (convex hull) afin d'en trouver le volume.
+
+des position différentes dans les différentes frames impliquerais des niche réalisées qui changeraient je pense dans le cas où l'on reconstruirais parfaitement le trait matching dan,s les premiers axes.
+
+compte rendu réunion: 
+- [x] garder un nombre constant d'observations par simu quand on fait des varier le nombre de frames 
+- [ ] essayer de reconstruire avec les paramètres de Lisa
+- [ ] faire changer la hauteur des pics des abondances pour regarder si ça change le drop quand on augmente mean_tol_env
+- [ ] regarder la connectance (nombre d'interactions observées / nombre interactions possibles pour le réseau binaire)
+- [ ] représenter les réseaux avec le package bipartite pour faire le lien avec les études actuelles en écologie (avec visweb je crois)
+- [ ] implémenter les mesures de beta div
+- [ ] checker si le hull n'est pas trop sensible aux outliers et si c'est le cas, plutôt calculer les distances des espèces dans les frames par rapport à leurs barycentre (ou distance au carré) plutôt que le hull (ça reviendrait à calculer quelque chose d'analogue à une variance).
+
+## 16 avril
+
+
+
 
 # Todo list
 
