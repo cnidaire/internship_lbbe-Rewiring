@@ -326,7 +326,21 @@ Aussi, on dirait qu'il n'y a pas de clusters biens démarqués non plus, alors q
 
 ## 17 avril
 
+les résultats sont vachement mieux la seule modif que j'ai faite est de mettre delta à 0.2 et on a des corrélations de l'espace
 
+En refaisant les simulations avec les paramètres de Lisa, j'obtiens des résultats similaires! Il n'y a donc pas d'erreur de code obvious au moins!
+
+| parameter   | mean_tol_env | ninter | ratio_grad           | nb_frame |     |
+| ----------- | ------------ | ------ | -------------------- | -------- | --- |
+| correlation | +            | +      | tr1ax1:+<br>tr2ax2:- | -        |     |
+Il faudrait voir le trade off entre nombre de frames et moyenne tolérance env avec genre une heatmap. On s'attends à ce que l'on ai une corrélation forte quand on a une frame ou quand on on a une moyenne de tolérance environnementale qui est assez élevée et que plus on a une une séparation en modules marquée, ce qui signifie que l'on a  des groupes d'espèce qui interagissent intra groupe mais pas inter groupe, alors on reconstruit pas bien les traits car on va avoir une axe par compartiment. C'est à dire quand on a peu de frames (mais pas seulement 1) et une variance faible.
+
+![](corr_tol_env_frame_1.png)
+![](corr_tol_env_frame_2.png)
+
+On observe donc bien ce à quoi on s'attendais et encore mieux, la reconstruction du gradient est meilleure quand on a une variance importante pour les niches environnementales et que l'on a suffisamment de frames que quand on a une seule frame. Cependant, c'est probablement dû à une puissance d'échantillonnage plus importante. Mais même en gardantr la même puissance d'échantillonnage mais en la répartissant, on a une meilleure reconstruction sur le trait 1 et une moins bonne sur le trait 2.
+
+Ma supposition pour expliquer la largeur de la niche environnementale impacte la reconstruction même quand on a une seule frame, est que les espèces peu présentes à l'endroit de l’échantillonnage et ainsi une largeur de niche plus importante permet peut-être d'avoir une meilleure représentativité dans la frame et diminue le biais d’échantillonnage.
 
 # Todo list
 
