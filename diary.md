@@ -324,6 +324,9 @@ En profiter pour implémenter le cas où on n'a que un réseau
 
 Aussi, on dirait qu'il n'y a pas de clusters biens démarqués non plus, alors que l'on s'attendait à quasi avoir un cluster par frame ou alors il faut vraiment beaucoup forcer le trait et avoir  peu de frames, une tolérance env très faible et un nombre d'observations élevé.
 
+## 17 avril
+
+
 
 # Todo list
 
