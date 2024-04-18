@@ -330,17 +330,27 @@ les résultats sont vachement mieux la seule modif que j'ai faite est de mettre 
 
 En refaisant les simulations avec les paramètres de Lisa, j'obtiens des résultats similaires! Il n'y a donc pas d'erreur de code obvious au moins!
 
-| parameter   | mean_tol_env | ninter | ratio_grad           | nb_frame |     |
-| ----------- | ------------ | ------ | -------------------- | -------- | --- |
-| correlation | +            | +      | tr1ax1:+<br>tr2ax2:- | -        |     |
+| parameter   | mean_tol_env | ninter | ratio_grad           | nb_frame | mean_tol traits | delta         |
+| ----------- | ------------ | ------ | -------------------- | -------- | --------------- | ------------- |
+| correlation | +            | +      | tr1ax1:+<br>tr2ax2:- | -        | - étonnamment   | + 0.1 - 0.2 - |
 Il faudrait voir le trade off entre nombre de frames et moyenne tolérance env avec genre une heatmap. On s'attends à ce que l'on ai une corrélation forte quand on a une frame ou quand on on a une moyenne de tolérance environnementale qui est assez élevée et que plus on a une une séparation en modules marquée, ce qui signifie que l'on a  des groupes d'espèce qui interagissent intra groupe mais pas inter groupe, alors on reconstruit pas bien les traits car on va avoir une axe par compartiment. C'est à dire quand on a peu de frames (mais pas seulement 1) et une variance faible.
 
-![](corr_tol_env_frame_1.png)
-![](corr_tol_env_frame_2.png)
+![Mean correlation depending on the number of frames and the environmental niche tolerance for trait 1](corr_tol_env_frame_1.png)
+![Mean correlation depending on the number of frames and the environmental niche tolerance for trait 2](corr_tol_env_frame_2.png)
 
 On observe donc bien ce à quoi on s'attendais et encore mieux, la reconstruction du gradient est meilleure quand on a une variance importante pour les niches environnementales et que l'on a suffisamment de frames que quand on a une seule frame. Cependant, c'est probablement dû à une puissance d'échantillonnage plus importante. Mais même en gardantr la même puissance d'échantillonnage mais en la répartissant, on a une meilleure reconstruction sur le trait 1 et une moins bonne sur le trait 2.
 
 Ma supposition pour expliquer la largeur de la niche environnementale impacte la reconstruction même quand on a une seule frame, est que les espèces peu présentes à l'endroit de l’échantillonnage et ainsi une largeur de niche plus importante permet peut-être d'avoir une meilleure représentativité dans la frame et diminue le biais d’échantillonnage.
+
+
+## 18 avril
+
+Je pense que les seuls paramètres qui n'ont pas une relation monotone avec la corrélation nb_frames. Il semblerait aussi que ratio-grad ait une relation monotone mais que ce soit décroissant pour le trait 1 mais décroissant pour le trait 2.
+
+| param               | mean_tol_env | mean_tol trait | ratio_traits | $\delta$ | nb_frames | ninter tot                 |
+| ------------------- | ------------ | -------------- | ------------ | -------- | --------- | -------------------------- |
+| "opti" set of value | 0.7          | 0.1            | 0.5          | 0.1-0.2  | 5         | $n_c \times n_r \times 10$ |
+
 
 # Todo list
 
