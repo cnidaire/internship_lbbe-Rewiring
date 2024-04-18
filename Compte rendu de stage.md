@@ -1,3 +1,18 @@
+# Rapide résumé
+
+En se basant sur une méthode développée par Lisa Nickvert et Stéphane dray, il est possible de déterminer les traits lattent des espèces à partir d'un réseau d'interactions grâce à une méthode statistique (AFC/ Correspondance Analysis) qui permet de faire fi des abondances (effet neutre/ champ moyen) et de décomposer le réseau en une série d'axes orthogonaux qui organisent l'information. C'est à dire les traits latents.
+Cette méthode, basée sur la décomposition en valeur singulières (SVD) est pratique vu qu'elle permet d'obtenir des axes indépendants et de retirer l'effet des abondance grâce à une "normalisation avec $\chi^2$.
+
+Cependant, bien que cela fonctionne sur des réseaux uniques, est-il possible de faire la même chose sur des séries de réseaux et est ce que la performance augmenterais vu que l'on a une description plus fine et globale du réseau ou est ce que elle diminue vu que l'on pourrait avoir une variabilité trop importante entre les sites et il ne serais plus possible de trouver les axes organisateur de l'ensemble des données mais de chaque sous jeu de données.
+Et serait il possible de détecter un des termes récurent dans les analyse de réseaux écologique sur le quel il n'y a pas de consensus: le rewiring?
+
+Rewiring: la modification des interactions entre espèces présentes dans plusieurs sites
+
+En effet, nous appliquons l'AFC sur les tableaux agrégés afin d'obtenir les axes organisateurs du réseau puis après, nous nous attendons à ce ces modification d'interaction entraîne des changements de positons quand on projette un sous-réseau sur les axes obtenus et ainsi que les espèce qui ont une variation de position importante soient des espèce qui ont des "rôles" différents entre les différents sous réseaux et ainsi qu'elles aient des modification de leurs interactions entre plusieurs sites.
+
+Afin de bien controller et de connaitre les paramètre sous jacent, les données sont simulée à partir d'abondances et de probabilité d'interaction entre espèce selon le  
+
+
 # Maths
 
 ## SVD
