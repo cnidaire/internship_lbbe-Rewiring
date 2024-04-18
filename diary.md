@@ -351,6 +351,11 @@ Je pense que les seuls paramètres qui n'ont pas une relation monotone avec la c
 | ------------------- | ------------ | -------------- | ------------ | -------- | --------- | -------------------------- |
 | "opti" set of value | 0.7          | 0.1            | 0.5          | 0.1-0.2  | 5         | $n_c \times n_r \times 10$ |
 
+maintenant je regarde pour les calculs de distances au iso barycentres (quand les points ont tous la même importance). Ce n'est en fait que la moyenne sur chacun des axes
+
+Pour faire ça, je calcule la distance au barycentre en utilisant la distance euclidienne:
+$$Euclidian\_dist = \sqrt{(x_i-x_G)^2 + (y_i-x_G)^2}$$
+and Then we check the variance of these distances.
 
 # Todo list
 

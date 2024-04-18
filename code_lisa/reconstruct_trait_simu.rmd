@@ -615,7 +615,7 @@ for (i in 1:50) {
                                      know_env_grad_pos = T, ninter = ninter, 
                                      mean_tol = 0.1, sd_tol = 0.1,
                                      mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
-                                     delta = 1, corr_env_trait = 0,
+                                     delta = 0.1, corr_env_trait = 0,
                                      ratio_grad = ratio_grad)
   
   not_giant_compo <- connected_compo(simulated_network, nb_frame)
@@ -1314,5 +1314,32 @@ c(1,1,1)
 hull <- cxhull(points)
 
 hull$volume
+```
+
+
+# Compute frame position variance
+
+
+
+```{r}
+######################## Compute barycentre #####################
+nb_pt <- 50
+pt <- matrix(sample(0:20, nb_pt, replace = T), ncol = 2)
+
+barycenter <- c(mean(pt[,1]), mean(pt[,2]))
+
+plot(x = pt[,1], y = pt[,2])
+points(barycenter[1], barycenter[2], col = "red")
+
+# sum(pt[,1] - barycenter[1])
+# sum(pt[,2] - barycenter[2])
+
+colSums(sweep(pt, 2, barycenter, FUN = "-")) # same but everything at once
+
+######################### Compute distance #######################
+
+dist <- sqrt(rowSums((sweep(pt, 2, barycenter, FUN = "-"))^2))
+pt_sd <- sd(dist)
+pt_sd
 ```
 
