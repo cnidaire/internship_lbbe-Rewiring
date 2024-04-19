@@ -1319,12 +1319,13 @@ hull$volume
 
 # Compute frame position variance
 
-
+$$Distance_i = \sqrt{\sum{(coordinate_i - coordinate_{barycenter})}^2}$$
 
 ```{r}
 ######################## Compute barycentre #####################
-nb_pt <- 50
-pt <- matrix(sample(0:20, nb_pt, replace = T), ncol = 2)
+nb_pt <- 500000
+# pt <- matrix(runif(nb_pt, 0, 20), ncol = 2)
+pt <- matrix(rnorm(nb_pt, 0, 1), ncol = 2)
 
 barycenter <- c(mean(pt[,1]), mean(pt[,2]))
 
@@ -1340,6 +1341,65 @@ colSums(sweep(pt, 2, barycenter, FUN = "-")) # same but everything at once
 
 dist <- sqrt(rowSums((sweep(pt, 2, barycenter, FUN = "-"))^2))
 pt_sd <- sd(dist)
-pt_sd
+
+hist(dist)
+
+sum(dist)
+sum(exp(dist))
+```
+
+
+```{r}
+n_dim = 2
+test_mat <- matrix(rnorm(10 * n_dim, mean = 1, sd = 2), ncol = n_dim)
+plot(test_mat[, 1], test_mat[, 2])
+
+
+colMeans(test_mat)
+test_mat
+sweep(test_mat, 2, colMeans(test_mat), FUN = "-")
+sweep(test_mat, 2, colMeans(test_mat), FUN = "-")**2
+rowSums(sweep(test_mat, 2, colMeans(test_mat), FUN = "-")**2)
+sqrt(rowSums(sweep(test_mat, 2, colMeans(test_mat), FUN = "-")**2))
+
+
+dist <- sqrt(rowSums(sweep(test_mat, 2, colMeans(test_mat), FUN = "-")**2))
+hist(dist)
+```
+
+```{r}
+set_values <- rnorm(10000)
+dist_1 <- (set_values - mean(set_values))**2
+
+set_values <- rnorm(10000)
+dist_2 <- (set_values - mean(set_values))**2
+
+set_values <- rnorm(10000)
+dist_3 <- (set_values - mean(set_values))**2
+
+set_values <- rnorm(10000)
+dist_4 <- (set_values - mean(set_values))**2
+
+set_values <- rnorm(10000)
+dist_5 <- (set_values - mean(set_values))**2
+
+dist <- dist_1 + dist_2 + dist_3 + dist_4 + dist_5
+
+hist(dist)
+
+# hist(sqrt((set_values - mean(set_values))**2))
+# hist(abs(rnorm(10000)))
+```
+
+```{r}
+set_values <- abs(rnorm(100))
+dist <- (set_values - mean(set_values))**2
+values <- dist
+for( i in 1:1000){
+  set_values <- abs(rnorm(10000))
+  dist <- (set_values - mean(set_values))**2
+  values <- values + dist
+}
+hist(values)
 ```
 

@@ -355,7 +355,24 @@ maintenant je regarde pour les calculs de distances au iso barycentres (quand le
 
 Pour faire ça, je calcule la distance au barycentre en utilisant la distance euclidienne:
 $$Euclidian\_dist = \sqrt{(x_i-x_G)^2 + (y_i-x_G)^2}$$
-and Then we check the variance of these distances.
+and Then we check the variance and the mean of these distances of these distances. The CV coefficient.
+
+## 19 avril
+
+réflexion sur la quantification du rewiring entre les frames.
+
+ponderer le barycentre avec les valeurs propres des axes.
+Quelle transformation pour donner un poids important aux valeurs qui 
+Quelle est la meilleure métrique pour le rewiring: la variance de la distance, la distance moyenne, le coefficient de variation?
+En même temps, ce que l'on veux, c'est quelque chose de sensible aux outliers vu que l'on veux obtenir le rewiring.
+Au moins, quand l'un des axes est non informatif sur une espèce, ça fait juste que la distance sur cet axe là sera nul dans toutes les frames.
+est ce que on pourra vraiment comparer les valeurs entre les différentes espèces?
+test de normalité?
+
+Mon problème majeur est que je ne connais pas la distribution initiale. Et en regardant axe par axe, on s'attend à avoir une distribution suivant $\lvert \mathcal{N} \rvert$  pour la distance au sein d'une même espèce.
+On s'attend à trouver de plusieurs modes ou bien un unique mode qui n'est pas centré sur 0 dans le cas où il y a du rewiring. Cependant quand on fait la somme sur plusieurs axes, la distribution va tendre vers une loi normale à cause du **théorème central limite**. Du coup je ne sais pas comment le détecter vu que la distance c'est $\sqrt{\sum diff ^ 2}$ 
+
+Du coup il faut probablement prendre les axes séparément.
 
 # Todo list
 
