@@ -99,7 +99,7 @@ and here, they make a distinction with turnover which would correspond to the va
 [[Ecosphere - 2021 - Fründ - Dissimilarity of species interaction networks  how to partition rewiring and species turnover.pdf|Fründ 2021]] :
 "[...]it has been suggested to partition network dissimilarity into one component driven by species turnover, that is, changes in community composition, and another component reflecting rewiring, that is, flexibility of interactions among shared species."
 
-"Furthermore, I argue that the term rewiring is not well defined in network ecology and that there are reasons why both methods overestimate the importance of rewiring, in particular with quantitative networks."
+**"Furthermore, I argue that the term rewiring is not well defined in network ecology and that there are reasons why both methods overestimate the importance of rewiring, in particular with quantitative networks."**
 
 [[jae-vizentin2023_rewiring_extinction.pdf|Vizentin-Bugoni 2023]] :
 "Their main hypothesis postulated that the loss of a highly connected species would lead to interaction rewiring and niche expansions by hummingbirds, decreasing individual, species and network specialization. However, they found that the overall structure of the plant-hummingbird networks remains mostly unaltered, with limited rewiring and minimal changes in specialization. "

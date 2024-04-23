@@ -374,6 +374,24 @@ On s'attend à trouver de plusieurs modes ou bien un unique mode qui n'est pas c
 
 Du coup il faut probablement prendre les axes séparément.
 
+## 22 avril
+
+En posant les maths, La distance va bien tendre à suivre une lois normale à cause du théorème central limite quand on a de plus en plus de dimension prises en compte.  De plus, en supposant que l'on a suffisamment peu de dimensions pour assumer que la distribution ne suit pas une loi normale centrée en 0 (ce qui n'est déjà pas le cas quand on a deux dimensions)
+
+## 23 avril
+
+Je me suis replongé dans les stats pour essayer de trouver comment traiter les coordonnées obtenues pour chaque espèces.
+
+plutôt que d'essayer de la trouver  partir de la distribution des distance, il est peut-être plus facile de faire un test de "multi-normalité" qu'il faudrait trouver et qui permettrais pour chaque axes de vérifier la normalité des données ou plutôt la $|\mathcal{N}|$.
+
+ou alors abandonner et se dire que le fait que l’hyper-volume soit sensible aux outlier est une bonne chose est que cela peut permettre de faire une présélection d'espèces suspectées de rewiring que l'on pourra vérifier manuellement mais ce n'est pas terrible sur le point de vue reproductibilité.
+
+Je regarde du côté de l'ANOVA, ce serait pas mal mais cela suppose la normalité de nos échantillons, hors ce n'est justement pas le cas en cas de rewiring.
+
+Il faut donc bien un test de normalité: l'approche  fréquentiste me semble plus simple que la bayésienne, je vais donc commencer par creuser dans cette direction.
+
+Kolmogorov-Smirnov n'est pas mal mais il ne fonctionne que pour comparer deux distributions entre elles , e, soit ce qui pourrait être fait, ce serait de comparer à la loi normale multidimensionnelle.
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux

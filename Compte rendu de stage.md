@@ -46,16 +46,21 @@ Also, the regular SVD considers 0 as information whereas in our case, it is rath
 ## Correspondance analysis (AFC)
 [course on Correspondance Analysis](https://statmath.wu.ac.at/courses/CAandRelMeth/caipA.pdf)
 
-### 1:
+### 1: Contribution to $\chi^2$
 contingency table transformed into a contribution table by a poisson $\chi^2$ 
 $\chi^2 = \frac{O_{ij} -  E_{ij}}{\sqrt{E_{ij}}} = \sqrt{f_{++}}[\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}]$
 
 $\overline{Q} = [\overline{q}_{ij}] = [\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}] = \frac{\chi_{ij}}{\sqrt{f_{++}}}$
 
+### 2: SVD
+Singular value décomposition on the matrix $\overline{Q} = U_{(r\times c)} \Sigma_{(diagonal, c\times c)} V_{(c \times c)}^T$ 
+$U$ and $V$ are both column orthogonal matrices and $\Sigma$ is a diagonal matrix $D_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$ which are the singular values of $\overline{Q}$
 
-### 2:
+### 3: eigen analysis
 
+possible d'obtenir les 
 
+### comment
 Conceptually similar to Principal Component Analysis, but applies to categorical data rather than continuous data
 
 CA has to ba applied to a contingency matrix whereas SVD can be applied to any matrix
