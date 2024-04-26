@@ -392,6 +392,34 @@ Il faut donc bien un test de normalité: l'approche  fréquentiste me semble plu
 
 Kolmogorov-Smirnov n'est pas mal mais il ne fonctionne que pour comparer deux distributions entre elles , e, soit ce qui pourrait être fait, ce serait de comparer à la loi normale multidimensionnelle.
 
+## 24 avril
+
+Le problème de Kolmogorov, c'est que le nombre d'échantillons auquel on a accès est trop petit, et que plus on va avoir de dimension, plus il va être dur de détecter la non normalité des échantillons mais cela n'empêchera pas d'obtenir des résultats cool si on a des données simulées qui avec beaucoup de frames. 
+Le fait que nous n'aillons pas les paramètres est un peu gênant et du coup on peut peut-être les estimer en se basant dur la moyenne et l'écart type de des niches que l'on obtiens.
+
+It is based on the distance of the Cumulative Density Functions
+
+
+## 25 avril
+
+découverte de small margin layout du package memoiR qui pourrait permettre de rédiger mon mémoire de master si je ne le fais pas sur latex ou bien même mes slides pour ma présentation.
+
+## 26 avril
+
+Pour tester la multinormalité des échantillons, il y a des packages dédiés tels que MVN qui a trois méthodes:
+- Mardia: qui cible skewness et kurtosis
+- Henze-Zickler qui calcule la distance entre les deux fonctions de distribution
+- Royston qui est basé sur le test de Shapiro
+
+Il y a aussi MVN Bayesian à regarder
+
+Réunion avec Stéphane:
+- **regarder la multinormalité c'est pas giga utile**, juste la variance/moyenne des distance ça suffit et du coup il faudrait le faire sur le li qui n'a pas les variances normalisées.
+- Il faut que je regarde la beta-div avec le papier de fründ et la contribution par espèce avec l'article de Toju et al
+- ensuite on pourrait controller les espèces faisant du rewiring en leurs attribuant une variance de niche environnemental large
+
+
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
