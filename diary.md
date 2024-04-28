@@ -203,6 +203,7 @@ et discussion avec Stéphane:
 - vérifier que la matrice de trait matching est bien reconstruite en regardant une distance RV
 - chercher un indice de modularité pour pouvoir comment la puissance d’échantillonnage et le nombre de frames l'influence
 
+
 ## 29 mars
 
 - [ ] faire un RV sur les matrices de trait matching et comprendre ce à quoi ça correspond
