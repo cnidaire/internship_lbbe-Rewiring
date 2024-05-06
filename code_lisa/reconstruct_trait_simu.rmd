@@ -15,7 +15,7 @@ library(ade4)
 library(igraph)
 library(ggplot2)
 ```
-
+# Reconstruct trait matching
 
 ```{r}
 ##################################################"
@@ -1112,7 +1112,6 @@ boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation d
 boxplot(param_tr2ax2, ylim = c(0, 1), main = "Optimum trait 2 ax 2 correlation depending on mean_tol trait")
 ```
 
-# correlation
 
 # Tester empiriquement reconstruction traits depuis trait matching th
 
@@ -1186,17 +1185,6 @@ scatter(afc.tab)
 
 # log(matrix(c(1:25), ncol = 5, nrow = 5)) + 1
 ```
-
-
-
-## effet des parametres sur l
-
-```{r}
-
-```
-
-
-
 
 # representation with bipartite
 
@@ -1402,4 +1390,64 @@ for( i in 1:1000){
 }
 hist(values)
 ```
+
+
+# Variance of the position in the Correspondance Analysis
+
+```{r}
+simu_network <- env_grad_netw(nb_resource = 50, nb_consumer = 50, nb_location = 100,
+              ninter = 5000,
+              mean_tol_env = 0.7, mean_tol = 0.1,
+              ratio_grad = 0.5, delta = 0.2)
+```
+
+```{r}
+not_giant_compo <- connected_compo(simu_network, nb_frame)
+simu_network <- filter_giant_component(simu_network, not_giant_compo)
+tab = Reduce('+', simu_network$obs_giant_compo) # afin de générer le réseau moyen
+afc.tab=dudi.coa(tab, nf = 6, scannf = FALSE)
+scatter(afc.tab)
+```
+
+## Mean position in AFC
+
+```{r}
+afc.tab$li
+afc.tab$co
+```
+
+## Position in the different frames
+
+Here, in fou1\$Tli and fou1\$Tco the structure is res"i".Ana"j" where i is the species numlber and j the frame number.
+
+
+```{r}
+fou1 = foucart(lapply(simu_network$obs_network, as.data.frame), scannf = F, nf = 2)
+fou1$Tli
+fou1$Tco
+```
+
+## extract the positions in the different frames for each species
+
+```{r}
+library(stringr)
+res_var <- c()
+
+for (res in 1:50) {
+  res1 <- fou1$Tli[str_detect(string = dimnames(fou1$Tli)[[1]],
+                              pattern = paste0("^res", res, ".Ana")), ]
+  res_var <- c(res_var, sd(res1[, 1]))
+}
+hist(res_var, breaks = 20)
+
+con_var <- c()
+
+for (con in 1:50) {
+  con1 <- fou1$Tco[str_detect(string = dimnames(fou1$Tco)[[1]],
+                              pattern = paste0("^con", con, ".Ana")), ]
+  con_var <- c(con_var, sd(con1[, 1]))
+}
+hist(con_var, breaks = 20)
+```
+
 

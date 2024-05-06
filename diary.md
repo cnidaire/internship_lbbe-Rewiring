@@ -414,11 +414,17 @@ Pour tester la multinormalité des échantillons, il y a des packages dédiés t
 
 Il y a aussi MVN Bayesian à regarder
 
+Une somme de k lois normales indépendantes au carré correspond à une loi du $\chi^2$ 
+
 Réunion avec Stéphane:
 - **regarder la multinormalité c'est pas giga utile**, juste la variance/moyenne des distance ça suffit et du coup il faudrait le faire sur le li qui n'a pas les variances normalisées.
 - Il faut que je regarde la beta-div avec le papier de fründ et la contribution par espèce avec l'article de Toju et al
 - ensuite on pourrait controller les espèces faisant du rewiring en leurs attribuant une variance de niche environnemental large
 
+
+## 6 mai
+
+Dans l'AFC, $li / $co ont une variance de $\lambda$ et $l1 / $c1 ont une variance de 1
 
 
 # Todo list
