@@ -27,7 +27,8 @@ nb_frame <- 5; env_grad_max = 10
 spe_resource <- 50; spe_consum <- 50
 mean_tol_env = 2; sd_tol_env = 4
 simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum,
-                                   nb_location = nb_frame, env_grad_max = env_grad_max,
+                                   nb_location = nb_frame,
+                                   # env_grad_max = env_grad_max,
                                    know_env_grad_pos = T, ninter = 500, 
                                    mean_tol = 15,
                                    mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env,

@@ -26,15 +26,15 @@ library(ggplot2)
 
 ```{r}
 # set.seed(0)
-nb_frame <- 3; env_grad_max = 10
+nb_frame <- 3
 spe_resource <- 60; spe_consum <- 60
-mean_tol_env = 2; sd_tol_env = 4
+mean_tol_env = 0.7; sd_tol_env = 1
 simulated_network <- env_grad_netw(nb_resource =spe_resource , nb_consumer = spe_consum,
-                                   nb_location = nb_frame, env_grad_max = env_grad_max,
+                                   nb_location = nb_frame,
                                    know_env_grad_pos = T, ninter = 120, 
-                                   mean_tol = 15,
+                                   mean_tol = 0.1,
                                    mean_tol_env = mean_tol_env, sd_tol_env = sd_tol_env,
-                                   delta = 1)
+                                   delta = 0.1)
 
 row.names(simulated_network$abudance$abundance_resource) <- paste0("site",1:nb_frame)
 row.names(simulated_network$abudance$abundance_consumer) <- paste0("site",1:nb_frame)
