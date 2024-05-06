@@ -52,6 +52,66 @@ sub_set <- function(data, year, week, site){
 data1 <- sub_set(interaction_netw, 2013, 2, "shady_point")
 ```
 
+```{r}
+ggnetwork(data1)
+```
+
+```{r}
+
+```
+
+
+```{r}
+# Plot the graph
+library(ggplot2)
+library(ggnetwork)
+library(network)
+library(sna)
+ggplot(ggnetwork(data1), aes(x = x, y = y, xend = xend, yend = yend)) + 
+  geom_edges() +
+  geom_nodes(color = "gold", size = 10) +
+  theme_blank()
+
+library(igraph)
+```
+
+
+```{r}
+data1 <- sub_set(interaction_netw, c(2013), c(1 :4), c("shady_point","twin_meadows"))
+graph <- graph_from_data_frame(data1, directed = T)
+
+# Assign colors to nodes based on column
+V(graph)$color <- ifelse(V(graph)$name %in% data1$pollinator, "darkgoldenrod1", "chartreuse4")
+```
+
+
+```{r}
+V(graph)$size <- 15
+layout <- layout_with_graphopt(graph)
+# Plot the graph
+plot(graph,
+     layout = layout,
+  edge.arrow.size = 0.5,
+  vertex.label.cex = 1,
+  vertex.label.color = "black",  # Node label color,
+  # vertex.label = NA,
+  vertex.label.dist = 0,  # Distance of label from node
+  edge.color = "black",  # Edge color
+  edge.width = 1  # Edge width)
+)
+```
+
+
+```{r}
+ggplot() +
+  geom_edges(data = edge_pos, aes(x = x_start, y = y_start, xend = x_end, yend = y_end), arrow = arrow(length = unit(0.2, "cm")), color = "black") +
+  geom_nodes(data = vert_pos, aes(x = x, y = y, color = vert1$cat), size = 3) +
+  scale_color_manual(values = c("pol" = "#EECE00", "pla" = "#06CB21")) +
+  theme_void() +
+  theme(legend.position = "none") +
+  coord_fixed()
+```
+
 ## Vertices and layout
 
 ```{r}
