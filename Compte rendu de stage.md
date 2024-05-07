@@ -1,3 +1,20 @@
+# Structure
+
+1. Introduction
+2. Methods
+	1. Ecology
+		1. trait matching
+		2. rewiring
+	2. SVD and Correspondance analysis
+	3. Simulation
+	4. Analysis?
+		1. package used
+3. Results
+	1. Optimum parameters estimation
+	2. Rewiring estimation
+4. discussion
+5. bibliography
+
 # Rapide résumé
 
 En se basant sur une méthode développée par Lisa Nickvert et Stéphane dray, il est possible de déterminer les traits lattent des espèces à partir d'un réseau d'interactions grâce à une méthode statistique (AFC/ Correspondance Analysis) qui permet de faire fi des abondances (effet neutre/ champ moyen) et de décomposer le réseau en une série d'axes orthogonaux qui organisent l'information. C'est à dire les traits latents.
