@@ -1497,9 +1497,7 @@ sum(dist.binary(seq_table, method = 1))
 a <- list(matrix(1:10, nrow = 2, byrow = T),
           matrix(11:20, nrow = 2, byrow = T),
           matrix(21:30, nrow = 2, byrow = T))
-a
 b <- array(unlist(a), dim = c(2,5,3))
-dimnames(b) <- c(c("res10",))
 print(b)
 ```
 
@@ -1514,8 +1512,60 @@ array_3d <- array(unlist(simu_network$obs_network),
 dimnames(array_3d)[[1]] <- rownames(simu_network$obs_network[[1]])
 dimnames(array_3d)[[2]] <- colnames(simu_network$obs_network[[1]])
 dimnames(array_3d)[[3]] <- paste0("frame",1:length(simu_network$obs_network))
-array_3d
+# array_3d
 ```
+
+```{r}
+sum(dist.binary(array_3d[,,1], method = 1)) # sum of the distances
+sum(array_3d["res1",,]) # number of observation for this specie
+```
+
+```{r}
+res_dist <- array(rep(0, ncol(simu_network$obs_network[[1]])*2),
+                  dim = c(ncol(simu_network$obs_network[[1]]),2))
+colnames(res_dist) <- c("dist", "obs")
+rownames(res_dist) <- colnames(simu_network$obs_network[[1]])
+# res_dist
+
+# dimnames(res_dist)[1] <- c("dist", "nb_obs")
+for (res in 1:ncol(simu_network$obs_network[[1]])) {
+  res_dist[res,"dist"] = sum(dist.binary(array_3d[res,,], method = 1), na.rm = T) # sum of the distances
+  res_dist[res, "obs"] = sum(array_3d[res,,]) # number of observation for this specie
+}
+res_dist[,1]
+
+# for resources
+res_var <- c()
+for (res in 1:200) {
+  res1 <- fou1$Tli[str_detect(string = dimnames(fou1$Tli)[[1]],
+                              pattern = paste0("^res", res, ".Ana")), ]
+  res_var <- c(res_var, sd(res1[, 1]))
+}
+hist(res_var, breaks = 20)
+
+res_dist <- cbind(res_dist, res_var)
+```
+
+
+```{r}
+ggplot() +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, alpha = obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("resource variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
+  scale_alpha_continuous(range = c(0.1, 1))  # Adjust transparency range (optional)
+
+ggplot() +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("resource variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
+  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
+
+# plot(x = res_dist[,1], y = res_dist[,3])
+```
+
+
 
 
 
