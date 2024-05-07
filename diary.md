@@ -425,7 +425,18 @@ Réunion avec Stéphane:
 ## 6 mai
 
 Dans l'AFC, $li / $co ont une variance de $\lambda$ et $l1 / $c1 ont une variance de 1
+j'ai donc regardé la distribution des variance et je veux essayer de détecter les outliers. Cependant, la distribution des variances n'est pas normale mais "fat-tailed", du coup je me renseigne sur comment avoir une méthode systématique qui puisse me permettre de pouvoir les détecter.
 
+
+## 7 mai
+
+ne pas oublier que quand largeur de niche augmente, la performance diminue car les abondances des espèces diminuent.
+
+regarder la distance de jaccard sur le turn over des espèces pour un même conso sur les différentes années et avec les différentes espèces
+
+puis faire la somme des distances
+
+ploter la variance selon la distance et on peut faire varier la taille des pts selon la taille de l'échantillonnage
 
 # Todo list
 
