@@ -432,11 +432,12 @@ j'ai donc regardé la distribution des variance et je veux essayer de détecter 
 
 ne pas oublier que quand largeur de niche augmente, la performance diminue car les abondances des espèces diminuent.
 
-regarder la distance de jaccard sur le turn over des espèces pour un même conso sur les différentes années et avec les différentes espèces
-
-puis faire la somme des distances
-
+regarder la distance de jaccard sur le turn over des espèces pour un même conso sur les différentes années et avec les différentes espèces puis faire la somme des distances
 ploter la variance selon la distance et on peut faire varier la taille des pts selon la taille de l'échantillonnage
+
+
+Hum, je ne m'attendais pas à ça, il semblerais que peu d'observations mènent à un indice de dissimilarité fort et à une variance des positions sur l'AFC plus importante
+
 
 # Todo list
 

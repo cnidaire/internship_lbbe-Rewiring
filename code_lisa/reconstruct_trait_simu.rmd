@@ -1520,6 +1520,8 @@ sum(dist.binary(array_3d[,,1], method = 1)) # sum of the distances
 sum(array_3d["res1",,]) # number of observation for this specie
 ```
 
+#### Consumers
+
 ```{r}
 res_dist <- array(rep(0, ncol(simu_network$obs_network[[1]])*2),
                   dim = c(ncol(simu_network$obs_network[[1]]),2))
@@ -1541,20 +1543,37 @@ for (res in 1:200) {
                               pattern = paste0("^res", res, ".Ana")), ]
   res_var <- c(res_var, sd(res1[, 1]))
 }
-hist(res_var, breaks = 20)
 
+# for consumers 
+con_var <- c()
+for (con in 1:200) {
+  con1 <- fou1$Tco[str_detect(string = dimnames(fou1$Tco)[[1]],
+                              pattern = paste0("^con", con, ".Ana")), ]
+  con_var <- c(con_var, sd(con1[, 1]))
+}
+hist(con_var, breaks = 20)
+boxplot(con_var)
+
+hist(res_var, breaks = 20)
+```
+
+```{r}
 res_dist <- cbind(res_dist, res_var)
 ```
 
+mettre tout ce qui est necessaire pour les ressources dans un tableau et de même pour tout ce qui concerne les consommateurs.
 
 ```{r}
+# In black and white
 ggplot() +
   geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, alpha = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
-  scale_alpha_continuous(range = c(0.1, 1))  # Adjust transparency range (optional)
+  scale_alpha_continuous(range = c(0.1, 1), name = "nb obs")  # Adjust transparency range (optional)
 
+# In colors
+# Axis 1
 ggplot() +
   geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
@@ -1562,9 +1581,35 @@ ggplot() +
   ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
   scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
 
-# plot(x = res_dist[,1], y = res_dist[,3])
-```
+# Axis 2 ################## TO DO ###########################
+ggplot() +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("resource variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
+  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
 
+```
+#### Resources
+```{r}
+# In colors
+# Axis 1 ################## TO DO ###########################
+ggplot() +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("resource variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
+  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
+
+# Axis 2 ################## TO DO ###########################
+ggplot() +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("resource variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
+  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
+
+```
 
 
 
