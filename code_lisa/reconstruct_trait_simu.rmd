@@ -1516,97 +1516,140 @@ dimnames(array_3d)[[3]] <- paste0("frame",1:length(simu_network$obs_network))
 ```
 
 ```{r}
-sum(dist.binary(array_3d[,,1], method = 1)) # sum of the distances
+sum(dist.binary(array_3d[,,1], method = 1)) # sum of the distances using the jaccard distance
 sum(array_3d["res1",,]) # number of observation for this specie
 ```
 
-#### Consumers
+#### Compute Jaccard dissimilarity and variance of the position distance
 
 ```{r}
-res_dist <- array(rep(0, ncol(simu_network$obs_network[[1]])*2),
-                  dim = c(ncol(simu_network$obs_network[[1]]),2))
+##################### jaccard's distance #####################
+# Initiate an empty matrix to 
+res_dist <- array(rep(0, nrow(simu_network$obs_network[[1]])*2),
+                  dim = c(nrow(simu_network$obs_network[[1]]),2)) # empty array of two columns
 colnames(res_dist) <- c("dist", "obs")
-rownames(res_dist) <- colnames(simu_network$obs_network[[1]])
-# res_dist
+rownames(res_dist) <- rownames(simu_network$obs_network[[1]])
 
+# fill the empty array using the jaccard method and the number of observations for the interaction
 # dimnames(res_dist)[1] <- c("dist", "nb_obs")
-for (res in 1:ncol(simu_network$obs_network[[1]])) {
-  res_dist[res,"dist"] = sum(dist.binary(array_3d[res,,], method = 1), na.rm = T) # sum of the distances
-  res_dist[res, "obs"] = sum(array_3d[res,,]) # number of observation for this specie
-}
-res_dist[,1]
-
-# for resources
-res_var <- c()
-for (res in 1:200) {
-  res1 <- fou1$Tli[str_detect(string = dimnames(fou1$Tli)[[1]],
-                              pattern = paste0("^res", res, ".Ana")), ]
-  res_var <- c(res_var, sd(res1[, 1]))
+for (res in 1:nrow(simu_network$obs_network[[1]])) {
+  res_dist[res,"dist"] = sum(dist.binary(array_3d[,res,], method = 1), na.rm = T) # sum of the distances
+  res_dist[res, "obs"] = sum(array_3d[,res,]) # number of interactions observed for this specie
 }
 
-# for consumers 
-con_var <- c()
-for (con in 1:200) {
-  con1 <- fou1$Tco[str_detect(string = dimnames(fou1$Tco)[[1]],
-                              pattern = paste0("^con", con, ".Ana")), ]
-  con_var <- c(con_var, sd(con1[, 1]))
-}
-hist(con_var, breaks = 20)
-boxplot(con_var)
+# Initiate an empty matrix to 
+con_dist <- array(rep(0, ncol(simu_network$obs_network[[1]])*2),
+                  dim = c(ncol(simu_network$obs_network[[1]]),2))
+colnames(con_dist) <- c("dist", "obs")
+rownames(con_dist) <- colnames(simu_network$obs_network[[1]])
 
-hist(res_var, breaks = 20)
+# fill the empty array using the jaccard method and the number of observations for the interaction
+# dimnames(res_dist)[1] <- c("dist", "nb_obs")
+for (con in 1:ncol(simu_network$obs_network[[1]])) {
+  con_dist[con,"dist"] = sum(dist.binary(array_3d[con,,], method = 1), na.rm = T) # sum of the distances
+  con_dist[con, "obs"] = sum(array_3d[con,,]) # number of interactions observed for this specie
+}
 ```
+
 
 ```{r}
-res_dist <- cbind(res_dist, res_var)
+##################### variance in CA #####################
+# variance of the positions in the CA for resources
+res_var_ax1 <- c()
+res_var_ax2 <- c()
+for (res in 1:nrow(simu_network$obs_network[[1]])) {
+  res_position <- fou1$Tli[str_detect(string = dimnames(fou1$Tli)[[1]],
+                              pattern = paste0("^res", res, ".Ana")), ]
+  res_var_ax1 <- c(res_var_ax1, sd(res_position[, 1]))
+  res_var_ax2 <- c(res_var_ax2, sd(res_position[, 2]))
+}
+
+# variance of the positions in the CA for consumers 
+con_var_ax1 <- c()
+con_var_ax2 <- c()
+for (con in 1:ncol(simu_network$obs_network[[1]])) {
+  con_position <- fou1$Tco[str_detect(string = dimnames(fou1$Tco)[[1]],
+                              pattern = paste0("^con", con, ".Ana")), ]
+  con_var_ax1 <- c(con_var_ax1, sd(con_position[, 1]))
+  con_var_ax2 <- c(con_var_ax2, sd(con_position[, 2]))
+}
+# fou1$Tli
+
+res_dist <- cbind(res_dist, res_var_ax1, res_var_ax2)
+con_dist <- cbind(con_dist, con_var_ax1, con_var_ax2)
+# con_dist
+# res_dist
 ```
 
-mettre tout ce qui est necessaire pour les ressources dans un tableau et de même pour tout ce qui concerne les consommateurs.
+
+#### Resources
 
 ```{r}
 # In black and white
 ggplot() +
-  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, alpha = obs)) +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax1, alpha = 0.6, size =  obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
-  scale_alpha_continuous(range = c(0.1, 1), name = "nb obs")  # Adjust transparency range (optional)
+  scale_alpha_continuous(range = c(0.1, 1), name = "nb obs") +  # Adjust transparency range (optional)
+  theme_bw()
 
 # In colors
 # Axis 1
 ggplot() +
-  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax1, colour = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
-  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
+  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs") +
+  theme_bw()
 
-# Axis 2 ################## TO DO ###########################
+# Axis 2
 ggplot() +
-  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
-  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
-  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
+  ggtitle("Jaccard dissimilarity vs variance in axis 2 position for resource") +  # Add plot title
+  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs") +
+  theme_bw()
 
 ```
-#### Resources
+```{r}
+ggplot() +
+  geom_point(data = as.data.frame(res_dist), aes(x = obs, y = dist)) +
+  xlab("nb obs") +  # Add X axis label
+  ylab("jaccard dissimilarity") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs number of observations for resource") +  # Add plot title
+  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs") +
+  theme_bw()
+
+ggplot() +
+  geom_point(data = as.data.frame(con_dist), aes(x = obs, y = dist)) +
+  xlab("nb obs") +  # Add X axis label
+  ylab("jaccard dissimilarity") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs number of observations for consumer") +  # Add plot title
+  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs") +
+  theme_bw()
+```
+
+
+#### Consumers
 ```{r}
 # In colors
-# Axis 1 ################## TO DO ###########################
+# Axis 1
 ggplot() +
-  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
+  geom_point(data = as.data.frame(con_dist), aes(x = dist, y = con_var_ax1, colour = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
-  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
+  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for consumer") +  # Add plot title
   scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
 
-# Axis 2 ################## TO DO ###########################
+# Axis 2
 ggplot() +
-  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var, colour = obs)) +
+  geom_point(data = as.data.frame(con_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
-  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
+  ggtitle("Jaccard dissimilarity vs variance in axis 2 position for consumer") +  # Add plot title
   scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
 
 ```

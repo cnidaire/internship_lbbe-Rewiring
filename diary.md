@@ -438,6 +438,11 @@ ploter la variance selon la distance et on peut faire varier la taille des pts s
 
 Hum, je ne m'attendais pas à ça, il semblerais que peu d'observations mènent à un indice de dissimilarité fort et à une variance des positions sur l'AFC plus importante
 
+## 10 mai
+
+- [ ] look at the variance of the position depending on the Jaccard dissimilarity of diversity of the species it is interacting with
+	- The thing that bothers me is that we are checking the Jaccard dissimilarity and then comparing it to the variance in one axis at the time whereas it should be done on both axis at the time. Some can have a big variance in one axis and stay still in the second one
+- [ ] look at the $\beta$ diversity/contribution of the species (look at the Japanese article) and the link with the 
 
 # Todo list
 
