@@ -1533,8 +1533,8 @@ rownames(res_dist) <- rownames(simu_network$obs_network[[1]])
 # fill the empty array using the jaccard method and the number of observations for the interaction
 # dimnames(res_dist)[1] <- c("dist", "nb_obs")
 for (res in 1:nrow(simu_network$obs_network[[1]])) {
-  res_dist[res,"dist"] = sum(dist.binary(array_3d[,res,], method = 1), na.rm = T) # sum of the distances
-  res_dist[res, "obs"] = sum(array_3d[,res,]) # number of interactions observed for this specie
+  res_dist[res, "dist"] = sum(dist.binary(array_3d[res,,], method = 1), na.rm = T) # sum of the distances
+  res_dist[res, "obs"] = sum(array_3d[res,,]) # number of interactions observed for this specie
 }
 
 # Initiate an empty matrix to 
@@ -1546,8 +1546,8 @@ rownames(con_dist) <- colnames(simu_network$obs_network[[1]])
 # fill the empty array using the jaccard method and the number of observations for the interaction
 # dimnames(res_dist)[1] <- c("dist", "nb_obs")
 for (con in 1:ncol(simu_network$obs_network[[1]])) {
-  con_dist[con,"dist"] = sum(dist.binary(array_3d[con,,], method = 1), na.rm = T) # sum of the distances
-  con_dist[con, "obs"] = sum(array_3d[con,,]) # number of interactions observed for this specie
+  con_dist[con,"dist"] = sum(dist.binary(array_3d[,con,], method = 1), na.rm = T) # sum of the distances
+  con_dist[con, "obs"] = sum(array_3d[,con,]) # number of interactions observed for this specie
 }
 ```
 
@@ -1604,23 +1604,33 @@ ggplot() +
   scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs") +
   theme_bw()
 
+# Axis 1
+ggplot() +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax1, colour = obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("resource variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
+  scale_colour_gradient(low = "cornflowerblue", high = "brown3", name = "nb obs") +
+  theme_bw()
+
 # Axis 2
 ggplot() +
   geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 2 position for resource") +  # Add plot title
-  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs") +
+  scale_colour_gradient(low = "cyan", high = "navy", name = "nb obs") +
   theme_bw()
 
 ```
+
+
 ```{r}
 ggplot() +
   geom_point(data = as.data.frame(res_dist), aes(x = obs, y = dist)) +
   xlab("nb obs") +  # Add X axis label
   ylab("jaccard dissimilarity") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs number of observations for resource") +  # Add plot title
-  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs") +
   theme_bw()
 
 ggplot() +
@@ -1628,7 +1638,6 @@ ggplot() +
   xlab("nb obs") +  # Add X axis label
   ylab("jaccard dissimilarity") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs number of observations for consumer") +  # Add plot title
-  scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs") +
   theme_bw()
 ```
 
@@ -1640,7 +1649,7 @@ ggplot() +
 ggplot() +
   geom_point(data = as.data.frame(con_dist), aes(x = dist, y = con_var_ax1, colour = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
-  ylab("resource variance on axis 1") +  # Add Y axis label
+  ylab("consumer variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 1 position for consumer") +  # Add plot title
   scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
 
@@ -1648,11 +1657,88 @@ ggplot() +
 ggplot() +
   geom_point(data = as.data.frame(con_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
-  ylab("resource variance on axis 1") +  # Add Y axis label
+  ylab("consumer variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 2 position for consumer") +  # Add plot title
   scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
 
+# Axis 2
+ggplot() +
+  geom_point(data = as.data.frame(con_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("consumer variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 2 position for consumer") +  # Add plot title
+  scale_colour_gradient(low = "cyan", high = "navy", name = "nb obs")
+
+# Axis 2
+ggplot() +
+  geom_point(data = as.data.frame(con_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("consumer variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 2 position for consumer") +  # Add plot title
+  scale_colour_gradient(low = "#298c8c", high = "#800074", name = "nb obs")
+
 ```
+
+# Beta diversity
+
+```{r}
+library(bipartite)
+```
+
+```{r}
+simu_network <- env_grad_netw(nb_resource = 25, nb_consumer = 25, nb_location = 5,
+              ninter = 650,
+              mean_tol_env = 0.7, mean_tol = 0.1,
+              ratio_grad = 0.5, delta = 0.2)
+```
+
+```{r}
+not_giant_compo <- connected_compo(simu_network, nb_frame)
+simu_network <- filter_giant_component(simu_network, not_giant_compo)
+tab = Reduce('+', simu_network$obs_giant_compo) # afin de générer le réseau moyen
+afc.tab=dudi.coa(tab, nf = 6, scannf = FALSE)
+scatter(afc.tab)
+```
+
+## Visu
+
+Les réseaux simulés ne semblent pas très réalistes. Les "abondances sont distribuées de façon trop uniforme. Et il n'y a pas d'espèce très strucutrante du milieu qui serait présente dans la majortité des frames et ferait un max d'interactions.
+
+```{r}
+plotweb(simu_network$obs_network[[1]], method="normal", text.rot=90,
+        bor.col.interaction="gray40", col.high="gold2", col.low="darkgreen")
+
+plotweb(simu_network$obs_network[[2]], method="normal", text.rot=90,
+        bor.col.interaction="gray40", col.high="gold2", col.low="darkgreen")
+
+plotweb(simu_network$obs_network[[3]], method="normal", text.rot=90,
+        bor.col.interaction="gray40", col.high="gold2", col.low="darkgreen")
+
+plotweb(simu_network$obs_network[[4]], method="normal", text.rot=90,
+        bor.col.interaction="gray40", col.high="gold2", col.low="darkgreen")
+
+plotweb(simu_network$obs_network[[5]], method="normal", text.rot=90,
+        bor.col.interaction="gray40", col.high="gold2", col.low="darkgreen")
+```
+
+```{r}
+array_3d <- array(unlist(simu_network$obs_network),
+                  dim = c(nrow(simu_network$obs_network[[1]]),
+                          ncol(simu_network$obs_network[[1]]),
+                          length(simu_network$obs_network)))
+
+dimnames(array_3d)[[1]] <- rownames(simu_network$obs_network[[1]])
+dimnames(array_3d)[[2]] <- colnames(simu_network$obs_network[[1]])
+dimnames(array_3d)[[3]] <- paste0("frame",1:length(simu_network$obs_network))
+# array_3d
+```
+
+## Beta div
+
+```{r}
+betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)
+```
+
 
 
 

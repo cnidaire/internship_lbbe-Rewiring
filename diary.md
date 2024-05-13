@@ -442,6 +442,9 @@ Hum, je ne m'attendais pas à ça, il semblerais que peu d'observations mènent 
 
 - [ ] look at the variance of the position depending on the Jaccard dissimilarity of diversity of the species it is interacting with
 	- The thing that bothers me is that we are checking the Jaccard dissimilarity and then comparing it to the variance in one axis at the time whereas it should be done on both axis at the time. Some can have a big variance in one axis and stay still in the second one
+	- I expected to observe the exact same behavior for the consumers and the resources. However, the consumers have a much bigger variance of the Jaccard dissimilarity for the low number of observations values (there is some surprisingly low dissimilarity for this few observations) and hence we can barely see anything on the plot of Jaccard dissimilarity Vs variance on the axis 1 due to some outliers,  and there is nearly no pattern in the axis 2 which is kind of confusing.
+			- It's probably due to a lower number of observation than for the resources but there is still more variance even if we would artificially cut off the low values.
+	- The Jaccard distance coefficient and the number of observations are tightly correlated, a high Jaccard dissimilarity means a low number of observations. Which is expected as it means that there is a high sampling bias and hence a the most of the differences are due to artefactual disappearance of some links. 
 - [ ] look at the $\beta$ diversity/contribution of the species (look at the Japanese article) and the link with the 
 
 # Todo list
