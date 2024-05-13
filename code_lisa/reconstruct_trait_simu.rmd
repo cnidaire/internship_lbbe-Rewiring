@@ -1606,7 +1606,7 @@ ggplot() +
 
 # Axis 1
 ggplot() +
-  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax1, colour = obs)) +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax1, colour = obs, alpha = 0.6, size =  obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 1 position for resource") +  # Add plot title
@@ -1679,6 +1679,46 @@ ggplot() +
 
 ```
 
+## Merge information from both axis
+
+```{r}
+##################### variance in CA #####################
+# variance of the positions in the CA for resources
+res_var_ax1 <- c()
+res_var_ax2 <- c()
+for (res in 1:nrow(simu_network$obs_network[[1]])) {
+  res_position <- fou1$Tli[str_detect(string = dimnames(fou1$Tli)[[1]],
+                              pattern = paste0("^res", res, ".Ana")), ]
+  res_var_ax1 <- c(res_var_ax1, sd(res_position[, 1]))
+  res_var_ax2 <- c(res_var_ax2, sd(res_position[, 2]))
+}
+
+res_var <- res_var_ax1 * fou1$eig[1] + res_var_ax2 * fou1$eig[2]
+
+# variance of the positions in the CA for consumers 
+con_var_ax1 <- c()
+con_var_ax2 <- c()
+for (con in 1:ncol(simu_network$obs_network[[1]])) {
+  con_position <- fou1$Tco[str_detect(string = dimnames(fou1$Tco)[[1]],
+                              pattern = paste0("^con", con, ".Ana")), ]
+  con_var_ax1 <- c(con_var_ax1, sd(con_position[, 1]))
+  con_var_ax2 <- c(con_var_ax2, sd(con_position[, 2]))
+}
+# fou1$Tli
+
+con_var <- con_var_ax1 * fou1$eig[1] + con_var_ax2 * fou1$eig[2]
+
+res_dist <- cbind(res_dist, res_var_ax1, res_var_ax2)
+con_dist <- cbind(con_dist, con_var_ax1, con_var_ax2)
+# con_dist
+# res_dist
+```
+
+```{r}
+fou1$eig[1]
+```
+
+
 # Beta diversity
 
 ```{r}
@@ -1736,11 +1776,22 @@ dimnames(array_3d)[[3]] <- paste0("frame",1:length(simu_network$obs_network))
 ## Beta div
 
 ```{r}
-betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)
+(nw_beta_div <- betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE))
 ```
 
+### Species level folllowing Toju et al 2024
 
+$\beta_{WN} = \beta_{ST} + \beta_{OS} \Leftrightarrow \beta_{INT} = \beta_{ST} + \beta_{RW}$
 
+Species contribution to rewiring
+
+$\beta'_{RW, i} = \beta'_{RW} + \beta_{RW, \Delta i}$ and same goes for $\beta_{ST}$ and $\beta_{INT}$
+
+I think here we would need to sum the contribution of each species foreach frames
+
+```{r}
+factorial(200)
+```
 
 
 

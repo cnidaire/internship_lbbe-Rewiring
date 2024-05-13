@@ -440,13 +440,27 @@ Hum, je ne m'attendais pas à ça, il semblerais que peu d'observations mènent 
 
 ## 10 mai
 
-- [ ] look at the variance of the position depending on the Jaccard dissimilarity of diversity of the species it is interacting with
+- [x] look at the variance of the position depending on the Jaccard dissimilarity of diversity of the species it is interacting with
 	- The thing that bothers me is that we are checking the Jaccard dissimilarity and then comparing it to the variance in one axis at the time whereas it should be done on both axis at the time. Some can have a big variance in one axis and stay still in the second one
 	- I expected to observe the exact same behavior for the consumers and the resources. However, the consumers have a much bigger variance of the Jaccard dissimilarity for the low number of observations values (there is some surprisingly low dissimilarity for this few observations) and hence we can barely see anything on the plot of Jaccard dissimilarity Vs variance on the axis 1 due to some outliers,  and there is nearly no pattern in the axis 2 which is kind of confusing.
 			- It's probably due to a lower number of observation than for the resources but there is still more variance even if we would artificially cut off the low values.
 	- The Jaccard distance coefficient and the number of observations are tightly correlated, a high Jaccard dissimilarity means a low number of observations. Which is expected as it means that there is a high sampling bias and hence a the most of the differences are due to artefactual disappearance of some links. 
-- [ ] look at the $\beta$ diversity/contribution of the species (look at the Japanese article) and the link with the 
 
+## 13 mai
+
+It looks like the simulated networks are not realistic. It would be nice to try to generate some that looks like the ones of: "Interaction network rewiring and species’ contributions to community-scale flexibility"
+
+I think it might be a good idea to use the normalized variance and multiply it by the eigen value corresponding to the axis and then it might be possible to sum it and hence have only one plot instead of one for each axis. However, there is no normalized variance when looking at the positions for each frame.
+
+- [ ] look at the $\beta$ diversity/contribution of the species (look at the Toju et al 2024) and the link with the varrance in the frame.
+
+One of the challenges I'm facing is that Toju is giving a way to obtain the species contribution to rewiring between two frames bu not a unique measure for each species meaning that I can not plot it against the variance in the Correspondance Analysis. Would it be fine to just make the sum?
+
+$\beta_{WN} = \beta_{ST} + \beta_{OS} \Leftrightarrow \beta_{INT} = \beta_{ST} + \beta_{RW}$
+
+Species contribution to rewiring
+
+$\Delta\beta'_{RW, i} = \beta'_{RW} + \beta_{RW, \Delta i}$ and same goes for $\beta_{ST}$ and $\beta_{INT}$
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
