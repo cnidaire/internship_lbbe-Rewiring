@@ -460,7 +460,30 @@ $\beta_{WN} = \beta_{ST} + \beta_{OS} \Leftrightarrow \beta_{INT} = \beta_{ST} +
 
 Species contribution to rewiring
 
-$\Delta\beta'_{RW, i} = \beta'_{RW} + \beta_{RW, \Delta i}$ and same goes for $\beta_{ST}$ and $\beta_{INT}$
+$\Delta\beta'_{RW, i} = \beta'_{RW} - \beta_{RW, \Delta i}$ and same goes for $\beta_{ST}$ and $\beta_{INT}$
+
+## 15 mai
+
+The complexity of betalinkr_multi seems to be in $O(n^2)$ with n the number of frames (time steps or locations) and if we use the method of Toju et al, by removing one after the other the species, we have to multiply by the number of all the species + 1 for each. Hence it can be really long if for example we take the dataset of Toju, we have 63 species of spider and 120 families of preys over 8 months. Which would take a really long time to run (5 days estimated if running on my laptop)
+
+It seems that I can speed up the process doing parallel computing using the doparallel library wich enables to use for loops in parallel using the following syntax:
+``` {r}
+library(doParallel)
+
+detectCores()
+registerDoParallel(cores=3)
+
+cl <- makePSOCKcluster(2) # create a set of copies of R running in parallel
+registerDoParallel(cl) # register the parallel backend with the `foreach` package
+m <- matrix(rnorm(9), 3, 3)
+foreach(i=1:nrow(m), .combine=rbind) 
+stopCluster(cl)
+```
+
+for now it doesn't seem to be faster be it can be that the jobs I asking for testing
+
+However, there is no README in their git repository and hence it is hard to know where are the parts I am interested in. The code is super clean but there is no annotation except from titles of the parts in abbreviated  words so I have no idea what is going on.
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux

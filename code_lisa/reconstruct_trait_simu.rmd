@@ -1726,7 +1726,7 @@ library(bipartite)
 ```
 
 ```{r}
-simu_network <- env_grad_netw(nb_resource = 25, nb_consumer = 25, nb_location = 5,
+simu_network <- env_grad_netw(nb_resource = 50, nb_consumer = 50, nb_location = 20,
               ninter = 650,
               mean_tol_env = 0.7, mean_tol = 0.1,
               ratio_grad = 0.5, delta = 0.2)
@@ -1776,8 +1776,53 @@ dimnames(array_3d)[[3]] <- paste0("frame",1:length(simu_network$obs_network))
 ## Beta div
 
 ```{r}
+start_time <- Sys.time()
 (nw_beta_div <- betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE))
+end_time <- Sys.time()
+end_time - start_time
 ```
+
+```{r}
+mean(nw_beta_div$OS)
+mean(nw_beta_div[-1,"OS"])
+mean(betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)[-17,"OS"])
+```
+
+### For resources
+
+```{r}
+# Load the parallel package
+library(parallel)
+start_time <- Sys.time()
+
+beta_indiv <- array(data = NA, 
+                    dim = c(nrow(simu_network$obs_network[[1]]), 1))
+
+rownames(beta_indiv) = row.names(simu_network$obs_network[[1]])
+colnames(beta_indiv) = "delta_os"
+# beta_indiv
+
+# Define a function that simulates some computational work
+my_function <- function(x) {
+  mean(betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)[-x, "OS"])
+}
+
+# Define a list of input values
+input_values <- 1:nrow(simu_network$obs_network[[1]])
+
+# Run the computations in parallel using mclapply
+# Here, we specify the number of cores to be used with the 'mc.cores' argument
+# You can adjust this number based on the number of cores available on your machine
+result <- mclapply(input_values, my_function, mc.cores = 4)
+
+# Print the results
+beta_indiv[,1] <- unlist(result)
+
+end_time <- Sys.time()
+end_time - start_time
+hist(beta_indiv[, 1])
+```
+
 
 ### Species level folllowing Toju et al 2024
 
@@ -1789,10 +1834,68 @@ $\beta'_{RW, i} = \beta'_{RW} + \beta_{RW, \Delta i}$ and same goes for $\beta_{
 
 I think here we would need to sum the contribution of each species foreach frames
 
+
+# test parelel computing
+
 ```{r}
-factorial(200)
+library(doParallel)
 ```
 
+```{r}
+detectCores()
+registerDoParallel(cores=3)
+```
 
+```{r}
+cl <- makePSOCKcluster(2)
+registerDoParallel(cl)
+m <- matrix(rnorm(9), 3, 3)
+foreach(i=1:nrow(m), .combine=rbind) 
+stopCluster(cl)
+```
 
+```{r}
+cl <- makePSOCKcluster(3)
+registerDoParallel(cl)
+start_time <- Sys.time()
+# a <- times(5) %do% Sys.sleep(1)
+foreach(i=1:6) %do% Sys.sleep(1)
+end_time <- Sys.time()
+stopCluster(cl)
+end_time - start_time
+```
+
+```{r}
+start_time <- Sys.time()
+a <- rnorm(500)
+Sys.sleep(5)
+end_time <- Sys.time()
+end_time - start_time
+```
+
+```{r}
+# Load the parallel package
+library(parallel)
+start_time <- Sys.time()
+
+# Define a function that simulates some computational work
+my_function <- function(x) {
+  Sys.sleep(2)  # Simulate some computation by sleeping for 2 seconds
+  return(x * 2) # Return the input multiplied by 2
+}
+
+# Define a list of input values
+input_values <- list(1:20)
+
+# Run the computations in parallel using mclapply
+# Here, we specify the number of cores to be used with the 'mc.cores' argument
+# You can adjust this number based on the number of cores available on your machine
+result <- mclapply(input_values, my_function, mc.cores = 20)
+
+# Print the results
+print(result)
+
+end_time <- Sys.time()
+end_time - start_time
+```
 
