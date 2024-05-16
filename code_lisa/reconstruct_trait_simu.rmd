@@ -1775,12 +1775,6 @@ dimnames(array_3d)[[3]] <- paste0("frame",1:length(simu_network$obs_network))
 
 ## Beta div
 
-```{r}
-start_time <- Sys.time()
-(nw_beta_div <- betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE))
-end_time <- Sys.time()
-end_time - start_time
-```
 
 ```{r}
 mean(nw_beta_div$OS)
@@ -1795,11 +1789,11 @@ mean(betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)[-17,"OS"])
 library(parallel)
 start_time <- Sys.time()
 
-beta_indiv <- array(data = NA, 
+beta_indiv_res <- array(data = NA, 
                     dim = c(nrow(simu_network$obs_network[[1]]), 1))
 
-rownames(beta_indiv) = row.names(simu_network$obs_network[[1]])
-colnames(beta_indiv) = "delta_os"
+rownames(beta_indiv_res) = rownames(simu_network$obs_network[[1]])
+colnames(beta_indiv_res) = "delta_os"
 # beta_indiv
 
 # Define a function that simulates some computational work
@@ -1816,11 +1810,72 @@ input_values <- 1:nrow(simu_network$obs_network[[1]])
 result <- mclapply(input_values, my_function, mc.cores = 4)
 
 # Print the results
-beta_indiv[,1] <- unlist(result)
+beta_indiv_res[,1] <- unlist(result)
 
 end_time <- Sys.time()
 end_time - start_time
-hist(beta_indiv[, 1])
+hist(mean(nw_beta_div$OS) - beta_indiv_res[, 1], breaks = 10)
+hist(- beta_indiv_res[, 1], breaks = 10)
+
+boxplot(mean(nw_beta_div$OS) - beta_indiv_res[, 1], breaks = 10)
+boxplot(- beta_indiv_res[, 1], breaks = 10)
+```
+
+```{r}
+sum(mean(nw_beta_div$OS) - beta_indiv_res[, 1])
+mean(nw_beta_div$OS)
+```
+
+
+### For conumers
+
+```{r}
+start_time <- Sys.time()
+
+beta_indiv_con <- array(data = NA, 
+                    dim = c(ncol(simu_network$obs_network[[1]]), 1))
+
+rownames(beta_indiv_con) = colnames(simu_network$obs_network[[1]])
+colnames(beta_indiv_con) = "delta_os"
+# beta_indiv
+
+# Define a function that simulates some computational work
+my_function <- function(x) {
+  mean(betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)[-x, "OS"])
+}
+
+# Define a list of input values
+input_values <- 1:nrow(simu_network$obs_network[[1]])
+
+# Run the computations in parallel using mclapply
+# Here, we specify the number of cores to be used with the 'mc.cores' argument
+# You can adjust this number based on the number of cores available on your machine
+result <- mclapply(input_values, my_function, mc.cores = 4)
+
+# Print the results
+beta_indiv_con[,1] <- unlist(result)
+
+end_time <- Sys.time()
+end_time - start_time
+```
+
+
+```{r}
+br <- 8
+hist(mean(nw_beta_div$OS) - beta_indiv_con[, 1], main = "distance to beta_os",breaks = br)
+hist(mean(beta_indiv_con[, 1]) - beta_indiv_con[, 1], main = "distance to mean delta_beta_os", breaks = br)
+hist(- beta_indiv_con[, 1], main = "contribution to beta_os (delta_beta_os)",breaks = br)
+
+boxplot(mean(nw_beta_div$OS) - beta_indiv_con[, 1], main = "distance to beta_os",breaks = br)
+boxplot(mean(beta_indiv_con[, 1]) - beta_indiv_con[, 1], main = "distance to mean delta_beta_os", breaks = br)
+boxplot(- beta_indiv_con[, 1], main = "contribution to beta_os (delta_beta_os)",breaks = br)
+```
+
+
+
+```{r}
+sum(mean(nw_beta_div$OS) - beta_indiv_con[, 1])
+mean(nw_beta_div$OS)
 ```
 
 
@@ -1839,63 +1894,10 @@ I think here we would need to sum the contribution of each species foreach frame
 
 ```{r}
 library(doParallel)
-```
-
-```{r}
 detectCores()
-registerDoParallel(cores=3)
 ```
 
-```{r}
-cl <- makePSOCKcluster(2)
-registerDoParallel(cl)
-m <- matrix(rnorm(9), 3, 3)
-foreach(i=1:nrow(m), .combine=rbind) 
-stopCluster(cl)
-```
 
-```{r}
-cl <- makePSOCKcluster(3)
-registerDoParallel(cl)
-start_time <- Sys.time()
-# a <- times(5) %do% Sys.sleep(1)
-foreach(i=1:6) %do% Sys.sleep(1)
-end_time <- Sys.time()
-stopCluster(cl)
-end_time - start_time
-```
 
-```{r}
-start_time <- Sys.time()
-a <- rnorm(500)
-Sys.sleep(5)
-end_time <- Sys.time()
-end_time - start_time
-```
 
-```{r}
-# Load the parallel package
-library(parallel)
-start_time <- Sys.time()
-
-# Define a function that simulates some computational work
-my_function <- function(x) {
-  Sys.sleep(2)  # Simulate some computation by sleeping for 2 seconds
-  return(x * 2) # Return the input multiplied by 2
-}
-
-# Define a list of input values
-input_values <- list(1:20)
-
-# Run the computations in parallel using mclapply
-# Here, we specify the number of cores to be used with the 'mc.cores' argument
-# You can adjust this number based on the number of cores available on your machine
-result <- mclapply(input_values, my_function, mc.cores = 20)
-
-# Print the results
-print(result)
-
-end_time <- Sys.time()
-end_time - start_time
-```
 
