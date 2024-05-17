@@ -1,19 +1,48 @@
+# Instructions
+
+The report should not exceed 50 pages and should be submitted in pdf format. For Word use Times New Roman 12 pt, line spacing 1.5. For Latex 12pt
+It may include the following sections: Abstract, Introduction, Methodology/Results, Discussion, References (classical biology format, not necessary for mathematicians)    
+Figures / tables / graphs with titles and legends can be included in the text.  
+References appear in the body of the text and are listed in the reference section. The format of the references you choose should be uniformly applied: for example (AUTHORS .  YEAR . TITLE ARTICLE . JOURNAL : ABBREVIATION of PUBMED - VOLUME : PAGES) for word or use of bibtex if latex.
+ Think of making your manuscript understandable for a large audience.
+
 # Structure
 
-1. Introduction
-2. Methods
+1. Abstract
+2. Introduction
+3. Methods
 	1. Ecology
 		1. trait matching
-		2. rewiring
+			what is trait matching
+			how do we quantify it?
+		1. rewiring
 	2. SVD and Correspondance analysis
+		1. What is an SV
+		2. What is the point of using a SVD
+		3. What is CA and the differences compared to SVD
+			1. contribution $\chi^²$
+			2. SVD
+			3. eigen analysis
 	3. Simulation
+		1. Intro
+			1. Simulate abundances across the env gradient
+			2. Simulate two traits for each species
+			3. Compute the resulting trait matching matrix 
+			4. Compute the mean field (check the exact meaning, should be the exact concept of "neutral effect")
+			5. multiply trait matching and mean field
+			6. sample over the previous matrix
 	4. Analysis?
 		1. package used
-3. Results
-	1. Optimum parameters estimation
-	2. Rewiring estimation
-4. discussion
-5. bibliography
+			1. not sure if it is useful
+		2. Trait matching reconstruction principle?
+1. Results
+	1. Reconstruction of the trait matching matrix
+	2. Optimum parameters estimation
+	3. Rewiring estimation
+	4. **Real data?**
+2. discussion
+3. Appendices
+4. bibliography
 
 # Rapide résumé
 
