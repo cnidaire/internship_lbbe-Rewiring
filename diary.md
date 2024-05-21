@@ -497,6 +497,16 @@ However, there is no README in their git repository and hence it is hard to know
 
 It seems that the sum of the $\Delta\beta'_{RW, i}$ is différent from $\beta'_{RW}$ which is not really expected from Toju's paper if I got the mean idea right. However, the sum of the dissimilarity for the resources and the consumer is equal, leading me to say that I misunderstood something.
 
+## 17 mai
+
+Setting a structure for the report
+
+It seems that the multithreading doesn't work, I have two core per socket and 2 socket, however it doesn't get faster with 3 and 4 than with 2
+
+## 21 mai
+
+
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux

@@ -1775,14 +1775,19 @@ dimnames(array_3d)[[3]] <- paste0("frame",1:length(simu_network$obs_network))
 
 ## Beta div
 
+Here I first look at the beta-diversity between two frames for each possible combination of frames.
 
 ```{r}
+(nw_beta_div <- betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE))
+
 mean(nw_beta_div$OS)
 mean(nw_beta_div[-1,"OS"])
 mean(betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)[-17,"OS"])
 ```
 
 ### For resources
+
+here the goal is to remove one species at the time and then compute mean the multi beta diversity for each possible combination of frames $\Delta\beta_{OS,i} = mean(\Delta\beta_{OS,i,f_a,f_b})$.
 
 ```{r}
 # Load the parallel package
@@ -1813,16 +1818,14 @@ result <- mclapply(input_values, my_function, mc.cores = 4)
 beta_indiv_res[,1] <- unlist(result)
 
 end_time <- Sys.time()
-end_time - start_time
-hist(mean(nw_beta_div$OS) - beta_indiv_res[, 1], breaks = 10)
-hist(- beta_indiv_res[, 1], breaks = 10)
-
-boxplot(mean(nw_beta_div$OS) - beta_indiv_res[, 1], breaks = 10)
-boxplot(- beta_indiv_res[, 1], breaks = 10)
+end_time - start_time # running time of the algorithm
+hist(mean(nw_beta_div$OS) - beta_indiv_res[, 1], breaks = 10) # gives the distance to the mean contribution of the species
+hist(beta_indiv_res[, 1], breaks = 10) # same but with only the contribution to rewiring for each species
 ```
 
+
 ```{r}
-sum(mean(nw_beta_div$OS) - beta_indiv_res[, 1])
+mean(beta_indiv_res[, 1])
 mean(nw_beta_div$OS)
 ```
 
@@ -1857,19 +1860,13 @@ beta_indiv_con[,1] <- unlist(result)
 
 end_time <- Sys.time()
 end_time - start_time
-```
 
-
-```{r}
 br <- 8
 hist(mean(nw_beta_div$OS) - beta_indiv_con[, 1], main = "distance to beta_os",breaks = br)
 hist(mean(beta_indiv_con[, 1]) - beta_indiv_con[, 1], main = "distance to mean delta_beta_os", breaks = br)
 hist(- beta_indiv_con[, 1], main = "contribution to beta_os (delta_beta_os)",breaks = br)
-
-boxplot(mean(nw_beta_div$OS) - beta_indiv_con[, 1], main = "distance to beta_os",breaks = br)
-boxplot(mean(beta_indiv_con[, 1]) - beta_indiv_con[, 1], main = "distance to mean delta_beta_os", breaks = br)
-boxplot(- beta_indiv_con[, 1], main = "contribution to beta_os (delta_beta_os)",breaks = br)
 ```
+
 
 
 
