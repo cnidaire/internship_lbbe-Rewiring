@@ -505,7 +505,9 @@ It seems that the multithreading doesn't work, I have two core per socket and 2 
 
 ## 21 mai
 
+En reprenant les analyses de lien entre la variance et la distance de Jaccard, j'ai corrigé une erreur que m'a montré PA. Il y a une forte anti-correlation entre le nombre d'observations et la distance de Jaccard. Cependant quand on regarde la relation entre La variance et la distance de jaccard / nombre d'observation il n'y a pas de pattern qui emerge. Ce qui signifie que **le biais d'échantillonnage n'est pas corrélé avec la variance dans l'AFC!** 
 
+J'ai débeugé du code et j'ai regardé le lien entre la beta diversité et la variance dans l'AFC et on dirait qu'il y a une erreur, il n'y a pas de correlation, juste une ligne chelou donc je pense que le delta OS indiv déconne et qu'il y a une erreur de code.
 
 # Todo list
 
