@@ -1462,11 +1462,16 @@ boxplot(con_var)
 
 be careful, the distances are under the form, $d = \sqrt{1-s}$ hence we really have a dissimilarity coefficient. Hence 0 is identical and 1 is completely different.
 
+It is going to look at the distance between the of the resources presence along the frame for each consumer and vice versa
+
 ```{r}
 seq_table <- matrix(c(1,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0), byrow = T, nrow = 5)
 dimnames(seq_table)[[1]] <- c("res1", "res2", "res3", "res4", "res5")
+dimnames(seq_table)[[2]] <- c("frame1", "frame2", "frame3", "frame4")
 seq_table
+t(seq_table)
 dist.binary(seq_table, method = 1)
+dist.binary(t(seq_table), method = 1)
 sum(dist.binary(seq_table, method = 1))
 ```
 
@@ -1512,7 +1517,7 @@ rownames(res_dist) <- rownames(simu_network$obs_network[[1]])
 # fill the empty array using the jaccard method and the number of observations for the interaction
 # dimnames(res_dist)[1] <- c("dist", "nb_obs")
 for (res in 1:nrow(simu_network$obs_network[[1]])) {
-  res_dist[res, "dist"] = sum(dist.binary(array_3d[res,,], method = 1), na.rm = T) # sum of the distances
+  res_dist[res, "dist"] = sum(dist.binary(t(array_3d[res,,]), method = 1), na.rm = T) # sum of the distances
   res_dist[res, "obs"] = sum(array_3d[res,,]) # number of interactions observed for this specie
 }
 
@@ -1525,7 +1530,7 @@ rownames(con_dist) <- colnames(simu_network$obs_network[[1]])
 # fill the empty array using the jaccard method and the number of observations for the interaction
 # dimnames(res_dist)[1] <- c("dist", "nb_obs")
 for (con in 1:ncol(simu_network$obs_network[[1]])) {
-  con_dist[con,"dist"] = sum(dist.binary(array_3d[,con,], method = 1), na.rm = T) # sum of the distances
+  con_dist[con,"dist"] = sum(dist.binary(t(array_3d[,con,]), method = 1), na.rm = T) # sum of the distances
   con_dist[con, "obs"] = sum(array_3d[,con,]) # number of interactions observed for this specie
 }
 ```
