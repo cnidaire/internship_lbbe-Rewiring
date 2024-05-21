@@ -2,11 +2,14 @@
 title: "reconstruct_trait_simu"
 author: "Rémi"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  rmdformats::material:
+    highlight: kate
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+## Global options
+knitr::opts_chunk$set(cache = TRUE)
 ```
 
 ```{r}
@@ -169,7 +172,7 @@ plot(graph_from_incidence_matrix(sampled_netw), vertex.size=5)
 ```
 
 ```{r}
-degree(graph_from_incidence_matrix(sampled_netw))
+igraph::degree(graph_from_incidence_matrix(sampled_netw))
 ```
 
 
@@ -249,7 +252,7 @@ scatter(afc.tab)
 
 ```{r}
 library(adegraphics)
-adegraphics::table.value(afc.tab$tab, coordsx = rank(afc.tab$co[,1]), coordsy  = rank(afc.tab$li[,1]), method = "color", ppoint.cex = 0.2) # transformed average table
+# adegraphics::table.value(afc.tab$tab, coordsx = rank(afc.tab$co[,1]), coordsy  = rank(afc.tab$li[,1]), method = "color", ppoint.cex = 0.2) # transformed average table
 
 image(simulated_network$trait$matching_matrix [order(afc.tab$li[,1]), order(afc.tab$co[,1])])
 
@@ -370,7 +373,7 @@ ade4::table.value(tab, clegend = 0)
 scatter(afc.tab)
 
 
-centrality <- closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
+centrality <- igraph::closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
 
 sort(centrality)
 # color depending on the centrality
@@ -392,8 +395,8 @@ plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), ver
 # closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))
 # sort(closeness(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0])))
 
-which(degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))>5)
-degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))>5
+which(igraph::degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))>5)
+igraph::degree(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]))>5
 
 fou1 = foucart(lapply(simulated_network$obs_giant_compo, as.data.frame), scannf = F, nf = 5)
 plot(fou1, xax = 1)
@@ -422,10 +425,6 @@ dendPlot(cluster_spe)
 
 barplot(fou1$eig)
 table.value(ifelse(tab> 0, 1,0), ppoint.cex=0.5)
-```
-
-```{r}
-
 ```
 
 
@@ -464,14 +463,10 @@ plot(graph_from_incidence_matrix(tab[rowSums(tab) != 0, colSums(tab) != 0]), ver
 dendPlot(cluster_spe)
 ```
 
-```{r}
-spe
-```
-
 
 ```{r}
 print("for consummer")
-vert_a = names(which(degree(graph_from_incidence_matrix(tab)) == 1))
+vert_a = names(which(igraph::degree(graph_from_incidence_matrix(tab)) == 1))
 vert_a_con <- grep("con", vert_a, value = T)
 conn_vert_b_con <- c()
 vert_b_res <- c()
@@ -486,7 +481,7 @@ conn_vert_b_con
 
 
 print("for resource")
-vert_a = names(which(degree(graph_from_incidence_matrix(tab)) == 1))
+vert_a = names(which(igraph::degree(graph_from_incidence_matrix(tab)) == 1))
 vert_a_res <- grep("res", vert_a, value = T)
 conn_vert_b_res <- c()
 vert_b_res <- c()
@@ -761,7 +756,7 @@ boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation de
 library(ggplot2)
 frames <- c(1, 2, 3, 5, 7, 10)
 tol_env <- c(0.1, 0.2, 0.3, 0.5, 0.7, 1)
-nb_rep = 50
+nb_rep = 10
 
 effect_tol_frame_1 = expand.grid(frame = frames, tol_env = tol_env)
 effect_tol_frame_2 = expand.grid(frame = frames, tol_env = tol_env)
@@ -769,21 +764,16 @@ effect_tol_frame_2 = expand.grid(frame = frames, tol_env = tol_env)
 effect_tol_frame_1$mean_corr = 0
 effect_tol_frame_2$mean_corr = 0
 
-param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr1ax1) <- as.character(parameters)
 
-param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr2ax2) <- as.character(parameters)
-
-for (r in 1:nrow(effect_tol_frame)) {
+for (r in 1:nrow(effect_tol_frame_1)) {
   tr1ax1 <- c()
   tr2ax2 <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
-  mean_tol_env = effect_tol_frame$tol_env[r]
-  ninter = 5000 / effect_tol_frame$frame[r]
+  mean_tol_env = effect_tol_frame_1$tol_env[r]
+  ninter = 5000 / effect_tol_frame_1$frame[r]
   # ninter = param
-  nb_frame = effect_tol_frame$frame[r]
+  nb_frame = effect_tol_frame_1$frame[r]
   
   for (i in 1:nb_rep) {
     spe_resource = 50
@@ -806,15 +796,12 @@ for (r in 1:nrow(effect_tol_frame)) {
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
     tr1ax1 <- c(tr1ax1, corr_line[1,1])
     tr2ax2 <- c(tr2ax2, corr_line[2,2])
-    print(r)
+    # print(r)
   }
   effect_tol_frame_1$mean_corr[r] <- mean(abs(tr1ax1))
   effect_tol_frame_2$mean_corr[r] <- mean(abs(tr2ax2))
-  # param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
-  # param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
   
 }
-effect_tol_frame
 
 ggplot(effect_tol_frame_1, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerence of the species toward the environment (axis1)") + geom_text(aes(label=round(mean_corr, 2)))
 
@@ -825,7 +812,7 @@ ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fil
 library(ggplot2)
 frames <- c(1, 2, 3, 5, 7, 10)
 tol_env <- c(0.1, 0.2, 0.3, 0.5, 0.7, 1)
-nb_rep = 50
+nb_rep = 10
 
 effect_tol_frame_1 = expand.grid(frame = frames, tol_env = tol_env)
 effect_tol_frame_2 = expand.grid(frame = frames, tol_env = tol_env)
@@ -833,21 +820,15 @@ effect_tol_frame_2 = expand.grid(frame = frames, tol_env = tol_env)
 effect_tol_frame_1$mean_corr = 0
 effect_tol_frame_2$mean_corr = 0
 
-param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr1ax1) <- as.character(parameters)
-
-param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr2ax2) <- as.character(parameters)
-
-for (r in 1:nrow(effect_tol_frame)) {
+for (r in 1:nrow(effect_tol_frame_1)) {
   tr1ax1 <- c()
   tr2ax2 <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
-  mean_tol_env = effect_tol_frame$tol_env[r]
-  ninter = 5000 / effect_tol_frame$frame[r]
+  mean_tol_env = effect_tol_frame_1$tol_env[r]
+  ninter = 5000 / effect_tol_frame_1$frame[r]
   # ninter = param
-  nb_frame = effect_tol_frame$frame[r]
+  nb_frame = effect_tol_frame_1$frame[r]
   
   for (i in 1:nb_rep) {
     spe_resource = 50
@@ -870,12 +851,10 @@ for (r in 1:nrow(effect_tol_frame)) {
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
     tr1ax1 <- c(tr1ax1, corr_line[1,1])
     tr2ax2 <- c(tr2ax2, corr_line[2,2])
-    print(r)
+    # print(r)
   }
   effect_tol_frame_1$mean_corr[r] <- sd(abs(tr1ax1)) / mean(abs(tr1ax1)) *100
   effect_tol_frame_2$mean_corr[r] <- sd(abs(tr2ax2)) / mean(abs(tr2ax2)) * 100
-  # param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
-  # param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
   
 }
 
@@ -1307,7 +1286,7 @@ hull$volume
 
 # Compute frame position variance
 
-$$Distance_i = \sqrt{\sum{(coordinate_i - coordinate_{barycenter})}^2}$$
+$Distance_i = \sqrt{\sum{(coordinate_i - coordinate_{barycenter})}^2}$
 
 ```{r}
 ######################## Compute barycentre #####################
@@ -1615,11 +1594,11 @@ ggplot() +
 
 # Axis 2
 ggplot() +
-  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
+  geom_point(data = as.data.frame(res_dist), aes(x = dist, y = res_var_ax2, colour = obs, alpha = 0.6, size =  obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("resource variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 2 position for resource") +  # Add plot title
-  scale_colour_gradient(low = "cyan", high = "navy", name = "nb obs") +
+  scale_colour_gradient(low = "#66CCEE", high = "navy", name = "nb obs") +
   theme_bw()
 
 ```
@@ -1653,6 +1632,13 @@ ggplot() +
   ggtitle("Jaccard dissimilarity vs variance in axis 1 position for consumer") +  # Add plot title
   scale_colour_gradient(low = "cornflowerblue", high = "coral3", name = "nb obs")
 
+ggplot() +
+  geom_point(data = as.data.frame(con_dist), aes(x = dist, y = con_var_ax1, colour = obs, alpha = 0.6, size =  obs)) +
+  xlab("jaccard dissimilarity") +  # Add X axis label
+  ylab("consumer variance on axis 1") +  # Add Y axis label
+  ggtitle("Jaccard dissimilarity vs variance in axis 1 position for consumer") +  # Add plot title
+  scale_colour_gradient(low = "#66CCEE", high = "navy", name = "nb obs")
+
 # Axis 2
 ggplot() +
   geom_point(data = as.data.frame(con_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
@@ -1663,11 +1649,11 @@ ggplot() +
 
 # Axis 2
 ggplot() +
-  geom_point(data = as.data.frame(con_dist), aes(x = dist, y = res_var_ax2, colour = obs)) +
+  geom_point(data = as.data.frame(con_dist), aes(x = dist, y = res_var_ax2, colour = obs, alpha = 0.6, size =  obs)) +
   xlab("jaccard dissimilarity") +  # Add X axis label
   ylab("consumer variance on axis 1") +  # Add Y axis label
   ggtitle("Jaccard dissimilarity vs variance in axis 2 position for consumer") +  # Add plot title
-  scale_colour_gradient(low = "cyan", high = "navy", name = "nb obs")
+  scale_colour_gradient(low = "#66CCEE", high = "navy", name = "nb obs")
 
 # Axis 2
 ggplot() +
