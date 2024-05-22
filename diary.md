@@ -509,6 +509,25 @@ En reprenant les analyses de lien entre la variance et la distance de Jaccard, j
 
 J'ai débeugé du code et j'ai regardé le lien entre la beta diversité et la variance dans l'AFC et on dirait qu'il y a une erreur, il n'y a pas de correlation, juste une ligne chelou donc je pense que le delta OS indiv déconne et qu'il y a une erreur de code.
 
+## 22 mai
+
+À partir de con46, il y a un problème et toutes les valeurs sont bloquées à 0.4832899 qui est la moyenne jusqu'à con100, ce qui explique la ligne étrange et il ya la même chose sur res, qu'importe si je change taille de la population, ça commence à 46
+
+Initialement remplis avec des NA donc toutes les cases sont bien remplies
+
+c'était un problème de transposée, j’itérais sur les consommateurs et pas les frames ou l'inverse 
+
+It takes really a lot of time, 1,1 hour each for consumer and resources
+![[Pasted image 20240522150816.png]]
+![[Pasted image 20240522150854.png]]
+
+
+matrices vecteur en gras droit majuscule
+vecteur vecteur en gras droit minuscule
+
+- [ ] veg dist de vegan pour bray curtis pour remplacer jaccard sur des données valuées
+- [ ] ajouter la position sur le gradient env sur le graph distance de jaccard pour checker si distribution ou alors avec l'abondance
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux

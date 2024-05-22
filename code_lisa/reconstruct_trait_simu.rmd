@@ -1883,7 +1883,7 @@ I think here we would need to sum the contribution of each species foreach frame
 ## Simulate the data
 
 ```{r}
-simu_network <- env_grad_netw(nb_resource = 100, nb_consumer = 100, nb_location = 10,
+simu_network <- env_grad_netw(nb_resource = 50, nb_consumer = 50, nb_location = 10,
               ninter = 40000,
               mean_tol_env = 0.7, mean_tol = 0.1,
               ratio_grad = 0.5, delta = 0.2)
@@ -2006,9 +2006,8 @@ rownames(beta_indiv_res) = rownames(simu_network$obs_network[[1]])
 colnames(beta_indiv_res) = "delta_os"
 # beta_indiv
 
-# Define a function that simulates some computational work
 my_function <- function(x) {
-  mean(betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)[-x, "OS"])
+  mean(betalinkr_multi(aperm(array_3d, c(2,3,1)), partitioning="poisot", binary=FALSE)[-x, "OS"])
 }
 
 # Define a list of input values
@@ -2027,6 +2026,14 @@ hist(mean(nw_beta_div$OS) - beta_indiv_res[, 1], breaks = 10) # gives the distan
 hist(beta_indiv_res[, 1], breaks = 10) # same but with only the contribution to rewiring for each species
 ```
 
+```{r}
+# mean(betalinkr_multi(aperm(array_3d, c(1,3,2)), partitioning="poisot", binary=FALSE)[-x, "OS"])
+```
+
+
+```{r}
+# aperm(array_3d, c(2,3,1))
+```
 
 ```{r}
 mean(beta_indiv_res[, 1])
@@ -2048,7 +2055,7 @@ colnames(beta_indiv_con) = "delta_os"
 
 # Define a function that simulates some computational work
 my_function <- function(x) {
-  mean(betalinkr_multi(array_3d, partitioning="poisot", binary=FALSE)[-x, "OS"])
+  mean(betalinkr_multi(aperm(array_3d, c(1,3,2)), partitioning="poisot", binary=FALSE)[-x, "OS"])
 }
 
 # Define a list of input values
