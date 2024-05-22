@@ -11,20 +11,14 @@ References appear in the body of the text and are listed in the reference sectio
 1. Abstract
 2. Introduction
 		define niche, realized and fundamental
-		 
-1. Methods
-	1. Ecology
+		réseau structurés et instables dans le temps
 		1. trait matching
 			what is trait matching
 			how do we quantify it?
 		2. rewiring
-	1. SVD and Correspondance analysis
-		1. What is an SV
-		2. What is the point of using a SVD
-		3. What is CA and the differences compared to SVD
-			1. contribution $\chi^²$
-			2. SVD
-			3. eigen analysis
+		 
+1. Methods
+	1. notation réseau
 	2. Simulation
 		1. Intro
 			1. Simulate abundances across the env gradient
@@ -33,18 +27,26 @@ References appear in the body of the text and are listed in the reference sectio
 			4. Compute the mean field (check the exact meaning, should be the exact concept of "neutral effect")
 			5. multiply trait matching and mean field
 			6. sample over the previous matrix
-	3. Analysis?
+	3. SVD and Correspondance analysis
+		1. What is an SV
+		2. What is the point of using a SVD
+		3. What is CA and the differences compared to SVD
+			1. contribution $\chi^²$
+			2. SVD
+			3. eigen analysis
+	4. Analysis?
 		1. package used
-			1. not sure if it is useful
 		2. Trait matching reconstruction principle?
-4. Results
+		3. evaluer la reconstruction
+		4. mes question et comment y répondre
+2. Results
 	1. Reconstruction of the trait matching matrix
 	2. Optimum parameters estimation
 	3. Rewiring estimation
 	4. **Real data?**
-5. discussion
-6. Appendices
-7. bibliography
+3. discussion
+4. Appendices
+5. bibliography
 
 # Rapide résumé
 
