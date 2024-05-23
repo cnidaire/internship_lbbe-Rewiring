@@ -528,6 +528,14 @@ vecteur vecteur en gras droit minuscule
 - [ ] veg dist de vegan pour bray curtis pour remplacer jaccard sur des données valuées
 - [ ] ajouter la position sur le gradient env sur le graph distance de jaccard pour checker si distribution ou alors avec l'abondance
 
+## 23 mai
+
+le delta OS individuel est compris dans un interval de 0.00002 ce qui est très faible et me fait penser qu'il y a un problème dans la façon dont je calcule la betadiv
+
+Pour l'instant c'est affreusement uniforme. Je pense que j'ai fait une erreur.
+
+It seems that what they are doing in Toju is that they are comparing each month individually against the metanetwork. In a sens, it is quite nice as they are comparing each frame to the metanetwork and hence it is similar to what we did with the CA as we also set the axis using the metanetwork.
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
