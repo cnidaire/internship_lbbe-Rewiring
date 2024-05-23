@@ -10,12 +10,15 @@ References appear in the body of the text and are listed in the reference sectio
 
 1. Abstract
 2. Introduction
-		define niche, realized and fundamental
-		réseau structurés et instables dans le temps
-		1. trait matching
+		relier au climate change
+		define niche grinnel et elton, realized and fundamental
+		réseau structurés et qui varient dans le temps
+		1. rewiring
+		2. trait matching
 			what is trait matching
 			how do we quantify it?
-		2. rewiring
+		3. Introduire ce que l'on va faire
+
 		 
 1. Methods
 	1. notation réseau
@@ -47,6 +50,8 @@ References appear in the body of the text and are listed in the reference sectio
 3. discussion
 4. Appendices
 5. bibliography
+
+Introduire la finalité du paragraphe 
 
 # Rapide résumé
 
