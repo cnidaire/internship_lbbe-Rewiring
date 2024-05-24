@@ -223,6 +223,46 @@ mean(betalinkr_multi(array_3d[-1, , ], partitioning="poisot", binary=FALSE)[,"OS
 # array_3d[,,-2]
 ```
 
+```{r}
+apply(array_3d[,,1], 1, betalinkr)
+```
+```{r}
+lapply(simu_network$obs_network)
+betalinkr(simu_network$obs_network[[1]], tab)
+
+library(abind)
+```
+
+
+```{r}
+# tab
+betalinkr(abind(array_3d[-1,,1], tab[-1,], along = 3))["OS"]
+betalinkr(abind(array_3d[,,1], tab[,], along = 3))["OS"]
+```
+
+```{r}
+beta_indiv_res <- array(data = NA, 
+                    dim = c(nrow(simu_network$obs_network[[1]]), dim(array_3d)[3]))
+
+rownames(beta_indiv_res) = rownames(simu_network$obs_network[[1]])
+colnames(beta_indiv_res) = dimnames(array_3d)[[3]]
+
+beta_os <- function(x){
+  betalinkr(abind(array_3d[-x,,f], tab[-x,], along = 3))[["OS"]]
+}
+
+input_values <- 1:nrow(simu_network$obs_network[[1]])
+
+for (f in 1:dim(array_3d)[3]) {
+  beta_os_netw <- betalinkr(abind(array_3d[,,f], tab[,], along = 3))[["OS"]]
+  # result <- beta_os_netw - mclapply(input_values, beta_os, mc.cores = 4)
+  result <- beta_os_netw - unlist(mclapply(input_values, beta_os, mc.cores = 4))
+  beta_indiv_res[,f] <- result
+}
+beta_indiv_res
+sum(beta_indiv_res[,1])
+```
+
 ### For resources
 
 here the goal is to remove one species at the time and then compute mean the multi beta diversity for each possible combination of frames $\Delta\beta_{OS,i} = mean(\Delta\beta_{OS,i,f_a,f_b})$.

@@ -536,6 +536,10 @@ Pour l'instant c'est affreusement uniforme. Je pense que j'ai fait une erreur.
 
 It seems that what they are doing in Toju is that they are comparing each month individually against the metanetwork. In a sens, it is quite nice as they are comparing each frame to the metanetwork and hence it is similar to what we did with the CA as we also set the axis using the metanetwork.
 
+## 24 mai
+
+tentative de correction du calcul de la beta diversité individuelle. Je commence à vraiment douter de leurs méthode. J'obtenais des valeurs négative et la somme des contributions n'est pas égale au rewiring total. Je pensais que ce n'étais que pour mon jeu de données et il semblerais que ce soit le cas dans le leurs aussi et il faut aller en 
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
