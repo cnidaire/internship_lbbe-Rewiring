@@ -538,7 +538,9 @@ It seems that what they are doing in Toju is that they are comparing each month 
 
 ## 24 mai
 
-tentative de correction du calcul de la beta diversité individuelle. Je commence à vraiment douter de leurs méthode. J'obtenais des valeurs négative et la somme des contributions n'est pas égale au rewiring total. Je pensais que ce n'étais que pour mon jeu de données et il semblerais que ce soit le cas dans le leurs aussi et il faut aller en 
+tentative de correction du calcul de la beta diversité individuelle. Je commence à vraiment douter de leurs méthode. J'obtenais des valeurs négative et la somme des contributions n'est pas égale au rewiring total. Je pensais que ce n'étais que pour mon jeu de données et il semblerais que ce soit le cas dans le leurs aussi et il faut aller en annexes pour voir qu'ils obtiennent des valeurs négatives.
+
+J'ai modifié la façon de calculer la contribution à la beta_diversité rewiring.
 
 # Todo list
 

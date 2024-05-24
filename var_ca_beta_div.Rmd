@@ -247,6 +247,8 @@ beta_indiv_res <- array(data = NA,
 rownames(beta_indiv_res) = rownames(simu_network$obs_network[[1]])
 colnames(beta_indiv_res) = dimnames(array_3d)[[3]]
 
+# generate empty array with frame in column and resources in row, it will contain the beta_os individual contribution compared to the meta-network. by making the difference when removing one specie in both networks.
+
 beta_os <- function(x){
   betalinkr(abind(array_3d[-x,,f], tab[-x,], along = 3))[["OS"]]
 }
