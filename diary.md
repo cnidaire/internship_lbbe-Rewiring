@@ -542,6 +542,15 @@ tentative de correction du calcul de la beta diversité individuelle. Je commenc
 
 J'ai modifié la façon de calculer la contribution à la beta_diversité rewiring.
 
+
+
+## 24 mai
+
+- [ ] calculer la multi beta div sur les différent réseaux en prenant une espèce par une espèce, un peu comme je faisait avant en retirant une espèce mais l'inverse du coup.
+
+Reunion avec Stéphane pour discuter de l'article de Toju. Il semblerais bien que ce soit du bricolage et ce n'est pas vraiment réutilisable pour comparer à notre méthode avec l'AFC
+
+Rédaction du rapport
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux

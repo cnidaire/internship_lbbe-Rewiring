@@ -19,7 +19,7 @@ This method is base don the distance of the $\chi^2$ instead of the euclidian di
 
 ### Factor analysis (Analyse factorielle)
 
-a method used to describe an ensemble of variables thanks to latent variables (non-observed ones) In order to reduce the number of variables, the methods compute these variables as a linear combination of observed variables.
+A method used to describe an ensemble of variables thanks to latent variables (non-observed ones) In order to reduce the number of variables, the methods compute these variables as a linear combination of observed variables.
 
 ### Cluster analysis
 
