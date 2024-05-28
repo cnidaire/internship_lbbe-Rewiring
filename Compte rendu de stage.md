@@ -14,7 +14,7 @@ vecteur vecteur en gras droit minuscule**
 
 1. Abstract
 2. Introduction
-		relier au climate change
+		relier au climate change, shift des niches
 		define niche grinnel et elton, realized and fundamental
 		réseau structurés et qui varient dans le temps
 		1. rewiring
@@ -35,7 +35,7 @@ vecteur vecteur en gras droit minuscule**
 			5. multiply trait matching and mean field
 			6. sample over the previous matrix
 	3. SVD and Correspondance analysis
-		1. What is an SV
+		1. What is an SVD
 		2. What is the point of using a SVD
 		3. What is CA and the differences compared to SVD
 			1. contribution $\chi^²$
@@ -83,6 +83,16 @@ The variability/ tolerance is encoded as the variance and the optimum is the mea
 ### Abundances and environmental distribution
 
 **notion of niche grinel/elton**
+_Grinellian niche:_ the niche of the species is determined by the habitat in which it lives and its accompanying behavioral modification. It can be defined by abiotic variables and environmental conditions on broad scale.
+
+_Eltonian niche:_ "The niche of an animal means its place in the biotic environment, its relations to food and enemies"
+classified niches according to foraging activities.
+response to and effect on the environment
+
+_Hutchinsonian niche:_ is a n-dimensional hypervolume
+
+Here we use the Hutchinsonian definition of the niche as a position of the species in a 1 dimensional gradient.
+
 Here, we assume that the species are normally distributed across an environmental gradient. This gradient can either represent the distribution over time or the distribution across space, for example in the case of a mountain. As for the traits, this gradients may takes in account different factors such as the humidity, sun exposure, temperature, altitude, soil, etc in the case of the space gradient.
 Here we assume normality distribution, which imply a unique associated optimum as well as a tolerance expressed as a variance.
 
