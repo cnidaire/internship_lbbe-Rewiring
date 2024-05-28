@@ -40,12 +40,28 @@ Afin de bien controller et de connaitre les paramètre sous jacent, les données
 \begin{itemize}
     \item relier au climate change avec les notions de shift de niches
     \item define niche de grinnel, elton (hutchinson) realized and fundamental
+    \begin{itemize}
+        \item \underline{Grinellian niche:} the niche of the species is determined by the habitat in which it lives and its accompanying behavioural modification. It can be defined by abiotic variables and environmental conditions on broad scale.
+        \item \underline{Eltonian niche:} "The niche of an animal means its place in the biotic environment, its relations to food and enemies"
+        \item classified niches according to foraging activities.
+        \item response to and effect on the environment
+        \item \underline{Hutchinsonian niche:} is a n-dimensional hyper-volume
+    \end{itemize}
     \item rewiring
     \item trait matching
         \item what is trait matching
         \item how do we quantify it?
     \item introduce what we are going to do
 \end{itemize}
+
+
+
+
+
+
+
+
+
 
 \section{Methods}
 
@@ -63,6 +79,19 @@ $y_{++}=\sum_{i=1}^{r}\sum_{j=1}^{c}y_{ij}$
 
 $p_{i+}=\sum_{j=1}^{c}$ and $p_{+j}=\sum_{i=1}^{r}$ are the marginal sums for rows and columns.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Simulation}
 
 based on Fründ et al 2016, Benadi et al 2022, Dray and Legrendre 2008 as well as the thesis of Lisa Nickvert
@@ -72,25 +101,49 @@ Here, we assume that the proxi of the relative abundances is is the frequency of
 
 Also, using a bipartite network assume that there is no interaction intra-group but only inter-groups. It implies that the competition, facilitation, spatial exclusion.
 
+
+
+
 \subsubsection{Trait Matching}
-The trait matching doesn't have to be something well defined like the length of the beak on the size of the fruit. First of all, it is most likely that the traits found are a combinaison of multiples pondered traits that can include more subjectives thing as the taste for example that can be though of as a gradient of sour/sweetness of the fruit or plant.
+Let $\textrm{T}^c = [t^c_{jk}]$ $(c \times 2)$ contains the parameters for the distribution of the consumers' traits. 
+Let $\textrm{T}^r = [t^r_{jk}]$ $(r \times 2)$ contains the parameters for the distribution of the resources' traits. 
+
+The first mean of the trait is uniformly distributed between 0 and 1 for both consumers and resources and for the second trait, the span of the gradient is smaller such that it has less weight in driving the matching. 
+For the consumer we associate a variance to the distribution in addition to an optimum in order to give a notion of specialisation of the consumers.
+
+The trait matching doesn't have to be something well defined like the length of the beak on the size of the fruit. First of all, it is most likely that the traits found are a combination of multiples pondered traits that can include more subjective thing as the taste for example that can be though of as a gradient of sour/sweetness of the fruit or plant.
 The variability/ tolerance is encoded as the variance and the optimum is the mean of the distribution.
 
+The traits PDF follows a normal distribution whose means are uniformly distributed between 0 and 1 and the variance follow a normal distribution.
+
+
+
+
+\subsubsection{Interaction probability based on trait matching}
+Then we compute the interaction probability  solely based on the trait matching.
+
+
 \subsubsection{Abundances and environmental distribution}
-\textbf{notion of niche grinel/elton}
-
-\underline{Grinellian niche:} the niche of the species is determined by the habitat in which it lives and its accompanying behavioral modification. It can be defined by abiotic variables and environmental conditions on broad scale.
-
-\underline{Eltonian niche:} "The niche of an animal means its place in the biotic environment, its relations to food and enemies"
-classified niches according to foraging activities.
-response to and effect on the environment
-
-\underline{Hutchinsonian niche:} is a n-dimensional hypervolume
 
 Here we use the Hutchinsonian definition of the niche as a position of the species in a 1 dimensional gradient.
 
 Here, we assume that the species are normally distributed across an environmental gradient. This gradient can either represent the distribution over time or the distribution across space, for example in the case of a mountain. As for the traits, this gradients may takes in account different factors such as the humidity, sun exposure, temperature, altitude, soil, etc in the case of the space gradient.
 Here we assume normality distribution, which imply a unique associated optimum as well as a tolerance expressed as a variance.
+
+\subsubsection{Interaction probability based on population size}
+
+\subsubsection{Integration of the trait matching and mean field}
+
+\subsubsection{Sampling of the interactions based on the previous computed probability}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -99,9 +152,9 @@ Here we assume normality distribution, which imply a unique associated optimum a
 
 \subsubsection{What is an SVD}
 
-The regular denationalization of a rectangular matrix $A$ of size $n \times m$ by $X^{-1} AX$ the resulting eigenvectors in X will not always be orthogonal, it requires to have a matrix $A$ a square matrix to have $Ax = \lambda x$. Also we have not always enough eigenvalues (apparently, but I don't really get what this means and why).
+The regular diagonalization of a rectangular matrix $A$ of size $n \times m$ by $X^{-1} AX$ the resulting eigenvectors in X will not always be orthogonal, it requires to have a matrix $A$ a square matrix to have $Ax = \lambda x$. Also we have not always enough eigenvalues (apparently, but I don't really get what this means and why).
 
-The singular value décomposition methods enable to diagonalise a rectangular matrix $A$ of size $n \times m$ in two sets of singular vectors, u's and v's. 
+The singular value decomposition methods enable to diagonalize a rectangular matrix $A$ of size $n \times m$ in two sets of singular vectors, u's and v's. 
 $u's \in \mathbb{R}^m$ and $u's \in \mathbb{R}^n$ will be in a $m \times m$ U matrix and a $n \times n$ V matrix
 
 $A = U \Sigma V^\intercal$
@@ -122,7 +175,7 @@ In the case where the organized information is a sum of products of vectors, it 
 
 Also, the regular SVD considers 0 as information whereas in our case, it is rather an absence of information, and that's one of the main reasons for using CA
 
-\subsubsection{Correspondance Analysis}
+\subsubsection{Correspondence Analysis}
 
 \paragraph{1: Contribution to $\chi^2$}
 
@@ -133,7 +186,7 @@ $\overline{Q} = [\overline{q}_{ij}] = [\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}
 
 \paragraph{SVD}
 
-Singular value décomposition on the matrix $\overline{Q} = U_{(r\times c)} \Sigma_{(diagonal, c\times c)} V_{(c \times c)}^T$ 
+Singular value decomposition on the matrix $\overline{Q} = U_{(r\times c)} \Sigma_{(diagonal, c\times c)} V_{(c \times c)}^T$ 
 $U$ and $V$ are both column orthogonal matrices and $\Sigma$ is a diagonal matrix $D_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$ which are the singular values of $\overline{Q}$
 
 
@@ -142,7 +195,7 @@ $U$ and $V$ are both column orthogonal matrices and $\Sigma$ is a diagonal matri
 \paragraph{comments (to remove later}
 Conceptually similar to Principal Component Analysis, but applies to categorical data rather than continuous data
 
-CA has to ba applied to a contingency matrix whereas SVD can be applied to any matrix
+CA has to be applied to a contingency matrix whereas SVD can be applied to any matrix
 
 \subsection{Analysis}
 
