@@ -104,7 +104,7 @@ Also, using a bipartite network assume that there is no interaction intra-group 
 
 
 
-\subsubsection{Trait Matching}
+\subsubsection{a) Traits generation}
 Let $\textrm{T}^c = [t^c_{jk}]$ $(c \times 2)$ contains the parameters for the distribution of the consumers' traits. 
 Let $\textrm{T}^r = [t^r_{jk}]$ $(r \times 2)$ contains the parameters for the distribution of the resources' traits. 
 
@@ -119,26 +119,45 @@ The traits PDF follows a normal distribution whose means are uniformly distribut
 
 
 
-\subsubsection{Interaction probability based on trait matching}
-Then we compute the interaction probability  solely based on the trait matching.
+\subsubsection{b) Interaction probability based on trait matching}
+Then we compute the interaction probability  solely based on the trait matching. To do so, we assume that the consumers interaction niche defined by the traits follow a bivariate normal distribution. Hence the probability of the the species i and j interacting follows the is influenced by the distance of the resource optimum to the consumer optimum and the tolerance of the consumer:
+
+$$\textbf{M} = [m_{ij}]=\frac{1}{2\pi s_{j1}s_{j2}} \textbf{exp}\left(-\frac{(t^c_{j1} - t^r_{i1})^2}{2s^2_{j1}} - \frac{(t^c_{j2} - t^r_{i2})^2}{2s^2_{j2}}\right)$$
+Cependant ici on dirait que ce n'est que la pdf de la fonction normale de l'un $\times$ celui de l'autre, je ne sais pas si c'est bien ça.
 
 
-\subsubsection{Abundances and environmental distribution}
 
+
+\subsubsection{c) Abundances and environmental distribution}
 Here we use the Hutchinsonian definition of the niche as a position of the species in a 1 dimensional gradient.
 
 Here, we assume that the species are normally distributed across an environmental gradient. This gradient can either represent the distribution over time or the distribution across space, for example in the case of a mountain. As for the traits, this gradients may takes in account different factors such as the humidity, sun exposure, temperature, altitude, soil, etc in the case of the space gradient.
-Here we assume normality distribution, which imply a unique associated optimum as well as a tolerance expressed as a variance.
+Here we assume normality distribution, which imply a unique associated optimum as well as a tolerance expressed as a variance. Let then define $\textbf{E}^r$ and $\textbf{E}^c$ the two matrices containing the environmental optimums that are uniformly distributed and the environmental tolerances.
 
-\subsubsection{Interaction probability based on population size}
-
-\subsubsection{Integration of the trait matching and mean field}
-
-\subsubsection{Sampling of the interactions based on the previous computed probability}
+Depending on the position of the frames we compute the number of individuals seen in the observed quadrat. We assume that the abundance/theoretical number of individuals is given by the density of the Probability density function times a number to approximate the population size. We then assume that there is a certain probability of observing the specie and hence we use a Poisson process to estimate the number of time the specie is observed during the time of the observation.
 
 
+\subsubsection{d) Interaction probability based on population size}
+We consider that the species have a certain that the number of potential interactions is proportional to the number of individuals and hence we multiply for each network the population size of both consumers and resources. (same principles and for concentration of chemical when there is a reaction)
+Hence we define $\textbf{A} = a_{ij} = a^r a^{c\intercal}$
 
 
+
+
+\subsubsection{e) Integration of the trait matching and mean field}
+Let's define $\textbf{P}^*$ the $i \times j$ matrix such that $\textbf{P}^* = p^*_{ij} = \frac{{m_{i\mid j}}^\delta a_{ij}}{a_{++}^*}$ with delta a variable to ponder the weight given to the trait matching in comparison to the neutral effect.
+It corresponds to the the number of observation we can expect to have during the observation period.
+
+
+
+
+\subsubsection{f) Sampling of the interactions based on the previous computed probability}
+Let's now introduce the observation bias and the sampling force. In order to take in account the sampling effort over the site, we sample the observations count over the $\textbf{P}^*$ matrix. To do so, we define a number of observations and then sample using a multinomial distribution with $k = r \times c$ outcomes corresponding to all the possible combination of possible interactions. The probability matrix is used is $\textbf{P}^*$.
+
+The interaction counts are defined in the matrix $\textbf{Z}$
+
+
+*******************************
 
 
 
