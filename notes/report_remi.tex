@@ -48,6 +48,9 @@ Afin de bien controller et de connaitre les paramètre sous jacent, les données
         \item \underline{Hutchinsonian niche:} is a n-dimensional hyper-volume
     \end{itemize}
     \item rewiring
+    \begin{itemize}
+        \item The beta diversity such as defined by Poisot in Poisot 2012 is a metric used to quantify the network  dissimilarity into species turnover and interaction turnover, also called rewiring.
+    \end{itemize}
     \item trait matching
         \item what is trait matching
         \item how do we quantify it?
@@ -152,12 +155,11 @@ It corresponds to the the number of observation we can expect to have during the
 
 
 \subsubsection{f) Sampling of the interactions based on the previous computed probability}
-Let's now introduce the observation bias and the sampling force. In order to take in account the sampling effort over the site, we sample the observations count over the $\textbf{P}^*$ matrix. To do so, we define a number of observations and then sample using a multinomial distribution with $k = r \times c$ outcomes corresponding to all the possible combination of possible interactions. The probability matrix is used is $\textbf{P}^*$.
+Let's now introduce the observation bias and the sampling force. In order to take in account the sampling effort over the site, we sample a number ninter of observations using the $\textbf{P}^*$ matrix. To do so, we sample using a multinomial distribution with $k = r \times c$ outcomes corresponding to all the possible combination of possible interactions. The probability matrix is used is $\textbf{P}^*$.
 
 The interaction counts are defined in the matrix $\textbf{Z}$
 
 
-*******************************
 
 
 
@@ -211,7 +213,7 @@ $U$ and $V$ are both column orthogonal matrices and $\Sigma$ is a diagonal matri
 
 \paragraph{eigen analysis}
 
-\paragraph{comments (to remove later}
+\paragraph{comments (to remove later)}
 Conceptually similar to Principal Component Analysis, but applies to categorical data rather than continuous data
 
 CA has to be applied to a contingency matrix whereas SVD can be applied to any matrix
@@ -224,14 +226,36 @@ CA has to be applied to a contingency matrix whereas SVD can be applied to any m
 
 \subsubsection{Evaluate reconstruction}
 
+Show the correlation between the 
+
 \subsubsection{Rewiring estimation}
 
 \section{Discussion}
 
+The absence of correlation with the method of Toju et al is not a finality on it's own, as the way of computing it is not so clean and the current gold standard metric is the beta diversity for the turnover of the interactions. However, the way of computing the $\beta_{rewiring}$ diversity is based on the fact that the specie is present in one frame and not in the other. Therefore it only takes in account the species disappearance and is ignoring the fluctuations in abundances that do not lead to the absence of interactions. Hence there are many species that are accounted in species turnover, greatly under estimating the portion of the beta diversity due to rewiring. Likewise, we think that the proportion due to rewiring (turnover of the interactions) is over estimated.
+
+This is due to the fact that the easiest proxy for the abundances to obtain. However, with the AFC, we can estimate the relative abundances assuming that the abundance for one specie is proportional to the number of interaction of this specie.
+
+The downsides are that first, this hypothesis may overestimate/underestimate the abundances of the species depending of if these are in an extremity of the environmental gradient.
+
+One of the other downsides is that we lost the information of the proportion of the beta dissimilarity due to rewiring and species turnover. 
+
+One of our hypothesis was that the rewiring as we think about it right now is only an effect of the abundances variation as well as a strong sampling bias.
+
+
+
+
+
 \section{Appendices}
+
+
 
 \section{Package}
 
+
+
 \section{Ecology}
+
+
 
 \end{document}

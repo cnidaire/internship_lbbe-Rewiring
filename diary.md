@@ -556,6 +556,12 @@ Rédaction du rapport
 
 continue le rapport
 
+## 30 mai
+
+Biblio pour la these wine de paris.
+
+always keep in mind that a paragraph is supposed to suffice it self. It is supposed to start with a first sentence that introduce the subject and then the main message and finally a brief conclusion/recap of what we just said
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
