@@ -556,11 +556,15 @@ Rédaction du rapport
 
 continue le rapport
 
-## 30 mai
+## 30-31 mai
 
 Biblio pour la these wine de paris.
 
 always keep in mind that a paragraph is supposed to suffice it self. It is supposed to start with a first sentence that introduce the subject and then the main message and finally a brief conclusion/recap of what we just said
+
+## 3 juin
+
+reprise de la rédaction et erreur de trouvée dans la reconstruction du trait matching, il manquait la pondération des position sur les axes par les valeurs propres associées.
 
 # Todo list
 
