@@ -52,7 +52,7 @@ reconst_afc <- function (dudi, nf = 1, ...)
     for (i in 1:nf) {
         xli <- dudi$li[, i]
         yc1 <- dudi$c1[, i] # pourquoi li et C1 et pas l1/c1, ou li/co? 
-        res <- res + outer(xli, yc1) * res0
+        res <- res + outer(xli, yc1) * res0 * dudi$eig[i]
     }
     return(res)
 } 
@@ -85,18 +85,23 @@ reconst_afc2 <- function (dudi, nf = 1, ...)
 }
 ```
 
+```{r}
+# afc.tab$eig
+```
+
+
 # Generate Network
 
 ```{r}
-nb_frame = 16
+nb_frame = 5
 spe_resource = 70
 spe_consumer = 190
 simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                    nb_location = nb_frame,
-                                   know_env_grad_pos = F, ninter = 2400, 
-                                   mean_tol = 0.2, sd_tol = 0.2,
-                                   mean_tol_env = 100, sd_tol_env = 0.3,
-                                   delta = 1, corr_env_trait = 0)
+                                   know_env_grad_pos = F, ninter = 24000, 
+                                   mean_tol = 0.1, sd_tol = 0.2,
+                                   mean_tol_env = 0.7, sd_tol_env = 0.2,
+                                   delta = 0.1, corr_env_trait = 0)
 
 ```
 
