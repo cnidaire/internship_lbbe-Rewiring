@@ -41,6 +41,9 @@ Afin de bien controller et de connaitre les paramètre sous jacent, les données
 
 \section{Introduction}
 
+
+
+
 \begin{itemize}
     \item relier au climate change avec les notions de shift de niches
     \item define niche de grinnel, elton (hutchinson) realized and fundamental
@@ -171,28 +174,75 @@ The interaction counts are defined in the matrix $\textbf{Z}$
 
 
 
+\subsection{Correspondance Analysis}
+
+Au lieu de partir de la SVD et partir en cours magistral où je retrace l'histoire, je pense qu'il vaut mieux que je retrace les étapes de l'AFC et que je détaille dans un paragraphe la deomposition en valeurs singulières.
+
+CA is analog to principal component analysis but is appropriate for discrete instead of continuous variable
+is a multivariate method
+$m\times n$ contingency table $A = [a_{ij}]$ 
+
+\paragraph{Small introduction about history}
 
 
-\subsection{SVD and correspondance analysis}
 
-\subsubsection{What is an SVD}
+
+\subsection{Correspondence analysis}
+
+Introduction about CA
+
+Correspondence analysis (a.k.a CA or reciprocal averaging) was first proposed for the analysis of two way contingency table.  It can be used to visualise the residual components into a lower dimensional space 
+expliquer globalement les différents 3 différentes étapes
+
+
+In our case, we are interested in it as it enables to study the proximity between the rows and the columns. Meaning that the species clustered together in the embedding view will have a similar interaction pattern.
+
+\paragraph{introduce the notations}
+
+Let's consider a $r \times c$ contingency table $Name\_to\_define$ such that $r\geq c$ 
+
+\subsubsection{1: Contribution to $\chi^2$}
+
+Each  $\chi_{ij}$ value is the standardised residual frequency of $\textbf{f}_{ij}$ after fitting the null model to the contingency table. The null model states that there is no difference between the row and columns. We therefore have:
+
+$$\chi^2 = \frac{O_{ij} -  E_{ij}}{\sqrt{E_{ij}}} = \sqrt{f_{++}}[\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}]$$
+However, the $\overline{Q}$ matrix differ from the $\chi_{ij}$ by a constant $\frac{1}{\sqrt{\textbf{f}_{++}}}$ such that:
+$$\overline{Q} = [\overline{q}_{ij}] = [\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}] = \frac{\chi_{ij}}{\sqrt{f_{++}}}$$
+
+
+\subsubsection{2: Single Value Decomposition}
+
+Singular value decomposition on the matrix $\overline{Q} = U_{(r\times c)} \Sigma_{(diagonal, c\times c)} V_{(c \times c)}^T$ 
+$U$ and $V$ are both column orthogonal matrices and $\Sigma$ is a diagonal matrix $D_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$ which are the singular values of $\overline{Q}$
+
+
+\paragraph{What is an SVD}
+
+Single Value Decomposition is the generalisation of eigendecomposition for a square matrix. The main difference is that instead of obtaining one set of eigen vector, we will obtain two sets of eigen vectors.
+
+enable to factorize a  rectangular $n \times m$ matrix $A$ and  
+two sets of singular vectors
+
+
+
+*************************************************
 
 The regular diagonalization of a rectangular matrix $A$ of size $n \times m$ by $X^{-1} AX$ the resulting eigenvectors in X will not always be orthogonal, it requires to have a matrix $A$ a square matrix to have $Ax = \lambda x$. Also we have not always enough eigenvalues (apparently, but I don't really get what this means and why).
 
 The singular value decomposition methods enable to diagonalize a rectangular matrix $A$ of size $n \times m$ in two sets of singular vectors, u's and v's. 
-$u's \in \mathbb{R}^m$ and $u's \in \mathbb{R}^n$ will be in a $m \times m$ U matrix and a $n \times n$ V matrix
-
-$A = U \Sigma V^\intercal$
-$\Leftrightarrow A = \sum_i \sigma_i U_i \otimes V_i^\intercal$
+$u's \in \mathbb{R}^m$ and $v's \in \mathbb{R}^n$ will be in a $m \times m$ U matrix and a $n \times n$ V matrix
+It is hence possible to decompose the $\textbf{A}$ in such a way:
+$$A = U \Sigma V^\intercal \Leftrightarrow A = \sum_i \sigma_i U_i \otimes V_i^\intercal$$
 the  $\Sigma$ matrix contains only values on the diagonal and contains the $\sigma$ values that are analogous to the eigenvalues 
+
 We call U the left singular vector and V the right singular vector of $\sigma$
 the diagonal entries $\sigma_i = \Sigma_{ii}$ of $\Sigma$ are uniquely determined by $M$ and known as singular values of $M$. The number non 0 singular values is equal to the rank of the matrix $M$.
 
-\subsubsection{Interpretation of the meaning of each matrices of the SVD}
+\paragraph{Interpretation of the meaning of each matrices of the SVD}
 
 $V^\intercal$ corresponds to a rotation on the unit disc, $\Sigma$ corresponds to a  scaling on the different dimensions, and $U$ to an other rotation 
 
-\subsubsection{Why we are interested in SVD}
+\paragraph{Why we are interested in SVD and CA (to put in the introduction)}
 
 SVD enables to obtain a sum of the vector product of rank one matrices, enabling to approximate more and more accurately the origin matrix. Therefore, when we have a matrix made of a Sum of clear signal and noise, we can filter out the noise by selecting the biggest $\sigma$ values as it will constitute the ordered information of the matrix and then there should be something something analog to an eigengap and the rest of the small $\sigma$ are noise.
 
@@ -200,25 +250,10 @@ In the case where the organised information is a sum of products of vectors, it 
 
 Also, the regular SVD considers 0 as information whereas in our case, it is rather an absence of information, and that's one of the main reasons for using CA
 
-\subsubsection{Correspondence Analysis}
+\subsubsection{3: Eigen analysis}
 
-\paragraph{1: Contribution to $\chi^2$}
-
-contingency table transformed into a contribution table by a poisson $\chi^2$ 
-$\chi^2 = \frac{O_{ij} -  E_{ij}}{\sqrt{E_{ij}}} = \sqrt{f_{++}}[\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}]$
-
-$\overline{Q} = [\overline{q}_{ij}] = [\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}] = \frac{\chi_{ij}}{\sqrt{f_{++}}}$
-
-\paragraph{SVD}
-
-Singular value decomposition on the matrix $\overline{Q} = U_{(r\times c)} \Sigma_{(diagonal, c\times c)} V_{(c \times c)}^T$ 
-$U$ and $V$ are both column orthogonal matrices and $\Sigma$ is a diagonal matrix $D_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$ which are the singular values of $\overline{Q}$
-
-
-\paragraph{eigen analysis}
-
-\paragraph{usual outputs}
-\paragraph{comments (to remove later)}
+\subsubsection{usual outputs}
+\subsubsection{comments (to remove later)}
 Conceptually similar to Principal Component Analysis, but applies to categorical data rather than continuous data
 
 CA has to be applied to a contingency matrix whereas SVD can be applied to any matrix
@@ -266,7 +301,7 @@ One of the other downsides is that we lost the information of the proportion of 
 One of our hypothesis was that the rewiring as we think about it right now is only an effect of the abundances variation as well as a strong sampling bias.
 
 
-
+Not really realistic that only depends on the abundances and the trait matching because even if we assume that we are at equilibrium on a local scale, taking the same network and removing one specie would imply that the depending ones will starve. Whereas it would most likely just make more interactions with the others and this is not taken into account and this is what I would call rewiring.
 
 
 \section{Appendices}

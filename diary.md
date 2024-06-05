@@ -566,6 +566,24 @@ always keep in mind that a paragraph is supposed to suffice it self. It is suppo
 
 reprise de la rédaction et erreur de trouvée dans la reconstruction du trait matching, il manquait la pondération des position sur les axes par les valeurs propres associées.
 
+## 4 juin
+
+est ce que je met des choses que j'ai essayé mais qui n'ont pas fonctionné comme le clustering?
+Community detection
+
+J'ai filtré les articles que je voudrais citer dans Zotero et je les ai tagué de façon à pouvoir les trier par thème.
+
+En lisant des articles et en me concentrant sur la forme, j'ai mieux saisi ce qui était attendu dans les abstracts et il va falloir que je fasse la même chose pour comprendre les formulations du reste.
+
+
+## 5 juin
+
+retro planning:
+
+D'ici le 7 juin, finir au moins la partie la l'analyse des correspondances
+finir les méthodes et résultats avant le vendredi 14
+tout finir (remerciements, intro, conclusion, discussions, contributions) avant le vendredi 21
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
