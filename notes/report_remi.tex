@@ -191,37 +191,33 @@ $m\times n$ contingency table $A = [a_{ij}]$
 
 Introduction about CA
 
-Correspondence analysis (a.k.a CA or reciprocal averaging) was first proposed for the analysis of two way contingency table.  It can be used to visualise the residual components into a lower dimensional space 
-expliquer globalement les différents 3 différentes étapes
+Correspondence analysis (CA), also known as reciprocal averaging is a multivariate statistical technique that was primarily developed for the analysis of two-way contingency table. it enables us to visualise the table in a lower dimensional space and put in evidence the relation between the rows and the columns of the table.
+
+It can be viewed as a three-step process. The first is obtaining the standardised residuals by computing the distances to the null (independence) model. The second one is using Singular Value Decomposition to get the axis containing the maximum variance. Finally, we select the axis holding the most information to reduce the dimensionality of the data and visualise these components in a lower dimensionality space using the coordinates obtained with the singular value decomposition.
 
 
-In our case, we are interested in it as it enables to study the proximity between the rows and the columns. Meaning that the species clustered together in the embedding view will have a similar interaction pattern.
 
-\paragraph{introduce the notations}
 
-Let's consider a $r \times c$ contingency table $Name\_to\_define$ such that $r\geq c$ 
+A contingency table is is a widely spread format. It enables to display the count of two categorical variables
+
+Let's consider a $n \times m$ contingency matrix $\textbf{O}$ such that $n\geq m$.
+
+expliquer pourquoi je parle du $\chi^2$
+expliquer ${f_{+j}}$
 
 \subsubsection{1: Contribution to $\chi^2$}
 
-Each  $\chi_{ij}$ value is the standardised residual frequency of $\textbf{f}_{ij}$ after fitting the null model to the contingency table. The null model states that there is no difference between the row and columns. We therefore have:
-
-$$\chi^2 = \frac{O_{ij} -  E_{ij}}{\sqrt{E_{ij}}} = \sqrt{f_{++}}[\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}]$$
-However, the $\overline{Q}$ matrix differ from the $\chi_{ij}$ by a constant $\frac{1}{\sqrt{\textbf{f}_{++}}}$ such that:
-$$\overline{Q} = [\overline{q}_{ij}] = [\frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}}] = \frac{\chi_{ij}}{\sqrt{f_{++}}}$$
-
-
+Let $\textbf{E}$ be the $n\times m$ matrix. $\textbf{E}$ is the expected matrix of  $\textbf{N}$ under null model corresponding to the hypothesis that there is no relationship between the rows and the columns. We hence define $\textbf{E}$ as $\textbf{E} = e_{ij} = [f_{i+}{f_{+j}}^T]$.
+In order to compute the standardised residuals of $\textbf{N}$, we compute the $\chi$ distance normalised by $\sqrt{f_{++}}$ to simplify the equation giving: 
+$$\textbf{S}_{ij} = \frac{\chi_{ij}}{\sqrt{p_{++}}} = \frac{\textbf{N}_{ij} -  \textbf{E}_{ij}}{\sqrt{\textbf{E}_{ij}}} \times \frac{1}{\sqrt{p_{++}}} = \sqrt{p_{++}} \left[ \frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}} \right] \times \frac{1}{\sqrt{p_{++}}} = \left[ \frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}} \right]$$ 
 \subsubsection{2: Single Value Decomposition}
 
-Singular value decomposition on the matrix $\overline{Q} = U_{(r\times c)} \Sigma_{(diagonal, c\times c)} V_{(c \times c)}^T$ 
-$U$ and $V$ are both column orthogonal matrices and $\Sigma$ is a diagonal matrix $D_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$ which are the singular values of $\overline{Q}$
+Singular value decomposition is a the eigendecomposition's generalisation to rectangular matrices. It is used vastly used in informatics for image compression as it enables to decompose the matrix into a sum of axis pondered by singular values which gives an information of how much this axis drives the patterns of the original matrix.
 
+with the  It enables to decompose a matrix such as the previous one under form  $\textbf{S} = U_{(r\times c)} \Sigma_{(diagonal, c\times c)} V_{(c \times c)}^T$ where $U$ and $V$ are respectively orthogonal left and right singular vectors. $\Sigma$ is a diagonal matrix $D_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$ which are the singular values of $\textbf{S}$
 
 \paragraph{What is an SVD}
 
-Single Value Decomposition is the generalisation of eigendecomposition for a square matrix. The main difference is that instead of obtaining one set of eigen vector, we will obtain two sets of eigen vectors.
-
-enable to factorize a  rectangular $n \times m$ matrix $A$ and  
-two sets of singular vectors
 
 
 
