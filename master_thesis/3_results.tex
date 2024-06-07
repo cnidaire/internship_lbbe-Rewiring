@@ -1,0 +1,24 @@
+\section{Analysis}
+
+\subsubsection{packages used}
+
+ase4 ggplot
+
+\subsubsection{Trait matching reconstruction principle}
+
+This should go in the methods part I think so that there is only results here.
+
+In order to reconstruct trait matching, we do the opposite of the single value decomposition, for each axis of Correspondence analysis obtained, we sum the product of the positions in line and column corresponding to the resources and the consumers, and this way we obtain the observed probability of interaction and we get rid of the noise by picking only the eigenvalues before the eigengap.
+
+\subsubsection{Evaluate reconstruction}
+
+To evaluate the reconstruction performance, we look correlation between the reconstructed traits and the theoretical one coming from the input of the generated data.
+
+To evaluate the trait estimation there is a 4th corner statistic that I did not check yet, and I should because I only did a naive correlation test. It is apparently used to find the correlation between the traits and the environment.
+
+\subsubsection{Rewiring estimation}
+
+To evaluate the rewiring, we decided to take the approach of looking at the variance of the species location in the different projections of the networks across the environmental gradient. 
+As there is a normalization by the weight of the columns and lines, and there is a filtration on the eigen there is a denoising effect.
+
+As in the CA, the resources and consumers that are close in the CA projection tend to interact more together.

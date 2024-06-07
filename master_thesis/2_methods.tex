@@ -1,0 +1,160 @@
+\section{Methods}
+
+\subsection{Network notations}
+Let's consider a location and the resulting interactions of this sampling. We consider a bipartite network with r resources species and c consumer species. In this case, the resources and consumer do not imply a prédation. It can either be plant/pollinators, host/parasitism, or else as long as the network is bipartite. 
+
+Let $Y$ be the $r\times c$ matrix of interactions such that $\textrm{Y} = [y_{ij}]$. With $y_{ij}$ the number of interactions between i and j was observed.
+
+$r=\textrm{P1}_r =[p_{1+}, ..., p_{r+}]^\intercal$
+
+$c=\textrm{P1}_c=[p_{+1}, ..., p_{+c}]^\intercal$
+
+matrices vecteur en gras droit majuscule
+vecteur vecteur en gras droit minuscule
+
+$p_{i+}=\sum_{j=1}^{c}$ and $p_{+j}=\sum_{i=1}^{r}$ are the marginal sums for rows and columns.
+
+
+
+
+$m\times n$ contingency table $A = [a_{ij}]$ 
+
+\paragraph{A small introduction about the history}
+
+
+
+
+\subsection{Correspondence analysis}
+
+Introduction about CA
+
+Correspondence analysis (CA), also known as reciprocal averaging is a multivariate statistical technique  primarily developed to analyze two-way contingency tables (for example the distribution of the eye color compared to the hair color). It enables us to visualize the table in a lower dimensional space and put in evidence the relation between the rows and the columns of the table.
+
+It can be viewed as a three-step process. The first is obtaining the standardized residuals by computing the distances to the null (independence) model. The second one is using Singular Value Decomposition to get the axis containing the maximum variance. Finally, we select the axis holding the most information to reduce the dimensionality of the data and visualize these components in a lower dimensionality space using the coordinates obtained with the singular value decomposition.
+
+
+Let $\textbf{P} = \left[ \frac{p_{ij}}{p_{++}} \right]$ where $p_{++}=\sum_{i=1}^{r}\sum_{j=1}^{c}p_{ij}$
+
+A contingency table is a widely spread format. It enables to display of the count of two or more categorical variables.
+
+Let's consider a $r \times c$ contingency matrix $\textbf{Y} = [y_{ij}]$ such that $r\geq c$.
+The sum of the interaction is $n_c = \sum_{i=1}^{r} \sum_{j=1}^{c} \textbf{Y}_{ij}$ 
+relative weights: $\textbf{w}_c = \frac{1}{n_c} \textbf{Y}1$ and $\textbf{w}_r = \frac{1}{n_c}1^\intercal\textbf{C}$ it corresponds to the relative column and rows weight.
+
+that are then transformed into diagonal matrices: $\textbf{W}_r = diag\left(\frac{1}{\sqrt{\textbf{w}_r}}\right)$ and $\textbf{W}_c = diag\left(\frac{1}{\sqrt{\textbf{w}_c}}\right)$
+
+
+
+expliquer pourquoi je parle du $\chi^2$:
+here I use $\chi$ and not $\chi^2$ to avoid having a transformation that would give more weight to the higher values, we want something that is representative of the real distance for when we plot it with the SVD.
+
+expliquer ${f_{+j}}$
+
+
+\subsubsection{1: Contribution to $\chi^2$}
+
+Let $\textbf{P}_0$ be the $r\times c$ expected matrix under the null hypothesis that no relationship exists between the rows and the columns. We define $\textbf{P}_0$ such that $\textbf{P}_0 = e_{ij} = [p_{i+}{p_{+j}}^\intercal]$ where \(p_{i+}\) and \(p_{+j}\) are respectively the marginal proportions of rows and columns.
+
+To compute the standardized residuals of $\textbf{N}$, we compute the $\chi$ distance normalized by $\sqrt{y_{++}}$ . This gives:
+$$
+\textbf{S}_{ij} = \frac{\chi_{ij}}{\sqrt{p_{++}}} = \frac{\textbf{N}_{ij} -  \textbf{P}_{0 ij}}{\sqrt{\textbf{P}_{0 ij}}} \times \frac{1}{\sqrt{y_{++}}} = \sqrt{y_{++}} \left[ \frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}} \right] \times \frac{1}{\sqrt{y_{++}}} = \left[ \frac{p_{ij} - p_{i+}p_{+j}}{\sqrt{p_{i+}p_{+j}}} \right]
+$$ 
+
+\subsubsection{2: Single Value Decomposition}
+
+Singular value decomposition (SVD) is a generalization of eigendecomposition to rectangular matrices. It is widely used in fields like informatics for applications such as image compression as. It enables the decomposition of the matrix into a sum of axes weighted by singular values, indicating the variance explained by each axis.
+
+
+SVD enables the decomposition of a matrix such as the previous one under the form: 
+$$
+\textbf{S} = \textbf{U}_{(r\times c)} \Sigma_{(diagonal, c\times c)} \textbf{V}_{(c \times c)}^\intercal \Leftrightarrow \textbf{S} = \sum_i \sigma_i \textbf{U}_i \textbf{V}_i^\intercal
+$$
+$\textbf{U}$ and $\textbf{V}$ are orthogonal left and right singular vectors such as $\textbf{U}^\intercal\textbf{U} = \textbf{V}^\intercal\textbf{V} = \textbf{I}$. $\Sigma$ is a diagonal matrix $\textbf{D}_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$, which are the singular values of $\textbf{S}$.
+
+
+
+___________________________________________
+
+
+
+
+
+
+
+comment caluler le scores (poids x racine de lambda): la partie sur les coordonées avec les l1, c1
+*******************************
+
+
+lier les notations avec ce que j'ai fait sur les réseaux
+
+Ajouter L'AFC de foucart sur du multiréseaux
+
+\subsection{Simulation}
+
+Realistic interaction network generation is a complex task and many ways exist to generate some such as random geometric graphs or dendritic networks. To validate the method, we must have full knowledge of the input used to create the networks and generate many networks.
+
+The simulation framework is based on Lisa Nickvert's thesis, which is based on Fründ et al 2016, Benadi et al 2022, Dray and Legrendre 2008.
+
+For the simulation, we assume that the proxy of the relative abundances is the frequency of the observed interaction for a given species. We also assume that the interactions are solely based on a mixed effect of the trait matching and the abundance. We can be understood as the probability of two species encountering, which is the product of the abundance, time the probability of these two species interacting together based on their trait matching.
+
+Also, using a bipartite network assumes that there is no interaction intra-group but only inter-groups. It implies competition, facilitation, and spatial exclusion.
+
+
+
+
+\subsubsection{a) Traits generation}
+Let $\textrm{T}^c = [t^c_{jk}]$ $(c \times 2)$ contain the parameters for the distribution of the consumers' traits. 
+Let $\textrm{T}^r = [t^r_{jk}]$ $(r \times 2)$ contain the parameters for the distribution of the resources' traits. 
+
+The first mean of the trait is uniformly distributed between 0 and 1 for both consumers and resources and for the second trait, the span of the gradient is smaller such that it has less weight in driving the matching. 
+For the consumer, we associate a variance to the distribution in addition to an optimum to give a notion of specialization of the consumers.
+
+The trait matching doesn't have to be something well defined like the length of the beak on the size of the fruit. First of all, it is most likely that the traits found are a combination of multiple pondered traits that can include more subjective things such as the taste for example that can be thought of as a gradient of sour/sweetness of the fruit or plant.
+The variability/ tolerance is encoded as the variance and the optimum is the mean of the distribution.
+
+The traits PDF follows a normal distribution whose means are uniformly distributed between 0 and 1 and the variance follows a normal distribution.
+
+
+
+
+\subsubsection{b) Interaction probability based on trait matching}
+Then we compute the interaction probability  solely based on the trait matching. To do so, we assume that the consumers interaction niche defined by the traits follows a bivariate normal distribution. Hence the probability of the the species i and j interacting follows is influenced by the distance of the resource optimum to the consumer optimum and the tolerance of the consumer:
+
+$$\textbf{M} = [m_{ij}]=\frac{1}{2\pi s_{j1}s_{j2}} \textbf{exp}\left(-\frac{(t^c_{j1} - t^r_{i1})^2}{2s^2_{j1}} - \frac{(t^c_{j2} - t^r_{i2})^2}{2s^2_{j2}}\right)$$
+Cependant ici on dirait que ce n'est que la pdf de la fonction normale de l'un $\times$ celui de l'autre, je ne sais pas si c'est bien ça.
+
+
+
+
+\subsubsection{c) Abundances and environmental distribution}
+Here we use the Hutchinsonian definition of the niche as a position of the species in a 1 dimensional gradient.
+
+Here, we assume that the species are normally distributed across an environmental gradient. This gradient can either represent the distribution over time or the distribution across space, for example in the case of a mountain. As for the traits, these gradients may take into account different factors such as humidity, sun exposure, temperature, altitude, soil, etc in the case of the space gradient.
+Here we assume normality distribution, which implies a unique associated optimum as well as a tolerance expressed as a variance. Let then define $\textbf{E}^r$ and $\textbf{E}^c$ the two matrices containing the environmental optimums that are uniformly distributed and the environmental tolerances.
+
+Depending on the position of the frames we compute the number of individuals seen in the observed quadrat. We assume that the abundance/theoretical number of individuals is given by the density of the Probability density function times a number to approximate the population size. We then assume that there is a certain probability of observing the species and hence we use a Poisson process to estimate the number of times the species are observed during the time of the observation.
+
+
+\subsubsection{d) Interaction probability based on population size}
+We consider that the species have a certain number of potential interactions is proportional to the number of individuals. Hence, we multiply for each network the population size of both consumers and resources. (same principles and for the concentration of chemicals when there is a reaction)
+Hence we define $\textbf{A} = a_{ij} = a^r a^{c\intercal}$
+
+
+
+
+\subsubsection{e) Integration of the trait matching and mean field}
+Let's define $\textbf{P}^*$ the $i \times j$ matrix such that $\textbf{P}^* = p^*_{ij} = \frac{{m_{i\mid j}}^\delta a_{ij}}{a_{++}^*}$ with delta a variable to ponder the weight given to the trait matching in comparison to the neutral effect.
+It corresponds to the number of observations we can expect to have during the observation period.
+
+
+
+
+\subsubsection{f) Sampling of the interactions based on the previous computed probability}
+Let's now introduce the observation bias and the sampling force. To take into account the sampling effort over the site, we sample a number ninter of observations using the $\textbf{P}^*$ matrix. To do so, we sample using a multinomial distribution with $k = r \times c$ outcomes corresponding to all the possible combinations of possible interactions. The probability matrix used is $\textbf{P}^*$.
+
+The interaction counts are defined in the matrix $\textbf{Z}$
+
+
+
+
+Ajouter mes contribution et expliquer le mieux des deux
