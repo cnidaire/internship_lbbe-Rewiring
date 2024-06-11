@@ -28,13 +28,17 @@ $m\times n$ contingency table $A = [a_{ij}]$
 
 Introduction about CA
 
-Correspondence analysis (CA), also known as reciprocal averaging is a multivariate statistical technique  primarily developed to analyze two-way contingency tables (for example the distribution of the eye color against the hair color). It enables us to visualize the table in a lower dimensional space and put in evidence the relation between the rows and the columns of the table.
+Correspondence analysis (CA), also known as reciprocal averaging is a multivariate statistical technique  primarily developed to analyze two-way contingency tables (for example the eye color's distribution against the hair color). It enables us to visualize the table in a lower dimensional space and put in evidence the relation between the rows and the columns of the table.
 
-It can be viewed as a three-step process. The first is obtaining the standardized residuals by computing the distances to the null (independence) model. The second one uses Singular Value Decomposition to get the axis containing the maximum variance. Finally, we select the axis holding the most information to reduce the dimensionality of the data and visualize these components in a lower dimensionality space using the coordinates obtained with the singular value decomposition.
+It can be viewed as a three-step process. The first is obtaining the standardized residuals by computing the distances to the null (independence) model. The second one uses Singular Value Decomposition to get the axes containing the maximum variance. Finally, we select the axes holding the most information to reduce the dimensionality of the data and visualize these components in a lower dimensionality space using the coordinates obtained with the singular value decomposition.
 
 
-Let's consider a $r \times c$ two-way contingency matrix $\mathbf{Y} = [y_{ij}]$ such that $r\geq c$ and let $\mathbf{P}$ be the matrix of proportions of $\mathbf{Y}$ represented by $y_{ij}$ such that $\mathbf{P} = \left[ \frac{y_{ij}}{\sum_{i=1}^{r} \sum_{j=1}^{c} \mathbf{Y}_{ij}} \right]$.
-The relative weights (marginal proportions) of the row and columns of $\mathbf{P}$ are defined respectively as: 
+Let's consider a $r \times c$ two-way contingency matrix $\mathbf{Y} = [y_{ij}]$ such that $r\geq c$ and let $\mathbf{P}$ be the matrix of proportions of $\mathbf{Y}$ represented by $y_{ij}$ such that:
+$$
+\mathbf{P} = \left[ \frac{y_{ij}}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}} \right]
+$$
+
+The relative weights (marginal proportions ie. sum of the columns and sum of the rows) of the row and columns of $\mathbf{P}$ are defined respectively as: 
 $$
     \mathbf{w}_c = \mathbf{P}1 \quad \text{and} \quad \mathbf{w}_r = 1^\intercal\mathbf{P}
 $$
@@ -61,33 +65,32 @@ $$
 
 Singular value decomposition (SVD) is a generalization of eigendecomposition to rectangular matrices. It is widely used in fields like informatics for applications such as image compression. It enables the decomposition of the matrix into a sum of axes weighted by singular values, indicating the variance explained by each axis.
 
-
 SVD enables the decomposition of a matrix such as the previous one under the form: 
 $$
     \mathbf{S} = \mathbf{U}_{(r\times c)} \Sigma_{(diagonal, c\times c)} \mathbf{V}_{(c \times c)}^\intercal \Leftrightarrow \mathbf{S} = \sum_i \sigma_i \mathbf{U}_i \mathbf{V}_i^\intercal
 $$
 
-$\mathbf{U}$ and $\mathbf{V}$ are orthogonal left and right singular vectors such as $\mathbf{U}^\intercal\mathbf{U} = \mathbf{V}^\intercal\mathbf{V} = \mathbf{I}$. $\Sigma$ is a diagonal matrix $\mathbf{D}_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$, which are the singular values of $\mathbf{S}$.
+where:
+\begin{itemize}
+    \item $\mathbf{U}$ and $\mathbf{V}$ are orthogonal left and right singular vectors such as $\mathbf{U}^\intercal\mathbf{U} = \mathbf{V}^\intercal\mathbf{V} = \mathbf{I}$.
+    \item  $\Sigma$ is a diagonal matrix $\mathbf{D}_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$, which are the singular values of $\mathbf{S}$.
+\end{itemize}
+
 
 \paragraph{3: Coordinates}
 
-The principal coordinates for the rows of $\mathbf{P}$ are computed by :
+To visualize the result, an additional step is needed to transform the singular vectors into coordinates that preserve the $\chi^2$ distances. The principal coordinates for the rows of $\mathbf{P}$ are computed as :
 $$
-    \mathbf{F}_n = \mathbf{W}_m \mathbf{U} \Sigma
+    \mathbf{F}_r = \mathbf{W}_r \mathbf{U} \Sigma
 $$
 
-Similarly, the principal coordinates for the columns are computed by:
+BESOIN D'EXPLICATIONS POUR LA PAGE WIKIPEDIA
+
+Similarly, the principal coordinates for the columns are computed as:
 $$
-    \mathbf{F}_n = \mathbf{W}_n \mathbf{V} \Sigma
+    \mathbf{F}_c = \mathbf{W}_c \mathbf{V} \Sigma
 $$ 
-
-___________________________________________
-
-
-
-
-
-
+PAS VRAIMENT FINI, À REVOIR AVEC STEPHANE OU LISA
 
 comment caluler le scores (poids x racine de lambda): la partie sur les coordonées avec les l1, c1
 *******************************
@@ -95,7 +98,34 @@ comment caluler le scores (poids x racine de lambda): la partie sur les coordon�
 
 lier les notations avec ce que j'ai fait sur les réseaux
 
-Ajouter L'AFC de foucart sur du multiréseaux
+
+
+\subsection{Foucart Correspondance analysis}
+
+Foucart Correspondance Analysis (foucart COA) is a method used to analyse a serie of contingency tables (Pavoine et al. 2007) crossing the same two variables (in our case consumers and resources).
+It is divided in two steps, first unravel the common structure and then the intra-structure of each contingency table.
+
+Let be $\mathbf{Y}_1, \ldots, \mathbf{Y}_k, \ldots, \mathbf{Y}_K$ be $K$ contingency tables with the same $I$ rows and $J$ columns: $\mathbf{Y}_k = [y_{ij}^k]$. 
+Let $(\mathbf{X}_1, \mathbf{D}_J^1, \mathbf{D}_I^1), \ldots, (\mathbf{X}_1, \mathbf{D}_J^k, \mathbf{D}_I^k), \ldots, (\mathbf{X}_1, \mathbf{D}_J^K, \mathbf{D}_I^K)$ be the $\mathbf{K}$ associated triplets.
+
+\paragraph{1: Common structure}
+
+In the first instance, we compute a regular CA as previously on the agglomeration of the contingency tables.
+Let $\mathbf{C}^k = \left[ \frac{y_{ij}^k}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k} \right]$ be the frequency table associated to the $k^{th}$ contingency table $\mathbf{Y}_k$ where $\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k$ is the grand total of the contingency table $\mathbf{Y}_k$.
+We define the common table $\mathbf{C}$ as:
+$$
+    \mathbf{C} = \frac{1}{K} \sum_{k=1}^K \mathbf{C}^k = \left[ \frac{1}{K}\sum_{k=1}^{K}\frac{y_{ij}^k}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k} \right]
+$$
+and then compute the CA on the matrix $\mathbf{C}$.
+
+\paragraph{2: Intra-structure}
+
+Next, we project the rows and columns of each contingency table onto the axes of the analysis of the average table.
+
+The  projection of the columns is obtained by: $\left( \mathbf{C}^k (\mathbf{D}_J^k)^{-1} \right)^\intercal\mathbf{B}$
+The projection of the rows is obtained by: $\left( (\mathbf{D}_I^k)^{-1}\mathbf{C}^k \right) \mathbf{A}$
+
+
 
 \subsection{Simulation}
 
@@ -161,7 +191,7 @@ We define an environmental gradient which can be interpreted as an environmental
 Similarly to the trait, each species is assigned a position and a tolerance on this environmental gradient that we will respectively call $\mathbf{E}^c = e_{jk}^c$ and $\mathbf{E}^r = e_{ik}^r$ for the consumers and resources.
 
 To compute the number of individuals observed in a given quadrant during the observation time, we first compute the theoretical abundance of each species based on their position and a random factor, supposing that the niche distribution follows a normal variable.
-The abundance of $th\_a_{ix}$ of the species $i$ at the position $x$ of the gradient is given by:
+The abundance of $th\_a_{ix}$ of the species $i$ at the position $x$ on the gradient is given by:
 
 $$
     th\_a_{ix} = N_i \cdot \frac{1}{\sigma_i\sqrt{2\pi}} exp \left( -\frac{(x-\mu_i)^2}{2\sigma_i^2} \right)
@@ -196,15 +226,15 @@ The main assumption of this model is that species interactions are driven by bot
 Depending on the weight given to trait-matching and mean-field effects, we define the mixed effect probability matrix $\mathbf{P}$ as: 
 
 $$
-    \mathbf{P}^* = p^*_{ij} = \frac{{m_{i\mid j}}^\delta a_{ij}}{a_{++}^*}
+    \mathbf{P} = p^*_{ij} = \frac{{m_{i\mid j}}^\delta a_{ij}}{\sum_{i=1}^{r} \sum_{j=1}^{c}a_{ij}}
 $$
-
+    
 where:
 \begin{itemize}
-\item  \(\delta\) is a parameter that controls the weight given to trait matching compared to the neutral effect.
-\item  \(m_{i|j}\) represents the compatibility or matching score between species \(i\) and \(j\).
-\item  \(a_{ij}\) is the interaction term reflecting the relative abundance of species \(i\) and \(j\).
-\item  \(a_{++}^*\) is a normalization constant ensuring that the elements of \(\mathbf{P}^*\) sum to 1.
+\item  $\delta$ is a parameter that controls the weight given to trait matching compared to the neutral effect.
+\item  $m_{i|j}$ represents the compatibility or matching score between species \(i\) and \(j\).
+\item  $a_{ij}$ is the interaction term reflecting the relative abundance of species \(i\) and \(j\).
+\item  $\sum_{i=1}^{r} \sum_{j=1}^{c}a_{ij}$ is a normalization constant ensuring that the elements of \(\mathbf{P}^*\) sum to 1.
 \end{itemize}
 
 The parameter $\delta$ allows the adjustment of the influence of trait matching in the model. When $\delta = 0$, the models relies only on the mean-filed (neutral) effect, meaning that there are no preferences, and as $\delta$ increases, the trait matching becomes main the driving factor of the interactions.
@@ -223,9 +253,9 @@ $$
 
 where:
 \begin{itemize}
-    \item - \(\mathbf{P}\) is the previously computed probability matrix of interactions.
-    \item  \(n_{\text{inter}}\) is the total number of sampled interactions.
-    \item  \(\mathcal{M}_{\kappa}\) denotes the multinomial distribution with \(\kappa\) possible outcomes.
+    \item $\mathbf{P}$ is the previously computed probability matrix of interactions.
+    \item  $n_{\text{inter}}$ is the total number of sampled interactions.
+    \item  $\mathcal{M}_{\kappa}$ denotes the multinomial distribution with \(\kappa\) possible outcomes.
 \end{itemize}
 
 
