@@ -1,25 +1,8 @@
 \section{Methods}
 
 \subsection{Network notations}
-Let's consider a location and the resulting interactions of this sampling. We consider a bipartite network with r resources species and c consumer species. In this case, the resources and consumers do not imply a prédation. It can either be plant/pollinators, host/parasitism, or else as long as the network is bipartite. 
+Let's consider a location and the resulting interactions of this sampling. We consider a bipartite network, meaning that the vertices can be divided into two disjoint ensembles $R$ and $C$ with $r$ resource species and $c$ consumer species, so there are no intra-group interactions. In this case, the resources and consumers do not imply a prédation. It can be plant/pollinators, host/parasites, or others as long as the network is bipartite.  All these interactions will be recorded in a two-way contingency matrix.
 
-Let $Y$ be the $r\times c$ matrix of interactions such that $\textrm{Y} = [y_{ij}]$. With $y_{ij}$ the number of interactions between i and j was observed.
-
-$r=\textrm{P1}_r =[p_{1+}, ..., p_{r+}]^\intercal$
-
-$c=\textrm{P1}_c=[p_{+1}, ..., p_{+c}]^\intercal$
-
-matrices vecteur en gras droit majuscule
-vecteur vecteur en gras droit minuscule
-
-$p_{i+}=\sum_{j=1}^{c}$ and $p_{+j}=\sum_{i=1}^{r}$ are the marginal sums for rows and columns.
-
-
-
-
-$m\times n$ contingency table $A = [a_{ij}]$ 
-
-\paragraph{A small introduction about the history}
 
 
 
@@ -28,20 +11,26 @@ $m\times n$ contingency table $A = [a_{ij}]$
 
 Introduction about CA
 
-Correspondence analysis (CA), also known as reciprocal averaging is a multivariate statistical technique  primarily developed to analyze two-way contingency tables (for example the eye color's distribution against the hair color). It enables us to visualize the table in a lower dimensional space and put in evidence the relation between the rows and the columns of the table.
+Correspondence analysis (CA) (Hirschfield 1935, Hill 1974, Behnadi 2004: review), also known as reciprocal averaging is a multivariate statistical technique  primarily developed to analyze two-way contingency tables (for example the eye color's distribution against the hair color). It enables us to visualize the table in a lower dimensional space and put in evidence the relationship between the rows and the columns of the table.
 
 It can be viewed as a three-step process. The first is obtaining the standardized residuals by computing the distances to the null (independence) model. The second one uses Singular Value Decomposition to get the axes containing the maximum variance. Finally, we select the axes holding the most information to reduce the dimensionality of the data and visualize these components in a lower dimensionality space using the coordinates obtained with the singular value decomposition.
 
 
-Let's consider a $r \times c$ two-way contingency matrix $\mathbf{Y} = [y_{ij}]$ such that $r\geq c$ and let $\mathbf{P}$ be the matrix of proportions of $\mathbf{Y}$ represented by $y_{ij}$ such that:
+Let's consider a $r \times c$ two-way contingency matrix $\mathbf{Y} = [y_{ij}]$ such that $r\geq c$ and with $y_{ij}$ the number of interactions between i and j was observed. Let $\mathbf{P}$ be the matrix of proportions of $\mathbf{Y}$ represented by $y_{ij}$ such that:
 $$
 \mathbf{P} = \left[ \frac{y_{ij}}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}} \right]
 $$
 
-The relative weights (marginal proportions ie. sum of the columns and sum of the rows) of the row and columns of $\mathbf{P}$ are defined respectively as: 
+The relative weights (marginal proportions ie. the sum of the columns and sum of the rows) of the row and columns of $\mathbf{P}$ are defined respectively as: 
 $$
-    \mathbf{w}_c = \mathbf{P}1 \quad \text{and} \quad \mathbf{w}_r = 1^\intercal\mathbf{P}
+    \mathbf{w}_c = \mathbf{P}1 = [p_{+1}, ... , p_{+j}] \quad \text{and} \quad \mathbf{w}_r = 1^\intercal\mathbf{P} = [p_{1+}, ... , p_{i+}]
 $$
+
+with:
+\begin{itemize}
+    \item $p_{+j} = \sum_ip_{ij}$
+    \item $p_{i+} = \sum_jp_{ij}$
+\end{itemize}
 
 where \(\mathbf{1}\) is a vector of ones of appropriate dimension.
 These weights are then transformed into diagonal matrices: 
@@ -63,17 +52,17 @@ $$
 
 \subsubsection{2: Single Value Decomposition}
 
-Singular value decomposition (SVD) is a generalization of eigendecomposition to rectangular matrices. It is widely used in fields like informatics for applications such as image compression. It enables the decomposition of the matrix into a sum of axes weighted by singular values, indicating the variance explained by each axis.
+Singular value decomposition (SVD) is a generalization of eigendecomposition of rectangular matrices. It is widely used in fields like informatics for applications such as image compression. It enables the decomposition of the matrix into a sum of axes weighted by singular values, indicating the variance explained by each axis.
 
 SVD enables the decomposition of a matrix such as the previous one under the form: 
 $$
-    \mathbf{S} = \mathbf{U}_{(r\times c)} \Sigma_{(diagonal, c\times c)} \mathbf{V}_{(c \times c)}^\intercal \Leftrightarrow \mathbf{S} = \sum_i \sigma_i \mathbf{U}_i \mathbf{V}_i^\intercal
+    \mathbf{S} = \mathbf{U}_{(r\times c)} \mathbf{\Sigma}_{(diagonal, c\times c)} \mathbf{V}_{(c \times c)}^\intercal \Leftrightarrow \mathbf{S} = \sum_i \sigma_i \mathbf{U}_i \mathbf{V}_i^\intercal
 $$
 
 where:
 \begin{itemize}
     \item $\mathbf{U}$ and $\mathbf{V}$ are orthogonal left and right singular vectors such as $\mathbf{U}^\intercal\mathbf{U} = \mathbf{V}^\intercal\mathbf{V} = \mathbf{I}$.
-    \item  $\Sigma$ is a diagonal matrix $\mathbf{D}_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$, which are the singular values of $\mathbf{S}$.
+    \item  $\mathbf{\Sigma}$ is a diagonal matrix $\mathbf{D}_{\sigma_i}$ with $\sigma_i \in \mathbb{R}^+$, which are the singular values of $\mathbf{S}$.
 \end{itemize}
 
 
@@ -81,37 +70,31 @@ where:
 
 To visualize the result, an additional step is needed to transform the singular vectors into coordinates that preserve the $\chi^2$ distances. The principal coordinates for the rows of $\mathbf{P}$ are computed as :
 $$
-    \mathbf{F}_r = \mathbf{W}_r \mathbf{U} \Sigma
+    \mathbf{F}_r = \mathbf{W}_r \mathbf{U} \mathbf{\Sigma}
 $$
-
-BESOIN D'EXPLICATIONS POUR LA PAGE WIKIPEDIA
-
 Similarly, the principal coordinates for the columns are computed as:
 $$
-    \mathbf{F}_c = \mathbf{W}_c \mathbf{V} \Sigma
+    \mathbf{F}_c = \mathbf{W}_c \mathbf{V} \mathbf{\Sigma}
 $$ 
 PAS VRAIMENT FINI, À REVOIR AVEC STEPHANE OU LISA
 
 comment caluler le scores (poids x racine de lambda): la partie sur les coordonées avec les l1, c1
+
 *******************************
-
-
-lier les notations avec ce que j'ai fait sur les réseaux
-
 
 
 \subsection{Foucart Correspondance analysis}
 
-Foucart Correspondance Analysis (foucart COA) is a method used to analyse a serie of contingency tables (Pavoine et al. 2007) crossing the same two variables (in our case consumers and resources).
-It is divided in two steps, first unravel the common structure and then the intra-structure of each contingency table.
+Foucart Correspondance Analysis (Foucart COA) is a method used to analyze a series of contingency tables (Pavoine et al. 2007) crossing the same two variables (in our case consumers and resources).
+It is divided into two steps, first unraveling the common structure and then the intra-structure of each contingency table.
 
-Let be $\mathbf{Y}_1, \ldots, \mathbf{Y}_k, \ldots, \mathbf{Y}_K$ be $K$ contingency tables with the same $I$ rows and $J$ columns: $\mathbf{Y}_k = [y_{ij}^k]$. 
-Let $(\mathbf{X}_1, \mathbf{D}_J^1, \mathbf{D}_I^1), \ldots, (\mathbf{X}_1, \mathbf{D}_J^k, \mathbf{D}_I^k), \ldots, (\mathbf{X}_1, \mathbf{D}_J^K, \mathbf{D}_I^K)$ be the $\mathbf{K}$ associated triplets.
+Let be $\mathbf{Y}_1, \ldots, \mathbf{Y}_k, \ldots, \mathbf{Y}_K$ be $K$ contingency tables with the same $R$ rows and $C$ columns: $\mathbf{Y}_k = [y_{ij}^k]$. 
+Let $(\mathbf{X}_1, \mathbf{D}_C^1, \mathbf{D}_R^1), \ldots, (\mathbf{X}_1, \mathbf{D}_C^k, \mathbf{D}_R^k), \ldots, (\mathbf{X}_1, \mathbf{D}_C^K, \mathbf{D}_R^K)$ be the $\mathbf{K}$ associated triplets.
 
 \paragraph{1: Common structure}
 
-In the first instance, we compute a regular CA as previously on the agglomeration of the contingency tables.
-Let $\mathbf{C}^k = \left[ \frac{y_{ij}^k}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k} \right]$ be the frequency table associated to the $k^{th}$ contingency table $\mathbf{Y}_k$ where $\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k$ is the grand total of the contingency table $\mathbf{Y}_k$.
+In the first instance, we compute a regular CA as previously on the aggregation of the contingency tables.
+Let $\mathbf{C}^k = \left[ \frac{y_{ij}^k}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k} \right]$ be the frequency table associated with the $k^{th}$ contingency table $\mathbf{Y}_k$ where $\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k$ is the grand total of the contingency table $\mathbf{Y}_k$.
 We define the common table $\mathbf{C}$ as:
 $$
     \mathbf{C} = \frac{1}{K} \sum_{k=1}^K \mathbf{C}^k = \left[ \frac{1}{K}\sum_{k=1}^{K}\frac{y_{ij}^k}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k} \right]
@@ -122,6 +105,9 @@ and then compute the CA on the matrix $\mathbf{C}$.
 
 Next, we project the rows and columns of each contingency table onto the axes of the analysis of the average table.
 
+$\mathbf{A} = c_1$ ce qui correspond à $\mathbf{F}_m$ ?
+$\mathbf{B} = l_1$ ce qui correspond à $\mathbf{F}_n$ ?
+
 The  projection of the columns is obtained by: $\left( \mathbf{C}^k (\mathbf{D}_J^k)^{-1} \right)^\intercal\mathbf{B}$
 The projection of the rows is obtained by: $\left( (\mathbf{D}_I^k)^{-1}\mathbf{C}^k \right) \mathbf{A}$
 
@@ -129,20 +115,20 @@ The projection of the rows is obtained by: $\left( (\mathbf{D}_I^k)^{-1}\mathbf{
 
 \subsection{Simulation}
 
-Realistic interaction network generation is a complex task and many ways exist to generate some such as random geometric graphs or dendritic networks. To validate the method, we must have full knowledge of the input used to create the networks and generate many networks.
+Realistic interaction network generation is a complex task and many ways exist to generate some such as random geometric graphs or dendritic networks. We must fully know the input used to create and generate many networks to validate the method.
 
-The simulation framework is based on Lisa Nickvert's thesis, which is based on Fründ et al 2016, Benadi et al 2022, Dray and Legrendre 2008.
+The simulation framework is based on Lisa Nicvert's thesis (à citer), itself based on Fründ et al 2016, Benadi et al 2022, Dray and Legrendre 2008.
 
-For the simulation, we assume that the proxy of the relative abundances is the frequency of the observed interaction for a given species. We also assume that the interactions are solely based on a mixed effect of the trait matching and the abundance. We can be understood as the probability of two species encountering, which is the product of the abundance, time the probability of these two species interacting together based on their trait matching.
+For the simulation, we assume that the frequency of the observed interaction for a given species is  the proxy of the relative abundances. We also assume that the interactions are solely based on a mixed effect of the trait matching and the abundance. We can understand this as the probability of two species encountering, which is the product of the abundance, times the probability of these two species interacting together based on their trait matching.
 
-Also, using a bipartite network assumes that there is no interaction intra-group but only inter-groups. It implies competition, facilitation, and spatial exclusion.
+Also, using a bipartite network assumes that there is no interaction intra-group but only inter-groups interactions. It includes competition, facilitation, and spatial exclusion.
 
 
 
 
 \subsubsection{a) Traits generation}
 
-Interactions are shaped by trait matching in ecosystems (cite the work). To model these interactions, we need to generate traits for consumers and resources.
+Interactions are shaped by trait matching in ecosystems (Vazquezet al 2009, Marjakangas et al 2022). To model these interactions, we need to generate traits for consumers and resources.
 
 Parler d'autre façons de simuler des réseaux d'interactions réalistes et pourquoi est ce que l'on a besoin de créer notre propre model pour générer des réseaux.
 
@@ -156,17 +142,17 @@ The trait matching does not have to be well-defined physical traits, such as the
 The traits follow a normal distribution, with the means uniformly distributed between 0 and 1 and checker le range de sigma. The probability density function (PDF) for a resource with a trait $t_j$ and a consumer with an optimum at $t_i^r$ and a variance of $s_i^r$ is given by:
 
 $$
-    \mathbf{PDF:} \quad \frac{1}{\sigma_i\sqrt{2\pi}} \exp\ -\left(\frac{t_j^c-t_i^r}{2s_i^r}\right)^{\!2}\
+    \mathbf{PDF:} \quad \frac{1}{\sigma_i\sqrt{2\pi}} exp -\left(\frac{t_j^c-t_i^r}{2s_i^r}\right)^{\!2}\
 $$
 
 \subsubsection{b) Interaction probability based on trait matching}
 
 To compute the interaction probability solely based on trait matching, we assume that the interaction niche of the consumers follows a bivariate normal distribution defined by their traits. The likelihood of an interaction between a consumer and a resource to occur hence depends on the proximity of their optimums, which gives a notion of compatibility and the tolerance of the consumer's trait.
 
-Let $\mathbf{M} = [m_{ij}]$ be the trait-matching matrix, where $m_{ij}$ is the interaction probablity between the consumer species $i$ and the resource $j$. This probability is given by:
+Let $\mathbf{M} = [m_{ij}]$ be the trait-matching matrix, where $m_{ij}$ is the interaction probability between the consumer species $i$ and the resource $j$. This probability is given by:
 
 $$
-    \mathbf{M} = [m_{ij}]=\frac{1}{2\pi s_{j1}s_{j2}} \mathbf{exp}\left(-\frac{(t^c_{j1} - t^r_{i1})^2}{2s^2_{j1}} - \frac{(t^c_{j2} - t^r_{i2})^2}{2s^2_{j2}}\right)
+    \mathbf{M} = [m_{ij}]=\frac{1}{2\pi s_{j1}s_{j2}} exp\left(-\frac{(t^c_{j1} - t^r_{i1})^2}{2s^2_{j1}} - \frac{(t^c_{j2} - t^r_{i2})^2}{2s^2_{j2}}\right)
 $$
 
 where:
@@ -184,14 +170,14 @@ Cependant ici on dirait que ce n'est que la pdf de la fonction normale de l'un $
 
 
 
-In this section, we adopt the  Hutchinsonian definition of the niche, which describes a species as a position of the species in an $n$-dimensional gradient, with in our case $n=1$ to keep the simulation simple.
+In this section, we adopt the  Hutchinsonian definition of the environmental niche, which describes a species as a position of the species in an $n$-dimensional gradient, in our case we set $n=1$ to keep the simulation simple.
 
 We define an environmental gradient which can be interpreted as an environmental factor such as the humidity, soil resources availability, sun exposure, temperature, and the density of the environment. For example, it could be the altitude in the alpine environment, which is a proxy for global warming. Or it can be the time and hence the seasonality fluctuations for example.
 
 Similarly to the trait, each species is assigned a position and a tolerance on this environmental gradient that we will respectively call $\mathbf{E}^c = e_{jk}^c$ and $\mathbf{E}^r = e_{ik}^r$ for the consumers and resources.
 
 To compute the number of individuals observed in a given quadrant during the observation time, we first compute the theoretical abundance of each species based on their position and a random factor, supposing that the niche distribution follows a normal variable.
-The abundance of $th\_a_{ix}$ of the species $i$ at the position $x$ on the gradient is given by:
+The abundance $th\_a_{ix}$ of the species $i$ at the position $x$ on the gradient is given by:
 
 $$
     th\_a_{ix} = N_i \cdot \frac{1}{\sigma_i\sqrt{2\pi}} exp \left( -\frac{(x-\mu_i)^2}{2\sigma_i^2} \right)
@@ -212,7 +198,7 @@ $$
 
 \subsubsection{d) Interaction probability based on population size}
 
-We assume that, similar to how the speed of a reaction is proportional to the product of the reactant concentration, the number of potential interactions in the network is proportional to the number of individuals. Therefore, for each network, we multiply the population size of both consumers and resources. 
+We assume that the number of potential interactions in the network is proportional to the number of individuals, similar to how the speed of a reaction is proportional to the product of the reactant concentration. Therefore, we multiply the population size of consumers and resources for each network. 
 Hence, we define the neutral effect matrix/ mean-field matrix $\mathbf{A}$ as : 
 
 $$
@@ -237,13 +223,13 @@ where:
 \item  $\sum_{i=1}^{r} \sum_{j=1}^{c}a_{ij}$ is a normalization constant ensuring that the elements of \(\mathbf{P}^*\) sum to 1.
 \end{itemize}
 
-The parameter $\delta$ allows the adjustment of the influence of trait matching in the model. When $\delta = 0$, the models relies only on the mean-filed (neutral) effect, meaning that there are no preferences, and as $\delta$ increases, the trait matching becomes main the driving factor of the interactions.
+The parameter $\delta$ allows the adjustment of the influence of trait matching in the model. When $\delta = 0$, the models rely only on the mean-filed (neutral) effect, meaning that there are no preferences, and as $\delta$ increases, the trait matching becomes the main driving factor of the interactions.
 
 
 
 \subsubsection{f) Sampling of the interactions based on the previous computed probability}
 
-To account for the bias in sampling effort of the observed interaction, we sample $n_{inter}$ interactions using a multinomial distribution based on the probability matrix $\mathbf{P}$. The multinomial distribution with $\kappa = r \times c$ outcomes, corresponding to the set of all the possible combinations of interactions.
+To account for the bias in the sampling effort of the observed interaction, we sample $n_{inter}$ interactions using a multinomial distribution based on the probability matrix $\mathbf{P}$. The multinomial distribution with $\kappa = r \times c$ outcomes corresponding to the set of all the possible combinations of interactions.
 
 The interaction counts are defined in the matrix $\mathbf{Z}$ as:
 
@@ -260,4 +246,99 @@ where:
 
 
 
+\subsection{Reconstruction of latent traits}
+
+To reconstruct the trait matching, we need to reverse the steps of the Correspondance Analysis. The same principle applies to the reconstruction of a Foucart CA as to the regular CA but we just apply it to the  aggregation of the different frames since the traits of the species are supposed to be consistent across the frames.
+
+First, we examine the distribution of the singular values and determine a cut-off on the number of axes to eliminate the noise.
+
+Let $\mathbf{R}$ be the reconstruction for the first $k$ axes of the $\mathbf{C}$ matrix in the case of the multiples networks along an environmental gradient, or $\mathbf{S}$ if this is a single network. We define $\mathbf{R}$ as:
+$$
+    \mathbf{R} = \sum_{i=1} ^{k}\left( \mathbf{U}_{i,} \times \sigma_i \times \mathbf{V}_{i,}^\intercal \right)
+$$
+
+To retrieve the trait matching matrix, we need to remove the influence of abundances. We assumed that the number of interactions is proportional to the product of the relative abundances.  Thus, the best proxies for the relative abundance are the rows and columns sums.
+In Ca, there is a normalization by the rows and columns sums. Thus, by reconstructing the matrix, we expect to retrieve the trait-matching matrix.
+
+\subsection{Quantify trait matching}
+
+We consider two traits $x$ and $y$,
+
+HELP: je n'ai fais que des corrélations de pearson ou spearman mais je nai pas fait de correlations avec le "fourth corner statistic", qui permet de pondérer par la mtrice d'interactions.
+
+
+\subsection{Research of reconstruction optimums}
+
+The input given to the simulation might unexpectedly impact the trait-matching performance. Therefore, we will look at the reconstruction performance between the first two traits and axes for the following parameters in these conditions on $50\times50$ networks:
+
+I should add that only linear interaction between the parameters is expected but it is to check and see how to bring it together.
+
+expliquer pourquoi on fait les imu et ce que l'on veut observer et fair refrence à la table
+
+re-évaluer les optimums en homogeneisant les tests de parametres. et s'assurer que l'on a la même dimenssion pour les réseaux
+\begin{table}
+    \centering
+\caption{Parameter's optimum exploration}
+\label{tab:my_label}
+    \begin{tabular}{clccccl}
+         Experiment&   $n_{inter\_tot}$ &$n_{frames}$&  $\delta$&  $trait\_ratio$& $\mu_{tol\_env}$ &$\mu_{tol\_trait}$\\
+ $\mu_{tol\_env}$&  $2500 \times 2$&$2$& $0.1$& $0.7$& $0.01, 0.1, 1, 10, 100$&0.1\\
+         $n_{inter}$&   $300, 3000, 30000$&5&  $0.2$&  $0.7$&  $0.3$&$0.1$\\
+         $nb_{frames} \times \mu_{tol\_env}$&   $5000$&$1,2,3,5,7,10$&  $0.2$&  $0.7$&  $0.1,0.2,0.3,0.5,0.7,1$&$0.1$\\
+         $nb_{frame}$&   $2500$&$2,4,10,20$&  $1$&  $0.7$&  $0.7$&$0.1$\\
+         $\delta$&   $2500$&$2$&  $0,0.01,0.1,0.2,1,2$&  $0.7$&  $1$&$0.1$\\
+ $trait\_ratio$& $5000$& $5$& $0.2$& $0.1,0.3,0.5,0.7,0.9$& $0.7$&$0.1$\\
+ $\mu_{tol\_trait}$& 5000& $5$& $0.2$& $0.5$& $0.7$&$0.01,0.005,0.1,0.2,0.3,0.5\\
+    \end{tabular}
+    
+    
+\end{table}
+
+for a $50\times50$ network: 
+\begin{table}
+    \centering
+    \begin{tabular}{cccccc}
+           $n_{inter\_tot}$ &  $n_{frames}$&  $\delta$&  $trait\_ratio$&  $\mu_{tol\_env}$ & $\mu_{tol\_trait}$\\
+           $2500$&  $5$&  $0.2$&  $0.7$&  $0.5$& $0.2\\
+    \end{tabular}
+    \caption{Standard parameters}
+    \label{tab:my_label}
+\end{table}
+
+
+\begin{table}
+    \centering
+    \begin{tabular}{ccccccc}
+         Experiment&  $n_{inter\_tot}$ &  $n_{frames}$&  $\delta$&  $trait\_ratio$&  $\mu_{tol\_env}$ & $\mu_{tol\_trait}$\\
+         $\mu_{tol\_env}$&  $2500$&  5&  $0.2$&  $0.7$&  $0.01, 0.1, 1, 10, 100$& 0.1\\
+         $n_{inter}$&  $250, 2500, 25000$&  5&  $0.2$&  $0.7$&  $0.5$& $0.1$\\
+         $nb_{frames} \times \mu_{tol\_env}$&  $2500$&  $1,2,3,5,7,10$&  $0.2$&  $0.7$&  $0.1,0.2,0.3,0.5,0.7,1$& $0.1$\\
+         $nb_{frame}$&  $2500$&  $2,4,10,20$&  $0.2$&  $0.7$&  $0.5$& $0.1$\\
+         $\delta$&  $2500$&  5&  $0,0.01,0.1,0.2,1,2$&  $0.7$&  $0.5$& $0.1$\\
+         $trait\_ratio$&  $2500$&  $5$&  $0.2$&  $0.1,0.3,0.5,0.7,0.9$&  $0.5$& $0.1$\\
+         $\mu_{tol\_trait}$&  $2500$&  $5$&  $0.2$&  $0.7$&  $0.5$& $0.01,0.005,0.1,0.2,0.3,0.5$\end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
+
+
+\subsection{Quantification of rewiring}
+
+CA will give close positions to the columns and the rows that have a similar interaction profile. Also, in the dual view, the rows and columns often seen in interaction together will have similar positions. When analyzing a series of networks with the Foucart CA, as we use the same axes to  project the networks separately, we can study the variation of the position as it means that the species interaction profile is changing.
+
+What else should I say?  That we assume that the variance is closely related to the rewiring?
+
+
+tester si une espèce qui fait beaucoup de rewiring sont des généraliste du point de vue niche env et/ou niche de traits, que sur les consomateurs car on n'a pas de notion de spécialisation pour les resources.
+
+\subsection{Contributions}
+
+Lisa used CA to analyze and reconstruct trait-matching on simulated networks in the single network case.
+
+I extended it to multiple networks along an environmental gradient using Foucart CA. I also extended her network generation method to add the environmental gradient to make the abundances vary accordingly.  
+
+******************************************
+
 Ajouter mes contribution et expliquer le mieux des deux
+
+ajouter ce que l'on va faire pour les résultats.
