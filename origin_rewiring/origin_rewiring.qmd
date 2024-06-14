@@ -1,0 +1,180 @@
+---
+title: "origin_rewiring"
+format: html
+editor: visual
+---
+
+# Correlation between input parameters and rewiring
+
+### Packages
+
+```{r}
+library(NetworkEnvGradGeneration)
+library(ade4)
+library(igraph)
+library(bipartite)
+library(stringr)
+```
+
+### Simulate Data
+
+```{r}
+connected_compo <- function(simu_netw, nb_frame){
+  not_always_con <- c() # to store the non connected species
+  sampled_netw <- Reduce('+', simu_netw$obs_network) # overlap of all the networks
+  sampled_netw_con = sampled_netw[which(rowSums(sampled_netw) != 0), which(colSums(sampled_netw) != 0)] # all components that have at least one connection
+  component <- igraph::components(graph_from_incidence_matrix(sampled_netw_con))
+  if (length(component$csize) != 1) {
+      not_always_con <- c(not_always_con, names(component$membership[which(component$membership != which.max(component$csize))]))
+  }
+  return(unique(not_always_con))
+}
+
+filter_giant_component <- function(simu_netw, not_giant_compo){
+  # On observed data
+  simu_netw$obs_giant_compo <- lapply(simu_netw$obs_network, function(arr){
+    arr[!dimnames(arr)[[1]] %in% unique(not_giant_compo),
+        !dimnames(arr)[[2]] %in% unique(not_giant_compo)]
+  }) # keep only the data that is not inside of the list of the non connected components
+  
+  # On the trait matching matrix
+  simu_netw$trait$trait_mat_giant_compo <- simu_netw$trait$matching_matrix[!dimnames(simu_netw$obs_network[[1]])[[1]] %in% unique(not_giant_compo),
+                                                                           !dimnames(simu_netw$obs_network[[1]])[[2]] %in% unique(not_giant_compo)]
+  
+  # On the resource traits
+  simu_netw$trait$resource_giant_compo <- simu_netw$trait$trait_resource[!dimnames(simu_netw$trait$trait_resource)[[1]] %in% unique(not_giant_compo),]
+  
+  #On the consumer traits
+  simu_netw$trait$consumer_giant_compo <- simu_netw$trait$trait_consumer[!dimnames(simu_netw$trait$trait_consumer)[[1]] %in% unique(not_giant_compo),,]
+  
+  return(simu_netw)
+}
+```
+
+```{r}
+simu_network <- env_grad_netw(nb_resource = 50, nb_consumer = 50, nb_location = 5,
+              ninter = 2500,
+              mean_tol_env = 0.7, mean_tol = 0.1,
+              ratio_grad = 0.5, delta = 0.2)
+
+
+############### Filter to only keep the giant component ###############
+not_giant_compo <- connected_compo(simu_network, nb_frame)
+simu_network <- filter_giant_component(simu_network, not_giant_compo)
+tab = Reduce('+', simu_network$obs_giant_compo) # afin de générer le réseau moyen
+
+############### AFC sur le réseau moyen ###############
+afc.tab=dudi.coa(tab, nf = 6, scannf = FALSE)
+scatter(afc.tab)
+
+############### AFC su chacun des réseaux en utilisant les axes précédents ###############
+fou1 = foucart(lapply(simu_network$obs_giant_compo, as.data.frame), scannf = F, nf = 2)
+```
+
+### Variance in the Foucart CA
+
+```{r}
+############### Initiate the arrays ###############
+res_var <- array(NA, c(nrow(tab), 3))
+dimnames(res_var)[[1]] <- rownames(tab)
+dimnames(res_var)[[2]] <- c("axis1", "axis2", "tot_res")
+
+con_var <- array(NA, c(nrow(tab), 3))
+dimnames(con_var)[[1]] <- colnames(tab)
+dimnames(con_var)[[2]] <- c("axis1", "axis2", "tot_con")
+
+############### Compute variance ###############
+
+######## AXIS 1 ########
+# for resources
+res_var_ax1 <- c()
+for (res in 1:nrow(tab)) {
+  res1 <- fou1$Tli[str_detect(string = dimnames(fou1$Tli)[[1]],
+                              pattern = paste0("^res", res, ".Ana")), ]
+  res_var_ax1 <- c(res_var_ax1, sd(res1[, 1]))
+}
+# hist(res_var_ax1, breaks = 20)
+res_var[, 1] <- res_var_ax1
+
+# for consumers 
+con_var_ax1 <- c()
+for (con in 1:ncol(tab)) {
+  con1 <- fou1$Tco[str_detect(string = dimnames(fou1$Tco)[[1]],
+                              pattern = paste0("^con", con, ".Ana")), ]
+  con_var_ax1 <- c(con_var_ax1, sd(con1[, 1]))
+}
+# hist(con_var_ax1, breaks = 20)
+
+######## AXIS 2 ########
+# for resources
+res_var_ax2 <- c()
+for (res in 1:nrow(tab)) {
+  res1 <- fou1$Tli[str_detect(string = dimnames(fou1$Tli)[[1]],
+                              pattern = paste0("^res", res, ".Ana")), ]
+  res_var_ax2 <- c(res_var_ax2, sd(res1[, 2]))
+}
+# hist(res_var_ax2, breaks = 20)
+
+# for consumers 
+con_var_ax2 <- c()
+for (con in 1:ncol(tab)) {
+  con1 <- fou1$Tco[str_detect(string = dimnames(fou1$Tco)[[1]],
+                              pattern = paste0("^con", con, ".Ana")), ]
+  con_var_ax2 <- c(con_var_ax2, sd(con1[, 2]))
+}
+# hist(con_var_ax2, breaks = 20)
+
+############### Tidy variance in dataframe ###############
+res_var[, 1] <- res_var_ax1
+con_var[, 1] <- con_var_ax1
+res_var[, 2] <- res_var_ax2
+con_var[, 2] <- con_var_ax2
+
+############### Merge information from both axis ###############
+
+res_var[ , 3] <- res_var_ax1 * fou1$eig[1] + res_var_ax2 * fou1$eig[2]
+con_var[ , 3] <- con_var_ax1 * fou1$eig[1] + con_var_ax2 * fou1$eig[2]
+
+hist(res_var[, 3], breaks = 20)
+hist(con_var[, 3], breaks = 20)
+
+res_var
+```
+
+## Trait variance
+
+attention, je ne sais pas comment je dois pondérer quand je fais la somme des variances du coup ici j'ai juste fais une somme débile.
+
+```{r}
+# simu_network$trait$trait_consumer[,2,]
+# rowSums(simu_network$trait$trait_consumer[,2,])
+# con_var[,3]
+```
+
+```{r}
+plot(x = rowSums(simu_network$trait$trait_consumer[,2,]),
+     y = con_var[,3],
+     main = "CA varaiance depending on the trait variance \n for the consumer",
+     xlab = "trait variance",
+     ylab = "CA position's variance")
+```
+
+## Environmental niche variance
+
+```{r}
+simu_network$abudance$th_distrib_consumer[,2]
+```
+
+```{r}
+plot(x = simu_network$abudance$th_distrib_consumer[,2],
+     y = con_var[,3],
+     main = "CA variance depending on the env niche variance \n for the consumer",
+     xlab = "environmental niche variance",
+     ylab = "CA position's variance")
+
+plot(x = simu_network$abudance$th_distrib_resource[,2],
+     y = res_var[,3],
+     main = "CA variance depending on the env niche variance \n for the resource",
+     xlab = "environmental niche variance",
+     ylab = "CA position's variance")
+```
