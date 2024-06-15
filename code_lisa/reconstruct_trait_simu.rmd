@@ -644,7 +644,7 @@ boxplot(abs(tr2ax2), ylim = c(0,1), main = paste0("Absolute correlation between 
 
 ```{r}
 parameters <- c(0.01, 0.1, 1, 10, 100)
-nb_rep = 30
+nb_rep = 50
 
 
 param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -660,18 +660,18 @@ for (param in parameters) {
   ratio_grad = 0.7
   # mean_tol_env = 0.1
   mean_tol_env = param
-  ninter = 2500
-  nb_frame = 2
+  ninter = 2500 / 5
+  nb_frame = 5
   
   for (i in 1:nb_rep) {
     spe_resource = 50
-    spe_consumer = 60
+    spe_consumer = 50
     simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                        nb_location = nb_frame,
                                        know_env_grad_pos = T, ninter = ninter, 
                                        mean_tol = 0.1, sd_tol = 0.1,
                                        mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
-                                       delta = 0.1, corr_env_trait = 0,
+                                       delta = 0.2, corr_env_trait = 0,
                                        ratio_grad = ratio_grad,
                                        magn_res_max = 20000)
     
@@ -703,7 +703,7 @@ The correlation decreases when the mean_tol_env gets too high because, the consu
 ## test ninter
 
 ```{r}
-parameters <- c(300, 3000, 30000)
+parameters <- c(250, 2500, 25000)
 nb_rep = 50
 
 
@@ -718,13 +718,13 @@ for (param in parameters) {
   tr2ax2 <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
-  mean_tol_env = 0.3
+  mean_tol_env = 0.5
   nb_frame = 5
   ninter = param / nb_frame
   
   for (i in 1:nb_rep) {
     spe_resource = 50
-    spe_consumer = 60
+    spe_consumer = 50
     simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                        nb_location = nb_frame,
                                        know_env_grad_pos = T, ninter = ninter, 
@@ -761,7 +761,7 @@ boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation de
 library(ggplot2)
 frames <- c(1, 2, 3, 5, 7, 10)
 tol_env <- c(0.1, 0.2, 0.3, 0.5, 0.7, 1)
-nb_rep = 10
+nb_rep = 50
 
 effect_tol_frame_1 = expand.grid(frame = frames, tol_env = tol_env)
 effect_tol_frame_2 = expand.grid(frame = frames, tol_env = tol_env)
@@ -776,13 +776,13 @@ for (r in 1:nrow(effect_tol_frame_1)) {
   rv_distrib <- c()
   ratio_grad = 0.7
   mean_tol_env = effect_tol_frame_1$tol_env[r]
-  ninter = 5000 / effect_tol_frame_1$frame[r]
+  ninter = 2500 / effect_tol_frame_1$frame[r]
   # ninter = param
   nb_frame = effect_tol_frame_1$frame[r]
   
   for (i in 1:nb_rep) {
     spe_resource = 50
-    spe_consumer = 60
+    spe_consumer = 50
     simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                        nb_location = nb_frame,
                                        know_env_grad_pos = T, ninter = ninter, 
@@ -872,7 +872,7 @@ ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fil
 
 ```{r}
 parameters <- c(2, 4, 10, 20)
-nb_rep = 30
+nb_rep = 50
 
 
 param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -886,7 +886,7 @@ for (param in parameters) {
   tr2ax2 <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
-  mean_tol_env = 0.7
+  mean_tol_env = 0.5
   ninter = 2500 / param
   nb_frame = param
   
@@ -898,7 +898,7 @@ for (param in parameters) {
                                        know_env_grad_pos = T, ninter = ninter, 
                                        mean_tol = 0.1, sd_tol = 0.1,
                                        mean_tol_env = mean_tol_env, sd_tol_env = 0.1,
-                                       delta = 1, corr_env_trait = 0,
+                                       delta = 0.2, corr_env_trait = 0,
                                        ratio_grad = ratio_grad)
     
     not_giant_compo <- connected_compo(simulated_network, nb_frame)
@@ -928,7 +928,7 @@ boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation de
 
 ```{r}
 parameters <- c(0, 0.01, 0.1, 0.2, 1, 2)
-nb_rep = 30
+nb_rep = 50
 
 
 param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -942,9 +942,9 @@ for (param in parameters) {
   tr2ax2 <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
-  mean_tol_env = 1
-  ninter = 2500
-  nb_frame = 2
+  mean_tol_env = 0.5
+  ninter = 2500 / 5
+  nb_frame = 5
   
   for (i in 1:nb_rep) {
     spe_resource = 50
@@ -986,7 +986,7 @@ boxplot(param_tr2ax2, ylim = c(0, 1), main = "Optimum trait 2 ax 2 correlation d
 ```{r}
 
 parameters <- c(0.1, 0.3, 0.5, 0.7, 0.9)
-nb_rep = 30
+nb_rep = 50
 
 
 param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -1000,13 +1000,13 @@ for (param in parameters) {
   tr2ax2 <- c()
   rv_distrib <- c()
   ratio_grad = param
-  mean_tol_env = 0.7
+  mean_tol_env = 0.5
   nb_frame = 5
-  ninter = 5000 / nb_frame
+  ninter = 2500 / nb_frame
   
   for (i in 1:nb_rep) {
     spe_resource = 50
-    spe_consumer = 60
+    spe_consumer = 50
     simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                        nb_location = nb_frame,
                                        know_env_grad_pos = T, ninter = ninter, 
@@ -1056,14 +1056,14 @@ for (param in parameters) {
   tr1ax1 <- c()
   tr2ax2 <- c()
   rv_distrib <- c()
-  ratio_grad = 0.5
-  mean_tol_env = 0.7
+  ratio_grad = 0.7
+  mean_tol_env = 0.5
   nb_frame = 5
-  ninter = 5000 / nb_frame
+  ninter = 2500 / nb_frame
   
   for (i in 1:nb_rep) {
     spe_resource = 50
-    spe_consumer = 60
+    spe_consumer = 50
     simulated_network <- env_grad_netw(nb_resource = spe_resource , nb_consumer = spe_consumer,
                                        nb_location = nb_frame,
                                        know_env_grad_pos = T, ninter = ninter, 
