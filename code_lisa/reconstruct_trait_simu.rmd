@@ -643,24 +643,33 @@ boxplot(abs(tr2ax2), ylim = c(0,1), main = paste0("Absolute correlation between 
 ```{r}
 library(tidyr)
 library(ggpubr)
+library(paletteer)
 ```
 
 ## test of mean_tol_env
 
 ```{r}
 parameters <- c(0.01, 0.1, 1, 10, 100)
-nb_rep = 50
+nb_rep = 5
 
 
-param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr1ax1) <- as.character(parameters)
+param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_l) <- as.character(parameters)
 
-param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr2ax2) <- as.character(parameters)
+param_tr2ax2_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_l) <- as.character(parameters)
+
+param_tr1ax1_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_c) <- as.character(parameters)
+
+param_tr2ax2_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_c) <- as.character(parameters)
 
 for (param in parameters) {
-  tr1ax1 <- c()
-  tr2ax2 <- c()
+  tr1ax1_l <- c()
+  tr2ax2_l <- c()
+  tr1ax1_c <- c()
+  tr2ax2_c <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
   # mean_tol_env = 0.1
@@ -690,39 +699,47 @@ for (param in parameters) {
       
     corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
-    tr1ax1 <- c(tr1ax1, corr_line[1,1])
-    tr2ax2 <- c(tr2ax2, corr_line[2,2])
+    tr1ax1_l <- c(tr1ax1_l, corr_line[1,1])
+    tr2ax2_l <- c(tr2ax2_l, corr_line[2,2])
+    tr1ax1_c <- c(tr1ax1_c, corr_col[1,1])
+    tr2ax2_c <- c(tr2ax2_c, corr_col[2,2])
   }
-  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
-  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+  param_tr1ax1_l[,as.character(param)] <- abs(tr1ax1_l)
+  param_tr2ax2_l[,as.character(param)] <- abs(tr2ax2_l)
+  param_tr1ax1_c[,as.character(param)] <- abs(tr1ax1_c)
+  param_tr2ax2_c[,as.character(param)] <- abs(tr2ax2_c)
   
 }
-# param_tr1ax1
-boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on mean tol env")
-# param_tr2ax2
-boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on mean tol env")
 
 
+data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
+              cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
-# With ggplot
+figure <- ggplot(data, aes(x=axis, y=value, fill=key)) + 
+    geom_boxplot() + 
+    facet_wrap(~spe) + 
+    ylab("Correlation (absolute value)") + 
+    xlab("") + 
+    theme_bw() +
+    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 5))) +
+    labs(fill = "Environmental \ntolerence")
 
-fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 1 Axis 1") +
-  ylab("Correlation") +
-  xlab("Mean env tolerance") +
-  theme_bw()
-fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 2 Axis 2") +
-  ylab("Correlation") +
-  xlab("Mean env tolerance") +
-  theme_bw()
+figure
 
-ggarrange(fig1, fig2)
+ggsave(file = "figure_report/ninter.pdf", plot = figure, width = 12, height = 8)
+```
+
+```{r}
+library(paletteer)
+```
 
 
-ggsave(file = "env.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+```{r}
+
+
+ggsave(file = "env.pdf", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+
+# paletteer_c("ggthemes::Orange", 5)
 ```
 
 
@@ -736,18 +753,26 @@ The correlation decreases when the mean_tol_env gets too high because, the consu
 
 ```{r}
 parameters <- c(250, 2500, 25000)
-nb_rep = 50
+nb_rep = 5
 
 
-param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr1ax1) <- as.character(parameters)
+param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_l) <- as.character(parameters)
 
-param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr2ax2) <- as.character(parameters)
+param_tr2ax2_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_l) <- as.character(parameters)
+
+param_tr1ax1_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_c) <- as.character(parameters)
+
+param_tr2ax2_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_c) <- as.character(parameters)
 
 for (param in parameters) {
-  tr1ax1 <- c()
-  tr2ax2 <- c()
+  tr1ax1_l <- c()
+  tr2ax2_l <- c()
+  tr1ax1_c <- c()
+  tr2ax2_c <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
   mean_tol_env = 0.5
@@ -768,34 +793,65 @@ for (param in parameters) {
     not_giant_compo <- connected_compo(simulated_network, nb_frame)
     simulated_network <- filter_giant_component(simulated_network, not_giant_compo)
     
-    print(param)
+    # print(param)
     tab = Reduce('+', simulated_network$obs_giant_compo) # afin de générer le réseau moyen
     afc.tab=dudi.coa(tab, nf = 6, scannf = FALSE)
     
     corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
-    tr1ax1 <- c(tr1ax1, corr_line[1,1])
-    tr2ax2 <- c(tr2ax2, corr_line[2,2])
+    tr1ax1_l <- c(tr1ax1_l, corr_line[1,1])
+    tr2ax2_l <- c(tr2ax2_l, corr_line[2,2])
+    tr1ax1_c <- c(tr1ax1_c, corr_col[1,1])
+    tr2ax2_c <- c(tr2ax2_c, corr_col[2,2])
   }
-  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
-  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+  param_tr1ax1_l[,as.character(param)] <- abs(tr1ax1_l)
+  param_tr2ax2_l[,as.character(param)] <- abs(tr2ax2_l)
+  param_tr1ax1_c[,as.character(param)] <- abs(tr1ax1_c)
+  param_tr2ax2_c[,as.character(param)] <- abs(tr2ax2_c)
   
 }
-# param_tr1ax1
-boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on \n the   number of observations per frames")
-# param_tr2ax2
-boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on \n the number of observations per frames")
 
 
+data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
+              cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
+figure <- ggplot(data, aes(x=axis, y=value, fill=key)) + 
+    geom_boxplot() + 
+    facet_wrap(~spe) + 
+    ylab("Correlation (absolute value)") + 
+    xlab("") + 
+    theme_bw() +
+    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 5))) +
+    labs(fill = "Number of \n interactions")
+
+figure
+
+ggsave(file = "figure_report/ninter.pdf", plot = figure, width = 12, height = 8)
+```
+
+
+```{r}
 # avec ggplot
-fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
+fig1 <- ggplot(gather(param_tr1ax1_l), aes(x = key, y = value)) + 
   geom_boxplot() + 
   ggtitle("Trait 1 Axis 1") +
   ylab("Correlation") +
   xlab("Number of interactions") +
   theme_bw()
-fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
+fig2 <- ggplot(gather(param_tr2ax2_l), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 2 Axis 2") +
+  ylab("Correlation") +
+  xlab("Number of interactions") +
+  theme_bw()
+
+fig1 <- ggplot(gather(param_tr1ax1_c), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 1 Axis 1") +
+  ylab("Correlation") +
+  xlab("Number of interactions") +
+  theme_bw()
+fig2 <- ggplot(gather(param_tr2ax2_c), aes(x = key, y = value)) + 
   geom_boxplot() + 
   ggtitle("Trait 2 Axis 2") +
   ylab("Correlation") +
@@ -803,7 +859,7 @@ fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) +
   theme_bw()
 
 ggarrange(fig1, fig2)
-ggsave(file = "ninter.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+ggsave(file = "ninter.pdf", plot = ggarrange(fig1, fig2), width = 12, height = 8)
 ```
 
 ## test crossed effect nb_frame x mean_tol_env
@@ -858,10 +914,30 @@ for (r in 1:nrow(effect_tol_frame_1)) {
   effect_tol_frame_2$mean_corr[r] <- mean(abs(tr2ax2))
   
 }
+```
 
-ggplot(effect_tol_frame_1, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerance of the species toward the environment (axis1)") + geom_text(aes(label=round(mean_corr, 2)))
+```{r}
+data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
+              cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
-ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerance of the species toward the environment (axis2)") + geom_text(aes(label=round(mean_corr, 2)))
+ggplot(data, aes(x=axis, y=value, fill=key)) + 
+    geom_boxplot() + 
+    facet_wrap(~spe) + 
+    ylab("Correlation (absolute value)") + 
+    xlab("") + 
+    theme_bw() +
+    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 5))) +
+    labs(fill = "Number of \n interactions")
+```
+
+```{r}
+fig1 <- ggplot(effect_tol_frame_1, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and  \n the tolerance of the species toward the environment (axis1)") + geom_text(aes(label=round(mean_corr, 2)))
+
+fig2 <- ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and \n the tolerance of the species toward the environment (axis2)") + geom_text(aes(label=round(mean_corr, 2)))
+
+ggarrange(fig1, fig2)
+
+ggsave(file = "frame_env.pdf", plot = ggarrange(fig1, fig2), width = 12.5, height = 6)
 ```
 
 ```{r}
@@ -923,18 +999,27 @@ ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fil
 
 ```{r}
 parameters <- c(2, 4, 10, 20)
-nb_rep = 50
+nb_rep = 5
 
 
-param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr1ax1) <- as.character(parameters)
+param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_l) <- as.character(parameters)
 
-param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr2ax2) <- as.character(parameters)
+param_tr2ax2_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_l) <- as.character(parameters)
+
+param_tr1ax1_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_c) <- as.character(parameters)
+
+param_tr2ax2_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_c) <- as.character(parameters)
+
 
 for (param in parameters) {
-  tr1ax1 <- c()
-  tr2ax2 <- c()
+  tr1ax1_l <- c()
+  tr1ax1_c <- c()
+  tr2ax2_l <- c()
+  tr2ax2_c <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
   mean_tol_env = 0.5
@@ -962,38 +1047,33 @@ for (param in parameters) {
       
     corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
-    tr1ax1 <- c(tr1ax1, corr_line[1,1])
-    tr2ax2 <- c(tr2ax2, corr_line[2,2])
-  }
-  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
-  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+    tr1ax1_l <- c(tr1ax1_l, corr_line[1,1])
+    tr2ax2_l <- c(tr2ax2_l, corr_line[2,2])
+    tr1ax1_c <- c(tr1ax1_c, corr_col[1,1])
+    tr2ax2_c <- c(tr2ax2_c, corr_col[2,2])
+    }
+  param_tr1ax1_l[,as.character(param)] <- abs(tr1ax1_l)
+  param_tr2ax2_l[,as.character(param)] <- abs(tr2ax2_l)
+  param_tr1ax1_c[,as.character(param)] <- abs(tr1ax1_c)
+  param_tr2ax2_c[,as.character(param)] <- abs(tr2ax2_c)
   
 }
-# param_tr1ax1
-boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on \n the   number of frames")
-# param_tr2ax2
-boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on \n the number of frames")
 
+data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
+              cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
+figure <- ggplot(data, aes(x=axis, y=value, fill=key)) + 
+    geom_boxplot() + 
+    facet_wrap(~spe) + 
+    ylab("Correlation (absolute value)") + 
+    xlab("") + 
+    theme_bw() +
+    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 4))) +
+    labs(fill = "Number of \n locations")
 
+figure
 
-# avec ggplot
-fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 1 Axis 1") +
-  ylab("Correlation") +
-  xlab("Number of locations sampled") +
-  theme_bw()
-fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 2 Axis 2") +
-  ylab("Correlation") +
-  xlab("Number of locations sampled") +
-  theme_bw()
-
-ggarrange(fig1, fig2)
-
-ggsave(file = "frame.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+ggsave(file = "figure_report/frame.pdf", plot = figure, width = 12, height = 8)
 ```
 
 ## test delta
@@ -1003,15 +1083,23 @@ parameters <- c(0, 0.01, 0.1, 0.2, 1, 2)
 nb_rep = 50
 
 
-param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr1ax1) <- as.character(parameters)
+param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_l) <- as.character(parameters)
 
-param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr2ax2) <- as.character(parameters)
+param_tr2ax2_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_l) <- as.character(parameters)
+
+param_tr1ax1_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_c) <- as.character(parameters)
+
+param_tr2ax2_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_c) <- as.character(parameters)
 
 for (param in parameters) {
-  tr1ax1 <- c()
-  tr2ax2 <- c()
+  tr1ax1_l <- c()
+  tr2ax2_l <- c()
+  tr1ax1_c <- c()
+  tr2ax2_c <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
   mean_tol_env = 0.5
@@ -1040,37 +1128,37 @@ for (param in parameters) {
       
     corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
-    tr1ax1 <- c(tr1ax1, corr_line[1,1])
-    tr2ax2 <- c(tr2ax2, corr_line[2,2])
+    tr1ax1_l <- c(tr1ax1_l, corr_line[1,1])
+    tr2ax2_l <- c(tr2ax2_l, corr_line[2,2])
+    tr1ax1_c <- c(tr1ax1_c, corr_col[1,1])
+    tr2ax2_c <- c(tr2ax2_c, corr_col[2,2])
   }
-  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
-  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+  param_tr1ax1_l[,as.character(param)] <- abs(tr1ax1_l)
+  param_tr2ax2_l[,as.character(param)] <- abs(tr2ax2_l)
+  param_tr1ax1_c[,as.character(param)] <- abs(tr1ax1_c)
+  param_tr2ax2_c[,as.character(param)] <- abs(tr2ax2_c)
   
 }
-# param_tr1ax1
-boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on delta")
-# param_tr2ax2
-boxplot(param_tr2ax2, ylim = c(0, 1), main = "Optimum trait 2 ax 2 correlation depending on delta")
 
+# ggsave(file = "delta.pdf", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+```
 
+```{r}
+data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
+              cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
-# avec ggplot
-fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 1 Axis 1") +
-  ylab("Correlation") +
-  xlab("Weight to trait matching (delta)") +
-  theme_bw()
-fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 2 Axis 2") +
-  ylab("Correlation") +
-  xlab("Weight to trait matching (delta)") +
-  theme_bw()
+figure <- ggplot(data, aes(x=axis, y=value, fill=key)) + 
+    geom_boxplot() + 
+    facet_wrap(~spe) + 
+    ylab("Correlation (absolute value)") + 
+    xlab("") + 
+    theme_bw() +
+    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 6))) +
+    labs(fill = "Delta")
 
-ggarrange(fig1, fig2)
+figure
 
-ggsave(file = "delta.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+ggsave(file = "figure_report/delta.pdf", plot = figure, width = 12, height = 8)
 ```
 
 ## test ratio_grad
@@ -1078,18 +1166,27 @@ ggsave(file = "delta.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
 ```{r}
 
 parameters <- c(0.1, 0.3, 0.5, 0.7, 0.9)
-nb_rep = 50
+nb_rep = 5
 
 
-param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr1ax1) <- as.character(parameters)
+param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_l) <- as.character(parameters)
 
-param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr2ax2) <- as.character(parameters)
+param_tr2ax2_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_l) <- as.character(parameters)
+
+param_tr1ax1_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_c) <- as.character(parameters)
+
+param_tr2ax2_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_c) <- as.character(parameters)
+
 
 for (param in parameters) {
-  tr1ax1 <- c()
-  tr2ax2 <- c()
+  tr1ax1_l <- c()
+  tr2ax2_l <- c()
+  tr1ax1_c <- c()
+  tr2ax2_c <- c()
   rv_distrib <- c()
   ratio_grad = param
   mean_tol_env = 0.5
@@ -1118,57 +1215,60 @@ for (param in parameters) {
       
     corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
-    tr1ax1 <- c(tr1ax1, corr_line[1,1])
-    tr2ax2 <- c(tr2ax2, corr_line[2,2])
+    tr1ax1_l <- c(tr1ax1_l, corr_line[1,1])
+    tr2ax2_l <- c(tr2ax2_l, corr_line[2,2])
+    tr1ax1_c <- c(tr1ax1_c, corr_col[1,1])
+    tr2ax2_c <- c(tr2ax2_c, corr_col[2,2])
   }
-  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
-  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+  param_tr1ax1_l[,as.character(param)] <- abs(tr1ax1_l)
+  param_tr2ax2_l[,as.character(param)] <- abs(tr2ax2_l)
+  param_tr1ax1_c[,as.character(param)] <- abs(tr1ax1_c)
+  param_tr2ax2_c[,as.character(param)] <- abs(tr2ax2_c)
   
 }
-# param_tr1ax1
-boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on trait importance ratio")
-# param_tr2ax2
-boxplot(param_tr2ax2, ylim = c(0, 1), main = "Optimum trait 2 ax 2 correlation depending on trait importance ratio")
 
+data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
+              cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
+figure <- ggplot(data, aes(x=axis, y=value, fill=key)) + 
+    geom_boxplot() + 
+    facet_wrap(~spe) + 
+    ylab("Correlation (absolute value)") + 
+    xlab("") + 
+    theme_bw() +
+    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 5))) +
+    labs(fill = "Ratio \ntrait2 / trait1")
 
+figure
 
-# avec ggplot
-fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 1 Axis 1") +
-  ylab("Correlation") +
-  xlab("Ratio between trait 1 and 2") +
-  theme_bw()
-fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 2 Axis 2") +
-  ylab("Correlation") +
-  xlab("Ratio between trait 1 and 2") +
-  theme_bw()
-
-ggarrange(fig1, fig2)
-
-
-ggsave(file = "grad.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+ggsave(file = "figure_report/ratio.pdf", plot = figure, width = 12, height = 8)
 ```
 
 ## test mean_tol
 
 ```{r}
 parameters <- c(0.01, 0.05, 0.1, 0.2, 0.3, 0.5)
-nb_rep = 50
+nb_rep = 5
 
 
-param_tr1ax1 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr1ax1) <- as.character(parameters)
+param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_l) <- as.character(parameters)
 
-param_tr2ax2 <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
-colnames(param_tr2ax2) <- as.character(parameters)
+param_tr2ax2_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_l) <- as.character(parameters)
+
+param_tr1ax1_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr1ax1_c) <- as.character(parameters)
+
+param_tr2ax2_c <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
+colnames(param_tr2ax2_c) <- as.character(parameters)
+
 
 for (param in parameters) {
-  tr1ax1 <- c()
-  tr2ax2 <- c()
+  tr1ax1_l <- c()
+  tr2ax2_l <- c()
+  tr1ax1_c <- c()
+  tr2ax2_c <- c()
   rv_distrib <- c()
   ratio_grad = 0.7
   mean_tol_env = 0.5
@@ -1197,39 +1297,35 @@ for (param in parameters) {
       
     corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
-    tr1ax1 <- c(tr1ax1, corr_line[1,1])
-    tr2ax2 <- c(tr2ax2, corr_line[2,2])
+    tr1ax1_l <- c(tr1ax1_l, corr_line[1,1])
+    tr2ax2_l <- c(tr2ax2_l, corr_line[2,2])
+    tr1ax1_c <- c(tr1ax1_c, corr_col[1,1])
+    tr2ax2_c <- c(tr2ax2_c, corr_col[2,2])
   }
-  param_tr1ax1[,as.character(param)] <- abs(tr1ax1)
-  param_tr2ax2[,as.character(param)] <- abs(tr2ax2)
+  param_tr1ax1_l[,as.character(param)] <- abs(tr1ax1_l)
+  param_tr2ax2_l[,as.character(param)] <- abs(tr2ax2_l)
+  param_tr1ax1_c[,as.character(param)] <- abs(tr1ax1_c)
+  param_tr2ax2_c[,as.character(param)] <- abs(tr2ax2_c)
   
 }
-# param_tr1ax1
-boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on mean_tol trait")
-# param_tr2ax2
-boxplot(param_tr2ax2, ylim = c(0, 1), main = "Optimum trait 2 ax 2 correlation depending on mean_tol trait")
 
 
+data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
+              cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
-# avec ggplot
-fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 1 Axis 1") +
-  ylab("Correlation") +
-  xlab("Mean trait tolerance") +
-  theme_bw()
-fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 2 Axis 2") +
-  ylab("Correlation") +
-  xlab("Mean trait tolerance") +
-  theme_bw()
+figure <- ggplot(data, aes(x=axis, y=value, fill=key)) + 
+    geom_boxplot() + 
+    facet_wrap(~spe) + 
+    ylab("Correlation (absolute value)") + 
+    xlab("") + 
+    theme_bw() +
+    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 6))) +
+    labs(fill = "Trait tolerence")
 
-ggarrange(fig1, fig2)
+figure
 
-ggsave(file = "trait.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+ggsave(file = "figure_report/trait.pdf", plot = figure, width = 12, height = 8)
 ```
-
 
 # Tester empiriquement reconstruction traits depuis trait matching th
 
