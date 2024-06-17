@@ -640,6 +640,11 @@ boxplot(abs(tr2ax2), ylim = c(0,1), main = paste0("Absolute correlation between 
 ```
 
 
+```{r}
+library(tidyr)
+library(ggpubr)
+```
+
 ## test of mean_tol_env
 
 ```{r}
@@ -696,7 +701,34 @@ for (param in parameters) {
 boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on mean tol env")
 # param_tr2ax2
 boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on mean tol env")
+
+
+
+# With ggplot
+
+fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 1 Axis 1") +
+  ylab("Correlation") +
+  xlab("Mean env tolerance") +
+  theme_bw()
+fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 2 Axis 2") +
+  ylab("Correlation") +
+  xlab("Mean env tolerance") +
+  theme_bw()
+
+ggarrange(fig1, fig2)
+
+
+ggsave(file = "env.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
 ```
+
+
+
+
+
 
 The correlation decreases when the mean_tol_env gets too high because, the consumers are gathered across a bigger niche and hence, there is less and maybe a sampling effect, we just need to increase magn_res_max
 
@@ -753,6 +785,25 @@ for (param in parameters) {
 boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on \n the   number of observations per frames")
 # param_tr2ax2
 boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on \n the number of observations per frames")
+
+
+
+# avec ggplot
+fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 1 Axis 1") +
+  ylab("Correlation") +
+  xlab("Number of interactions") +
+  theme_bw()
+fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 2 Axis 2") +
+  ylab("Correlation") +
+  xlab("Number of interactions") +
+  theme_bw()
+
+ggarrange(fig1, fig2)
+ggsave(file = "ninter.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
 ```
 
 ## test crossed effect nb_frame x mean_tol_env
@@ -808,9 +859,9 @@ for (r in 1:nrow(effect_tol_frame_1)) {
   
 }
 
-ggplot(effect_tol_frame_1, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerence of the species toward the environment (axis1)") + geom_text(aes(label=round(mean_corr, 2)))
+ggplot(effect_tol_frame_1, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerance of the species toward the environment (axis1)") + geom_text(aes(label=round(mean_corr, 2)))
 
-ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerence of the species toward the environment (axis2)") + geom_text(aes(label=round(mean_corr, 2)))
+ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerance of the species toward the environment (axis2)") + geom_text(aes(label=round(mean_corr, 2)))
 ```
 
 ```{r}
@@ -863,9 +914,9 @@ for (r in 1:nrow(effect_tol_frame_1)) {
   
 }
 
-ggplot(effect_tol_frame_1, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 100)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerence of the species toward the environment (axis1)") + geom_text(aes(label=round(mean_corr, 2)))
+ggplot(effect_tol_frame_1, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 100)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerance of the species toward the environment (axis1)") + geom_text(aes(label=round(mean_corr, 2)))
 
-ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 100)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerence of the species toward the environment (axis2)") + geom_text(aes(label=round(mean_corr, 2)))
+ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 100)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and the \n tolerance of the species toward the environment (axis2)") + geom_text(aes(label=round(mean_corr, 2)))
 ```
 
 ## test nb_frames
@@ -922,6 +973,27 @@ for (param in parameters) {
 boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on \n the   number of frames")
 # param_tr2ax2
 boxplot(param_tr2ax2, ylim = c(0, 1),main = "Optimum trait 2 ax 2 correlation depending on \n the number of frames")
+
+
+
+
+# avec ggplot
+fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 1 Axis 1") +
+  ylab("Correlation") +
+  xlab("Number of locations sampled") +
+  theme_bw()
+fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 2 Axis 2") +
+  ylab("Correlation") +
+  xlab("Number of locations sampled") +
+  theme_bw()
+
+ggarrange(fig1, fig2)
+
+ggsave(file = "frame.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
 ```
 
 ## test delta
@@ -979,6 +1051,26 @@ for (param in parameters) {
 boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on delta")
 # param_tr2ax2
 boxplot(param_tr2ax2, ylim = c(0, 1), main = "Optimum trait 2 ax 2 correlation depending on delta")
+
+
+
+# avec ggplot
+fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 1 Axis 1") +
+  ylab("Correlation") +
+  xlab("Weight to trait matching (delta)") +
+  theme_bw()
+fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 2 Axis 2") +
+  ylab("Correlation") +
+  xlab("Weight to trait matching (delta)") +
+  theme_bw()
+
+ggarrange(fig1, fig2)
+
+ggsave(file = "delta.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
 ```
 
 ## test ratio_grad
@@ -1037,6 +1129,28 @@ for (param in parameters) {
 boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on trait importance ratio")
 # param_tr2ax2
 boxplot(param_tr2ax2, ylim = c(0, 1), main = "Optimum trait 2 ax 2 correlation depending on trait importance ratio")
+
+
+
+
+# avec ggplot
+fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 1 Axis 1") +
+  ylab("Correlation") +
+  xlab("Ratio between trait 1 and 2") +
+  theme_bw()
+fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 2 Axis 2") +
+  ylab("Correlation") +
+  xlab("Ratio between trait 1 and 2") +
+  theme_bw()
+
+ggarrange(fig1, fig2)
+
+
+ggsave(file = "grad.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
 ```
 
 ## test mean_tol
@@ -1094,6 +1208,26 @@ for (param in parameters) {
 boxplot(param_tr1ax1, ylim = c(0, 1), main = "Optimum trait 1 ax 1 correlation depending on mean_tol trait")
 # param_tr2ax2
 boxplot(param_tr2ax2, ylim = c(0, 1), main = "Optimum trait 2 ax 2 correlation depending on mean_tol trait")
+
+
+
+# avec ggplot
+fig1 <- ggplot(gather(param_tr1ax1), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 1 Axis 1") +
+  ylab("Correlation") +
+  xlab("Mean trait tolerance") +
+  theme_bw()
+fig2 <- ggplot(gather(param_tr2ax2), aes(x = key, y = value)) + 
+  geom_boxplot() + 
+  ggtitle("Trait 2 Axis 2") +
+  ylab("Correlation") +
+  xlab("Mean trait tolerance") +
+  theme_bw()
+
+ggarrange(fig1, fig2)
+
+ggsave(file = "trait.svg", plot = ggarrange(fig1, fig2), width = 12, height = 8)
 ```
 
 
