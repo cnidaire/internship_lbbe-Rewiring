@@ -584,6 +584,35 @@ D'ici le 7 juin, finir au moins la partie la l'analyse des correspondances
 finir les méthodes et résultats avant le vendredi 14
 tout finir (remerciements, intro, conclusion, discussions, contributions) avant le vendredi 21
 
+
+## 12 juin objectifs du jour
+
+Je pense qu'il faudrait parler de la beta div mais je ne sais pas où
+
+Trouver un moyen de montrer mes contributions
+- [x] Network notations
+- [ ] results methods:
+	- [ ] reconstruction du trait matching
+	- [ ] méthodes de quantification de la reconstruction: permet de montrer que la méthode marche
+	- [ ] chercher paramètres optimums pour la reconstruction
+	- [ ] quantification of rewiring: objectif principal
+
+
+## 14 Juin
+
+Numéroter les équations
+- [ ] \begin{equation}
+- [ ] \label{lab_name}
+- [ ] \end{equation}
+- call with \autoref{lab_name}
+
+citep{}
+citet{}
+si cite plusieurs articles, dans même {} avec ,
+
+refaire le correlations avec le rewiring en regardant les traits séparément.
+
+
 # Todo list
 
 - [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
