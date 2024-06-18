@@ -649,8 +649,8 @@ library(paletteer)
 ## test of mean_tol_env
 
 ```{r}
-parameters <- c(0.01, 0.1, 1, 10, 100)
-nb_rep = 5
+parameters <- c(0.1, 0.3, 0.5, 0.7, 1)
+nb_rep = 50
 
 
 param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -726,26 +726,8 @@ figure <- ggplot(data, aes(x=axis, y=value, fill=key)) +
 
 figure
 
-ggsave(file = "figure_report/ninter.pdf", plot = figure, width = 12, height = 8)
+ggsave(file = "figure_report/env.pdf", plot = figure, width = 8, height = 4)
 ```
-
-```{r}
-library(paletteer)
-```
-
-
-```{r}
-
-
-ggsave(file = "env.pdf", plot = ggarrange(fig1, fig2), width = 12, height = 8)
-
-# paletteer_c("ggthemes::Orange", 5)
-```
-
-
-
-
-
 
 The correlation decreases when the mean_tol_env gets too high because, the consumers are gathered across a bigger niche and hence, there is less and maybe a sampling effect, we just need to increase magn_res_max
 
@@ -753,7 +735,7 @@ The correlation decreases when the mean_tol_env gets too high because, the consu
 
 ```{r}
 parameters <- c(250, 2500, 25000)
-nb_rep = 5
+nb_rep = 50
 
 
 param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -821,71 +803,46 @@ figure <- ggplot(data, aes(x=axis, y=value, fill=key)) +
     ylab("Correlation (absolute value)") + 
     xlab("") + 
     theme_bw() +
-    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 5))) +
+    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 3))) +
     labs(fill = "Number of \n interactions")
 
 figure
 
-ggsave(file = "figure_report/ninter.pdf", plot = figure, width = 12, height = 8)
-```
-
-
-```{r}
-# avec ggplot
-fig1 <- ggplot(gather(param_tr1ax1_l), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 1 Axis 1") +
-  ylab("Correlation") +
-  xlab("Number of interactions") +
-  theme_bw()
-fig2 <- ggplot(gather(param_tr2ax2_l), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 2 Axis 2") +
-  ylab("Correlation") +
-  xlab("Number of interactions") +
-  theme_bw()
-
-fig1 <- ggplot(gather(param_tr1ax1_c), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 1 Axis 1") +
-  ylab("Correlation") +
-  xlab("Number of interactions") +
-  theme_bw()
-fig2 <- ggplot(gather(param_tr2ax2_c), aes(x = key, y = value)) + 
-  geom_boxplot() + 
-  ggtitle("Trait 2 Axis 2") +
-  ylab("Correlation") +
-  xlab("Number of interactions") +
-  theme_bw()
-
-ggarrange(fig1, fig2)
-ggsave(file = "ninter.pdf", plot = ggarrange(fig1, fig2), width = 12, height = 8)
+ggsave(file = "figure_report/ninter.pdf", plot = figure, width = 8, height = 4)
 ```
 
 ## test crossed effect nb_frame x mean_tol_env
 
 ```{r}
 library(ggplot2)
-frames <- c(1, 2, 3, 5, 7, 10)
-tol_env <- c(0.1, 0.2, 0.3, 0.5, 0.7, 1)
+frames <- c(1, 3, 5, 7, 10)
+tol_env <- c(0.1, 0.3, 0.5, 0.7, 1)
 nb_rep = 50
 
-effect_tol_frame_1 = expand.grid(frame = frames, tol_env = tol_env)
-effect_tol_frame_2 = expand.grid(frame = frames, tol_env = tol_env)
+############### Initiate df with the different combiations ###############
 
-effect_tol_frame_1$mean_corr = 0
-effect_tol_frame_2$mean_corr = 0
+effect_tol_frame_1_r = expand.grid(frame = frames, tol_env = tol_env)
+effect_tol_frame_2_r = expand.grid(frame = frames, tol_env = tol_env)
+effect_tol_frame_1_r$mean_corr = 0
+effect_tol_frame_2_r$mean_corr = 0
 
+effect_tol_frame_1_c = expand.grid(frame = frames, tol_env = tol_env)
+effect_tol_frame_2_c = expand.grid(frame = frames, tol_env = tol_env)
+effect_tol_frame_1_c$mean_corr = 0
+effect_tol_frame_2_c$mean_corr = 0
 
-for (r in 1:nrow(effect_tol_frame_1)) {
-  tr1ax1 <- c()
-  tr2ax2 <- c()
-  rv_distrib <- c()
+############### Fill the df ###############
+
+for (r in 1:nrow(effect_tol_frame_1_c)) { # will go through each combinaton
+  tr1ax1_r <- c()
+  tr2ax2_r <- c()
+  tr1ax1_c <- c()
+  tr2ax2_c <- c()
   ratio_grad = 0.7
-  mean_tol_env = effect_tol_frame_1$tol_env[r]
-  ninter = 2500 / effect_tol_frame_1$frame[r]
+  mean_tol_env = effect_tol_frame_1_c$tol_env[r]
+  ninter = 2500 / effect_tol_frame_1_c$frame[r]
   # ninter = param
-  nb_frame = effect_tol_frame_1$frame[r]
+  nb_frame = effect_tol_frame_1_c$frame[r]
   
   for (i in 1:nb_rep) {
     spe_resource = 50
@@ -906,38 +863,51 @@ for (r in 1:nrow(effect_tol_frame_1)) {
     
     corr_line <- cor(simulated_network$trait$resource_giant_compo, afc.tab$li) # resource correlation with the rows of the CA depending on the axis
     corr_col <- cor(simulated_network$trait$consumer_giant_compo[,1,], afc.tab$co) # consumer correlation with the columns of the CA depending on the axis
-    tr1ax1 <- c(tr1ax1, corr_line[1,1])
-    tr2ax2 <- c(tr2ax2, corr_line[2,2])
-    # print(r)
+    tr1ax1_r <- c(tr1ax1_r, corr_line[1,1])
+    tr2ax2_r <- c(tr2ax2_r, corr_line[2,2])
+    tr1ax1_c <- c(tr1ax1_c, corr_col[1,1])
+    tr2ax2_c <- c(tr2ax2_c, corr_col[2,2])
   }
-  effect_tol_frame_1$mean_corr[r] <- mean(abs(tr1ax1))
-  effect_tol_frame_2$mean_corr[r] <- mean(abs(tr2ax2))
-  
+  effect_tol_frame_1_r$mean_corr[r] <- mean(abs(tr1ax1_r))
+  effect_tol_frame_2_r$mean_corr[r] <- mean(abs(tr2ax2_r))
+  effect_tol_frame_1_c$mean_corr[r] <- mean(abs(tr1ax1_c))
+  effect_tol_frame_2_c$mean_corr[r] <- mean(abs(tr2ax2_c))
+  print(r)
 }
 ```
 
 ```{r}
-data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
-              cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
+data <- rbind(
+  cbind(effect_tol_frame_1_r, Axis = as.factor("axis 1"), Species = as.factor("Resources")),
+  cbind(effect_tol_frame_2_r, Axis = as.factor("axis 2"), Species = as.factor("Resources")),
+  cbind(effect_tol_frame_1_c, Axis = as.factor("axis 1"), Species = as.factor("Consumers")),
+  cbind(effect_tol_frame_2_c, Axis = as.factor("axis 2"), Species = as.factor("Consumers")))
 
-ggplot(data, aes(x=axis, y=value, fill=key)) + 
-    geom_boxplot() + 
-    facet_wrap(~spe) + 
-    ylab("Correlation (absolute value)") + 
-    xlab("") + 
-    theme_bw() +
-    scale_fill_manual(values = rev(paletteer_c("grDevices::Sunset", 5))) +
-    labs(fill = "Number of \n interactions")
+data
+
+ggplot(data, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) +
+  facet_wrap(~ Species + Axis) +
+  geom_tile() + scale_fill_paletteer_c("grDevices::YlGnBu", direction = -1, limits = c(0, 1)) +
+  labs(x = "Number of frame",y = "Mean tolerance of the env niche") + 
+  geom_text(aes(label=round(mean_corr, 2)))
 ```
 
-```{r}
-fig1 <- ggplot(effect_tol_frame_1, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and  \n the tolerance of the species toward the environment (axis1)") + geom_text(aes(label=round(mean_corr, 2)))
 
-fig2 <- ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + geom_tile() + scale_fill_gradient(low = "white", high = "blue", limits = c(0, 1)) + labs(x = "number of frame",y = "mean tolerance of the env niche") + ggtitle("Trait recovering performance depending on the number of frames and \n the tolerance of the species toward the environment (axis2)") + geom_text(aes(label=round(mean_corr, 2)))
+
+```{r}
+fig1 <- ggplot(effect_tol_frame_1_r, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) +
+  geom_tile() + scale_fill_paletteer_c("grDevices::YlGnBu", direction = -1, limits = c(0, 1)) +
+  labs(x = "number of frame",y = "mean tolerance of the env niche") + 
+  geom_text(aes(label=round(mean_corr, 2)))
+
+fig2 <- ggplot(effect_tol_frame_2_r, aes(x = as.factor(frame), y = as.factor(tol_env), fill = mean_corr)) + 
+  geom_tile() + scale_fill_paletteer_c("grDevices::YlGnBu", direction = -1, limits = c(0, 1)) +
+  labs(x = "number of frame",y = "mean tolerance of the env niche") + 
+  geom_text(aes(label=round(mean_corr, 2)))
 
 ggarrange(fig1, fig2)
 
-ggsave(file = "frame_env.pdf", plot = ggarrange(fig1, fig2), width = 12.5, height = 6)
+ggsave(file = "figure_report/frame_env.pdf", plot = ggarrange(fig1, fig2), width = 8, height = 4)
 ```
 
 ```{r}
@@ -999,7 +969,7 @@ ggplot(effect_tol_frame_2, aes(x = as.factor(frame), y = as.factor(tol_env), fil
 
 ```{r}
 parameters <- c(2, 4, 10, 20)
-nb_rep = 5
+nb_rep = 50
 
 
 param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -1062,6 +1032,8 @@ for (param in parameters) {
 data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
               cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
+data$key <- as.factor(data$key)
+data$key <- ordered(data$key, levels = c("2", "4", "10", "20"))
 figure <- ggplot(data, aes(x=axis, y=value, fill=key)) + 
     geom_boxplot() + 
     facet_wrap(~spe) + 
@@ -1073,7 +1045,7 @@ figure <- ggplot(data, aes(x=axis, y=value, fill=key)) +
 
 figure
 
-ggsave(file = "figure_report/frame.pdf", plot = figure, width = 12, height = 8)
+ggsave(file = "figure_report/frame.pdf", plot = figure, width = 8, height = 4)
 ```
 
 ## test delta
@@ -1140,10 +1112,6 @@ for (param in parameters) {
   
 }
 
-# ggsave(file = "delta.pdf", plot = ggarrange(fig1, fig2), width = 12, height = 8)
-```
-
-```{r}
 data <- rbind(cbind(gather(param_tr1ax1_l), spe = as.factor("resource"), axis = as.factor("axis 1")), cbind(gather(param_tr1ax1_c), spe = as.factor("consumer"), axis = as.factor("axis 1")), 
               cbind(gather(param_tr2ax2_l), spe = as.factor("resource"), axis = as.factor("axis 2")), cbind(gather(param_tr2ax2_c), spe = as.factor("consumer"), axis = as.factor("axis 2")))
 
@@ -1158,15 +1126,14 @@ figure <- ggplot(data, aes(x=axis, y=value, fill=key)) +
 
 figure
 
-ggsave(file = "figure_report/delta.pdf", plot = figure, width = 12, height = 8)
+ggsave(file = "figure_report/delta.pdf", plot = figure, width = 8, height = 4)
 ```
 
 ## test ratio_grad
 
 ```{r}
-
 parameters <- c(0.1, 0.3, 0.5, 0.7, 0.9)
-nb_rep = 5
+nb_rep = 50
 
 
 param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -1241,14 +1208,14 @@ figure <- ggplot(data, aes(x=axis, y=value, fill=key)) +
 
 figure
 
-ggsave(file = "figure_report/ratio.pdf", plot = figure, width = 12, height = 8)
+ggsave(file = "figure_report/ratio.pdf", plot = figure, width = 8, height = 4)
 ```
 
 ## test mean_tol
 
 ```{r}
 parameters <- c(0.01, 0.05, 0.1, 0.2, 0.3, 0.5)
-nb_rep = 5
+nb_rep = 50
 
 
 param_tr1ax1_l <- data.frame(matrix(ncol = length(parameters), nrow = nb_rep))
@@ -1324,7 +1291,7 @@ figure <- ggplot(data, aes(x=axis, y=value, fill=key)) +
 
 figure
 
-ggsave(file = "figure_report/trait.pdf", plot = figure, width = 12, height = 8)
+ggsave(file = "figure_report/trait.pdf", plot = figure, width = 8, height = 4)
 ```
 
 # Tester empiriquement reconstruction traits depuis trait matching th
