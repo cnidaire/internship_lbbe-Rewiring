@@ -1,17 +1,18 @@
 \section{Methods}
 
 \subsection{Network notations}
-Let's consider a location and the resulting interactions of this sampling. We consider a bipartite network, meaning that the vertices can be divided into two disjoint ensembles $R$ and $C$ with $r$ resource species and $c$ consumer species, so there are no intra-group interactions. In this case, the resources and consumers do not imply a prédation. It can be plant/pollinators, host/parasites, or others as long as the network is bipartite.  All these interactions will be recorded in a two-way contingency matrix.
+A network is a mathematical object composed of  a set of vertices (in ecology, it often is individuals or genes) that are connected by edges representing their relations.
+Let's consider a location and the resulting interactions of this sampling. We consider a bipartite network, meaning that the vertices can be divided into two disjoint ensembles of vertices $R$ and $C$ with $r$ resource species and $c$ consumer species, so there are no intra-group interactions. In this case, the resources and consumers do not imply a prédation. It can be plant/pollinators, host/parasites, or others as long as the network is bipartite.  All these interactions will be recorded in a two-way contingency matrix.
 
 
-\citep{vadigepalli2003paint}
+\citet{vadigepalli2003paint}
 
 
 \subsection{Correspondence analysis}
 
 Introduction about CA
 
-Correspondence analysis (CA) (Hirschfield 1935, Hill 1974, Behnadi 2004: review), also known as reciprocal averaging is a multivariate statistical technique  primarily developed to analyze two-way contingency tables (for example the eye color's distribution against the hair color). It enables us to visualize the table in a lower dimensional space and put in evidence the relationship between the rows and the columns of the table.
+Correspondence analysis (CA) (Hirschfield 1935, \citet{hill_correspondence_1974}, Behnadi 2004: review), also known as reciprocal averaging is a multivariate statistical technique primarily developed to analyze two-way contingency tables (for example the eye color's distribution against the hair color). It enables us to visualize the table in a lower dimensional space and put in evidence the relationship between the rows and the columns of the table.
 
 It can be viewed as a three-step process. The first is obtaining the standardized residuals by computing the distances to the null (independence) model. The second one uses Singular Value Decomposition to get the axes containing the maximum variance. Finally, we select the axes holding the most information to reduce the dimensionality of the data and visualize these components in a lower dimensionality space using the coordinates obtained with the singular value decomposition.
 
@@ -21,7 +22,7 @@ $$
 \mathbf{P} = \left[ \frac{y_{ij}}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}} \right]
 $$
 
-The relative weights (marginal proportions ie. the sum of the columns and sum of the rows) of the row and columns of $\mathbf{P}$ are defined respectively as: 
+The relative weights (marginal proportions ie. the sum of the columns and the sum of the rows) of the row and columns of $\mathbf{P}$ are defined respectively as: 
 $$
     \mathbf{w}_c = \mathbf{P}1 = [p_{+1}, ... , p_{+j}] \quad \text{and} \quad \mathbf{w}_r = 1^\intercal\mathbf{P} = [p_{1+}, ... , p_{i+}]
 $$
@@ -38,7 +39,7 @@ $$
     \mathbf{W}_r = \text{diag}\left(\frac{1}{\sqrt{\mathbf{w}_r}}\right) \quad \text{and} \quad \mathbf{W}_c = \text{diag}\left(\frac{1}{\sqrt{\mathbf{w}_c}}\right)
 $$
 
-\subsubsection{1: Contribution to $\chi^2$ / distance to null model}
+\subsubsection{Contribution to $\chi^2$ / distance to null model}
 
 Let $\mathbf{P}_0$ be the $r\times c$ expected matrix under the null hypothesis that no relationship exists between the rows and the columns. We define $\mathbf{P}_0$ as:
 $$
@@ -50,9 +51,9 @@ $$
     \mathbf{S} = \mathbf{W}_r (\mathbf{P} - \mathbf{P}_0) \mathbf{W}_c
 $$
 
-\subsubsection{2: Single Value Decomposition}
+\subsubsection{Single Value Decomposition}
 
-Singular value decomposition (SVD) is a generalization of eigen-decomposition of rectangular matrices. It is widely used in fields like informatics for applications such as image compression. It enables the decomposition of the matrix into a sum of axes weighted by singular values, indicating the variance explained by each axis.
+Singular value decomposition (SVD) is a generalization of the eigen-decomposition of rectangular matrices. It is widely used in fields like informatics for applications such as image compression. It enables the decomposition of the matrix into a sum of axes weighted by singular values, indicating the variance explained by each axis.
 
 SVD enables the decomposition of a matrix such as the previous one under the form: 
 $$
@@ -76,22 +77,17 @@ Similarly, the principal coordinates for the columns are computed as:
 $$
     \mathbf{F}_c = \mathbf{W}_c \mathbf{V} \mathbf{\Sigma}
 $$ 
-PAS VRAIMENT FINI, À REVOIR AVEC STEPHANE OU LISA
-
-comment caluler le scores (poids x racine de lambda): la partie sur les coordonées avec les l1, c1
-
-*******************************
 
 
-\subsection{Foucart Correspondance analysis}
+\subsection{Foucart Correspondence analysis}
 
-Foucart Correspondance Analysis (Foucart COA) is a method used to analyze a series of contingency tables (Pavoine et al. 2007) crossing the same two variables (in our case consumers and resources).
+Foucart Correspondence Analysis (also called Foucart COA) is a method used to analyze a series of contingency tables (Pavoine et al. 2007) crossing the same two variables (in our case consumers and resources).
 It is divided into two steps, first unraveling the common structure and then the intra-structure of each contingency table.
 
 Let be $\mathbf{Y}_1, \ldots, \mathbf{Y}_k, \ldots, \mathbf{Y}_K$ be $K$ contingency tables with the same $R$ rows and $C$ columns: $\mathbf{Y}_k = [y_{ij}^k]$. 
 Let $(\mathbf{X}_1, \mathbf{D}_C^1, \mathbf{D}_R^1), \ldots, (\mathbf{X}_1, \mathbf{D}_C^k, \mathbf{D}_R^k), \ldots, (\mathbf{X}_1, \mathbf{D}_C^K, \mathbf{D}_R^K)$ be the $\mathbf{K}$ associated triplets.
 
-\paragraph{1: Common structure}
+\subsubsection{Common structure}
 
 In the first instance, we compute a regular CA as previously on the aggregation of the contingency tables.
 Let $\mathbf{C}^k = \left[ \frac{y_{ij}^k}{\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k} \right]$ be the frequency table associated with the $k^{th}$ contingency table $\mathbf{Y}_k$ where $\sum_{i=1}^{r} \sum_{j=1}^{c} y_{ij}^k$ is the grand total of the contingency table $\mathbf{Y}_k$.
@@ -101,7 +97,7 @@ $$
 $$
 and then compute the CA on the matrix $\mathbf{C}$.
 
-\paragraph{2: Intra-structure}
+\subsubsection{Intra-structure}
 
 Next, we project the rows and columns of each contingency table onto the axes of the analysis of the average table.
 
@@ -117,18 +113,18 @@ The projection of the rows is obtained by: $\left( (\mathbf{D}_I^k)^{-1}\mathbf{
 
 Realistic interaction network generation is a complex task and many ways exist to generate some such as random geometric graphs or dendritic networks. We must fully know the input used to create and generate many networks to validate the method.
 
-The simulation framework is based on Lisa Nicvert's thesis (à citer), itself based on Fründ et al 2016, Benadi et al 2022, Dray and Legrendre 2008.
+The simulation framework is based on Lisa Nicvert's thesis (à citer), itself based on Fründ et al 2016, Benadi et al 2022, and Dray and Legendre 2008.
 
 For the simulation, we assume that the frequency of the observed interaction for a given species is  the proxy of the relative abundances. We also assume that the interactions are solely based on a mixed effect of the trait matching and the abundance. We can understand this as the probability of two species encountering, which is the product of the abundance, times the probability of these two species interacting together based on their trait matching.
 
-Also, using a bipartite network assumes that there is no interaction intra-group but only inter-groups interactions. It includes competition, facilitation, and spatial exclusion.
+Also, using a bipartite network assumes that there is no interaction intra-group but only inter-group interactions. It includes competition, facilitation, and spatial exclusion.
 
 
 
 
-\subsubsection{a) Traits generation}
+\subsubsection{Traits generation}
 
-Interactions are shaped by trait matching in ecosystems (Vazquezet al 2009, Marjakangas et al 2022). To model these interactions, we need to generate traits for consumers and resources.
+Interactions are shaped by trait matching in ecosystems (Vazquez et al 2009, Marjakangas et al 2022). To model these interactions, we need to generate traits for consumers and resources.
 
 Parler d'autre façons de simuler des réseaux d'interactions réalistes et pourquoi est ce que l'on a besoin de créer notre propre model pour générer des réseaux.
 
@@ -145,7 +141,7 @@ $$
     \mathbf{PDF:} \quad \frac{1}{\sigma_i\sqrt{2\pi}} exp -\left(\frac{t_j^c-t_i^r}{2s_i^r}\right)^{\!2}\
 $$
 
-\subsubsection{b) Interaction probability based on trait matching}
+\subsubsection{Interaction probability based on trait matching}
 
 To compute the interaction probability solely based on trait matching, we assume that the interaction niche of the consumers follows a bivariate normal distribution defined by their traits. The likelihood of an interaction between a consumer and a resource to occur hence depends on the proximity of their optimums, which gives a notion of compatibility and the tolerance of the consumer's trait.
 
@@ -166,13 +162,13 @@ Cependant ici on dirait que ce n'est que la pdf de la fonction normale de l'un $
 
 
 
-\subsubsection{c) Abundances and environmental distribution}
+\subsubsection{Abundances and environmental distribution}
 
 
 
 In this section, we adopt the  Hutchinsonian definition of the environmental niche, which describes a species as a position of the species in an $n$-dimensional gradient, in our case we set $n=1$ to keep the simulation simple.
 
-We define an environmental gradient which can be interpreted as an environmental factor such as the humidity, soil resources availability, sun exposure, temperature, and the density of the environment. For example, it could be the altitude in the alpine environment, which is a proxy for global warming. Or it can be the time and hence the seasonality fluctuations for example.
+We define an environmental gradient which can be interpreted as an environmental factor such as the humidity, soil resources availability, sun exposure, temperature, and the density of the environment. For example, the altitude in the alpine environment could be a proxy for global warming. Or it can be the time and hence the seasonality fluctuations for example.
 
 Similarly to the trait, each species is assigned a position and a tolerance on this environmental gradient that we will respectively call $\mathbf{E}^c = e_{jk}^c$ and $\mathbf{E}^r = e_{ik}^r$ for the consumers and resources.
 
@@ -196,7 +192,7 @@ $$
     n_{ix}^c \thicksim Poisson(th\_a_{ix})
 $$
 
-\subsubsection{d) Interaction probability based on population size}
+\subsubsection{Interaction probability based on population size}
 
 We assume that the number of potential interactions in the network is proportional to the number of individuals, similar to how the speed of a reaction is proportional to the product of the reactant concentration. Therefore, we multiply the population size of consumers and resources for each network. 
 Hence, we define the neutral effect matrix/ mean-field matrix $\mathbf{A}$ as : 
@@ -205,7 +201,7 @@ $$
     \mathbf{A} = [a_{ij}] = a^r a^{c\intercal}
 $$
 
-\subsubsection{e) Integration of the trait matching and mean field}
+\subsubsection{Integration of the trait matching and mean field}
 
 The main assumption of this model is that species interactions are driven by both the relative abundance of the species and their compatibility regarding trait matching.
 
@@ -223,13 +219,13 @@ where:
 \item  $\sum_{i=1}^{r} \sum_{j=1}^{c}a_{ij}$ is a normalization constant ensuring that the elements of \(\mathbf{P}^*\) sum to 1.
 \end{itemize}
 
-The parameter $\delta$ allows the adjustment of the influence of trait matching in the model. When $\delta = 0$, the models rely only on the mean-filed (neutral) effect, meaning that there are no preferences, and as $\delta$ increases, the trait matching becomes the main driving factor of the interactions.
+The parameter $\delta$ allows the adjustment of the influence of trait matching in the model. When $\delta = 0$, the models rely only on the mean-filed (neutral) effect, meaning there are no preferences, and as $\delta$ increases, trait matching becomes the main driving factor of the interactions.
 
 
 
-\subsubsection{f) Sampling of the interactions based on the previous computed probability}
+\subsubsection{Sampling of the interactions based on the previously computed probability}
 
-To account for the bias in the sampling effort of the observed interaction, we sample $n_{inter}$ interactions using a multinomial distribution based on the probability matrix $\mathbf{P}$. The multinomial distribution with $\kappa = r \times c$ outcomes corresponding to the set of all the possible combinations of interactions.
+To account for the bias in the sampling effort of the observed interaction, we sample $n_{inter}$ interactions using a multinomial distribution based on the probability matrix $\mathbf{P}$. The multinomial distribution with $\kappa = r \times c$ outcomes corresponds to the set of all the possible combinations of interactions.
 
 The interaction counts are defined in the matrix $\mathbf{Z}$ as:
 
@@ -248,7 +244,7 @@ where:
 
 \subsection{Reconstruction of latent traits}
 
-To reconstruct the trait matching, we need to reverse the steps of the Correspondance Analysis. The same principle applies to the reconstruction of a Foucart CA as to the regular CA but we apply it to the  aggregation of the different frames since the traits of the species are supposed to be consistent across the frames.
+To reconstruct the trait matching, we need to reverse the steps of the Correspondence Analysis. The same principle applies to the reconstruction of a Foucart CA as to the regular CA but we apply it to the  aggregation of the different frames since the species' traits are supposed to be consistent across the frames.
 
 First, we examine the distribution of the singular values and determine a cut-off on the number of axes to eliminate the noise.
 
@@ -257,81 +253,58 @@ $$
     \mathbf{R} = \sum_{i=1} ^{k}\left( \mathbf{U}_{i,} \times \sigma_i \times \mathbf{V}_{i,}^\intercal \right)
 $$
 
-To retrieve the trait matching matrix, we need to remove the influence of abundances. We assumed that the number of interactions is proportional to the product of the relative abundances.  Thus, the best proxies for the relative abundance are the rows and columns sums.
-In Ca, there is a normalization by the rows and columns sums. Thus, by reconstructing the matrix, we expect to retrieve the trait-matching matrix.
+To retrieve the trait-matching matrix, we must remove the influence of abundance. We assumed that the number of interactions is proportional to the product of the relative abundances.  Thus, the best proxy for relative abundance are the rows and columns sums.
+
+In CA, there is a normalization by the rows and columns sums. Thus, by reconstructing the matrix, we expect to retrieve the trait-matching matrix.
 
 \subsection{Quantify trait matching}
 
-We consider two traits $x$ and $y$,
+In this section, we aim to quantify the performance of the Correspondence analysis in its ability to reconstruct the latent traits. We assume that the first axis is the proxy of the first trait and the second axis of the second trait. To do so, we look at the Pearson correlation coefficient between the theoretical trait given in input and the position. 
+
+A perfect recovery of the trait is indicated by $\lvert cor(trait_{th}, position)\rvert = 1$, denoting a perfect linear relationship. Conversely, a complete absence of recovery would be $\lvert cor(trait_{th}, position)\rvert = 0$, signifying no linear relationship. 
 
 
 \subsection{Research of reconstruction optimums}
 
-The input given to the simulation might unexpectedly impact the trait-matching performance. Therefore, we will look at the reconstruction performance between the first two traits and axes for the following parameters in these conditions on $50\times50$ networks:
+The input parameters given to the simulation might unexpectedly impact the trait-matching performance. Therefore, we will look at the reconstruction performance between the first two traits and axes for different parameter values in a $50\times50$ network. The parameters we will focus on will be:
+\begin{itemize}
+    \item $n_{inter\_tot}$: the total number of observations across all the sampling sites,
+    \item $n_{frames}$: the number of sampling sites,
+    \item $\delta$: the weight given to trait matching as described in the simulation section (mettre une ref),
+    \item $trait\_ratio$: the ratio between the amplitude of the first and the second trait,
+    \item $\mu_{tol\_env}$: the mean of the environmental tolerance of both consumers and resources (the gradient ranges from 0 to 1),
+    \item $\mu_{tol\_trait}$: the mean of the tolerance of the traits of the consumers (with the gradient ranging from 0 to 1).
+\end{itemize}
 
-I should add that only linear interaction between the parameters is expected but it is to check and see how to bring it together.
 
-expliquer pourquoi on fait les simu et ce que l'on veut observer et faire refrence à la table
-
-re-évaluer les optimums en homogeneisant les tests de parametres. et s'assurer que l'on a la même dimenssion pour les réseaux
-
-
-for a $50\times50$ network: 
-\begin{table}
+\begin{table}[H]
     \centering
-    \begin{tabular}{cccccc}
-           $n_{inter\_tot}$ &  $n_{frames}$&  $\delta$&  $trait\_ratio$&  $\mu_{tol\_env}$ & $\mu_{tol\_trait}$\\
-           $2500$&  $5$&  $0.2$&  $0.7$&  $0.5$& $0.2\\
-    \end{tabular}
-    \caption{Standard parameters}
-    \label{tab:my_label}
-\end{table}
-
-
-\begin{table}
-    \centering
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{ccccccc}
-         Experiment&  $n_{inter\_tot}$ &  $n_{frames}$&  $\delta$&  $trait\_ratio$&  $\mu_{tol\_env}$ & $\mu_{tol\_trait}$\\
-         $n_{inter}$&  $250, 2500, 25000$&  5&  $0.2$&  $0.7$&  $0.5$& $0.1$\\
-         $nb_{frames} \times \mu_{tol\_env}$&  $2500$&  $1,2,3,5,7,10$&  $0.2$&  $0.7$&  $0.1,0.3,0.5,0.7,1$& $0.1$\\
-         $\delta$&  $2500$&  5&  $0,0.01,0.1,0.2,1,2$&  $0.7$&  $0.5$& $0.1$\\
-         $trait\_ratio$&  $2500$&  $5$&  $0.2$&  $0.1,0.3,0.5,0.7,0.9$&  $0.5$& $0.1$\\
-         $\mu_{tol\_trait}$&  $2500$&  $5$&  $0.2$&  $0.7$&  $0.5$& $0.01,0.005,0.1,0.2,0.3,0.5$\end{tabular}
-    \caption{Caption}
-    \label{tab:my_label}
+         Experiment&  $n_{inter\_tot}$ &  $n_{frames}$ &$\mu_{tol\_env}$ &  $\delta$&  $trait\_ratio$& $\mu_{tol\_trait}$\\
+         $n_{inter}$&  $250, 2500, 25000$&  5 &$0.5$&  $0.2$&  $0.7$& $0.1$\\
+         $nb_{frames} \times \mu_{tol\_env}$&  $2500$&  $1,2,3,5,7,10$ &$0.1,0.3,0.5,0.7,1$&  $0.2$&  $0.7$& $0.1$\\
+         $\delta$&  $2500$&  5 &$0.5$&  $0,0.01,0.1,0.2,1,2$&  $0.7$& $0.1$\\
+         $trait\_ratio$&  $2500$&  $5$ &$0.5$&  $0.2$&  $0.1,0.3,0.5,0.7,0.9$& $0.1$\\
+         $\mu_{tol\_trait}$&  $2500$&  $5$ &$0.5$&  $0.2$&  $0.7$& $0.01,0.005,0.1,0.2,0.3,0.5$\\
+    \end{tabular}
+    }
+    \caption{Parameters for the experimentation}
+    \label{parameter_table}
 \end{table}
 
-
-
-\subsection{Quantification of rewiring using Beta diversity}
-
-explain beta diversity and the compartmentation of network beta diversity into species turnover and links turnover (rewiring). And then explain how the current species contribution to turnover is computed.
 
 
 \subsection{Quantification of rewiring using Foucart COA}
 
-CA will give close positions to the columns and the rows that have a similar interaction profile. Also, in the dual view, the rows and columns often seen in interaction together will have similar positions. When analyzing a series of networks with the Foucart CA, as we use the same axes to  project the networks separately, we can study the variation of the position as it means that the species interaction profile is changing.
+Rewiring refers to the ability of species to change their interaction profile over time or in different environments. Using the Foucart Correspondence Analysis, we can obtain the positions of species in each sampling by projecting the corresponding network onto the same axes. CA positions the columns and rows with similar interaction profiles close to each other in the lower dimensional space.
+We assume that the variance in the position of the CA is an estimator of the rewiring. As each position can be interpreted as a specific interaction profile., a high position's variance would imply a high diversity of the interaction profiles and hence a high level of rewiring.
 
-******************************************
+\subsection{Beta diversity and interaction turnover}
 
-What else should I say?  That we assume that the variance is closely related to the rewiring?
+Diverse ways can be used to describe a network. Historically, some of the most common metrics for bipartite ecological networks are connectance (the proportion of realized interactions over the ensemble of possible interactions), modularity (the degree to which edges are distributed within rather than between distinct sets of nodes), and link density (average number of links per node). While these metrics give a way to characterize a single network, they are limited when it comes to comparing networks among themselves.
 
-
-tester si une espèce qui fait beaucoup de rewiring sont des généraliste du point de vue niche env et/ou niche de traits, que sur les consomateurs car on n'a pas de notion de spécialisation pour les resources.
-
-\subsection{Contributions}
-
-Lisa used CA to analyze and reconstruct trait-matching on simulated networks in the single network case.
-
-I extended it to multiple networks along an environmental gradient using Foucart CA. I also extended her network generation method to add the environmental gradient to make the abundances vary accordingly.  
-
-******************************************
-
-\subsection{Beta diversity and interactions turnover}
-
-Diverse ways can be used to describe a network. Historically, some of the most common metrics for bipartite ecological networks are connectance (the proportion of realized interactions over the ensemble of possible interactions), modularity (the degree to which edges are distributed within rather than between distinct sets of nodes) and link density (average number of links per node). While these metrics give a way to characterize a single network, they are limited when it comes to comparing networks among themselves.
-
-Beta diversity, introduced by R.H.Whittaker in \cite{whittaker_vegetation_1960}, is an index ranging from 0 to 1 that measures the dissimilarity between two ecological communities. Let $A$ and $B$ be two realized communities. We define the beta diversity between these two communities as: 
+Beta diversity, introduced by R.H. Whittaker in \citet{whittaker_vegetation_1960}, is an index ranging from 0 to 1 that measures the dissimilarity between two ecological communities. Let $A$ and $B$ be two realized communities. We define the beta diversity between these two communities as: 
 $$
     \beta = \frac{a+b+c}{a+\frac{b}{2} + \frac{c}{2}} - 1
 $$
@@ -343,26 +316,21 @@ where :
     \item $c = ||A \notin B||$ is the number of species present only in the community $A$.
 \end{itemize}
 
-Beta diversity can be extended in the context of ecological networks and broken down into two main different measures to quantify dissimilarity \cite{poisot_dissimilarity_2012}:
+Beta diversity can be extended in the context of ecological networks and broken down into two main different measures to quantify dissimilarity \citet{poisot_dissimilarity_2012}:
 \begin{itemize}
     \item the dissimilarity in species composition ($\beta_S$), also called species turnover,
-    \item the the dissimilarity of interactions ($\beta_{WN}$).
+    \item the dissimilarity of interactions ($\beta_{WN}$).
 \end{itemize}
  The latter can be further decomposed into a dissimilarity of interactions due to species turnover ($\beta_{ST}$) and the dissimilarity of interactions within the set of species common to both networks ($\beta_{OS}$ also called rewiring) such that $\beta_{WN} = \beta_{ST} + \beta_{OS}$. 
 
-A recently published article by \cite{toju_interaction_2024} suggested a way to compute the species contribution to rewiring by removing each species one by one and computing the dissimilarity between the new $\beta_{OS,\Delta_i}$ and the original $\beta_{OS}$ as:
+A recently published article by \citet{toju_interaction_2024} suggested a way to compute the species contribution to rewiring by removing each species one by one and computing the dissimilarity between the new $\beta_{OS,\Delta_i}$, and the original $\beta_{OS}$ as:
 $$
     \Delta\beta_{OS,i} = \beta_{OS} - \beta_{OS,\Delta_i}
 $$
 
-******************************************
+\subsection{Contributions (where should I put it?)}
 
-Ajouter mes contribution et expliquer le mieux des deux
+Lisa Nicvert used CA to analyze and reconstruct trait-matching on simulated networks in the single network case.
 
-ajouter ce que l'on va faire pour les résultats.
+I extended it to multiple networks along an environmental gradient using Foucart CA. I also extended her network generation method to add the environmental gradient to make the abundances vary accordingly.
 
-
-The analysis have been conducted on R (version) using the packages ade4 for the correspondence analysis and data vizualisation with ggplot tidyr
-
-
-******************************************
