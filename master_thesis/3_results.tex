@@ -1,24 +1,160 @@
-\section{Analysis}
+\section{Results}
 
-\subsubsection{packages used}
+\subsection{packages used (in methods)}
 
-ase4 ggplot
+ade4 (1.7-22) for the computation of the Foucart Correspondence Analysis, ggplot2 (3.5.1) for the data visualization part, bipartite (2.19)
 
-\subsubsection{Trait matching reconstruction principle}
+\subsection{Evaluate reconstruction and optimum research (C'est en double, il faut fusionner avec celui des methodes}
 
-This should go in the methods part I think so that there is only results here.
+The efficiency of the Correspondence Analysis to recover the latent traits in the single network case has been well-documented by Lisa Nicvert. The goal here is to validate the multinetwork case, using Foucart's analysis.
 
-In order to reconstruct trait matching, we do the opposite of the single value decomposition, for each axis of Correspondence analysis obtained, we sum the product of the positions in line and column corresponding to the resources and the consumers, and this way we obtain the observed probability of interaction and we get rid of the noise by picking only the eigenvalues before the eigengap.
+In this section, we aim to evaluate the impact of the simulation parameters on the recovery of the latent traits within a series of networks. We performed 6 experiments to assess the effect of different factors:
+\begin{itemize}
+    \item the number of sampled interactions
+    \item the number of sampled locations
+    \item the environmental tolerance of the species
+    \item the crossed impact of the size of the environmental niche and the number of sampled locations
+    \item the weight given to trait matching in comparison to the mean-field effect
+    \item the ratio between the traits 1 and 2 and finally the trait tolerance
+\end{itemize}
 
-\subsubsection{Evaluate reconstruction}
 
-To evaluate the reconstruction performance, we look correlation between the reconstructed traits and the theoretical one coming from the input of the generated data.
 
-To evaluate the trait estimation there is a 4th corner statistic that I did not check yet, and I should because I only did a naive correlation test. It is apparently used to find the correlation between the traits and the environment.
 
-\subsubsection{Rewiring estimation}
 
-To evaluate the rewiring, we decided to take the approach of looking at the variance of the species location in the different projections of the networks across the environmental gradient. 
-As there is a normalization by the weight of the columns and lines, and there is a filtration on the eigen there is a denoising effect.
 
-As in the CA, the resources and consumers that are close in the CA projection tend to interact more together.
+
+\subsection{make a small intro!}
+
+The performance was assessed by computing the mean correlation between trait one and the first axis position and similarly for the second trait and axis.
+
+
+
+\subsubsection{Effect of the number of interactions ($n_{inter\_tot}$)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{FIGURES/ninter.pdf}
+    \caption{Evaluation of the reconstruction of the trait depending on the total number of interactions observed (50 consumer species, 50 resource species, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$ and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:ninter}
+\end{figure}
+
+The recovery of the traits increases with the number of interactions sampled across all the networks. Specifically, trait recovery is significantly higher when there is an equivalent of one observation per potential interaction. With ten times more observation, the improvement is marginal.
+
+\subsubsection{Joint influence of the number of sampled locations and the environmental tolerance ($n_{frame} \times \mu_{tol\_env}$)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{FIGURES/frame_env.pdf}
+    \caption{Evaluation of the reconstruction of the trait depending on the crossed effect of the number of sites and the environmental tolerance (50 consumer species, 50 resource species, $n_{inter\_tot} = 2500$, $\delta =  0.2$, $trait\_ratio = 0.7$ and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:frame_env}
+\end{figure}
+
+The trait recovery significantly decreases when the number of sampled locations increases from one to two and for the low environmental tolerance values ($\mu_{tol\_env} < 0.7$). However, as the number of sampled sites continues to increase, trait recovery improves and matches the recovery observed in a single sampled site. Also, the trait recovery improves with higher environmental tolerance of the niche. When the mean environmental tolerance is $0.5$ or higher, the number of sampled sites no longer has a significant impact on the trait recovery.
+
+
+
+\subsubsection{Effect of the weight given to trait matching ($\delta$)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{FIGURES/delta.pdf}
+    \caption{Evaluation of the reconstruction of the trait depending on the weight given to trait matching (delta) (50 consumer species, 50 resource species, $n_{inter\_tot} = 2500$, $n_{frame} = 5$,$trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$ and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:delta}
+\end{figure}
+
+Trait recovery increases with the weight given to trait matching ($\delta$) up to $\delta = 0.2$ after which it decreases when the trait matching is too important ($\delta = 2).$
+
+
+
+\subsubsection{Effect of the relative weight given to the traits ($trait\_ratio$)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{FIGURES/ratio.pdf}
+    \caption{Evaluation of the reconstruction of the trait depending on the ratio between the first and the second trait (50 consumer species, 50 resource species, $n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $\mu_{tol\_env} = 0.5$ and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:trait_ratio}
+\end{figure}
+
+When most of the weight is given to the first trait, the correlation between the first axis and the first trait is the highest, while the correlation between the second axis and the second trait is the lowest. As the weight given to the second trait increases, the correlation between the first axis and the first trait decreases, and the correlation between the second trait and the second axis increases.
+
+
+\subsubsection{Effect of the trait tolerance ($\mu_{tol\_trait}$)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{FIGURES/trait.pdf}
+    \caption{Evaluation of the reconstruction of the trait depending on trait tolerance (50 consumer species, 50 resource species, $n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$ and $\mu_{tol\_env} = 0.5$)}
+    \label{fig:tol_env}
+\end{figure}
+
+The recovery of the traits decreases with increasing trait tolerance ($\mu_{tol\_trait}$). Notably, the trait recovery drastically decreases when $\mu_{tol\_trait}$ exceeds  $0.2$.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+% \subsection{Summary of the Results}
+
+% The impact of the parameters is similar for both consumers and resources. The behavior of the first and second traits is also similar, except for the trait ratio, where the reconstruction of the first trait decreases as the ratio increases, while the second trait's reconstruction improves.
+
+% The number of sampled locations does not significantly change the reconstruction of traits when the environmental tolerance is high (0.5 or greater). However, the reconstruction is more efficient for lower environmental tolerance with either one or many more sampled locations.
+
+% Regarding the weight given to trait matching ($\delta$), a low weight results in poor reconstruction. The reconstruction improves as the weight increases up to 0.2-1 and then decreases.
+
+% Increasing trait tolerance seems to decrease the ability to reconstruct latent traits. However, increasing the sampling effort improves the reconstruction capability.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Donner les informations sur les param des simu pour chaque légende
+
+raconter une histoire sur pourquoi est ce queue l'on reconstruit le trait matching.
+
+expliquer pourquoi est ce queue il 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Rewiring estimation}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{FIGURES/rewiring.pdf}
+    \caption{Comparison of rewiring estimation with the correspondence analysis and with the $\beta$ diversity contribution ($n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:enter-label}
+\end{figure}
+
+It seems that there is no correlation between the variance of the position in the CA and the individual contribution to the Beta diversity of link turnover the way it is computed in the article of Toju et al either for the .
+
+
+Add 
+
+
+then quickly show if there is a correlation between the consumer's trait variance and the environmental niche (in this case, it can be done for the resources and the consumers as the data is available). And it seems that there is no pattern appearing.
+
+
+\subsection{Origin rewiring}
+
+\subsubsection{Environment}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{FIGURES/impact_env.pdf}
+    \caption{Effect of the environmental tolerance on the observed position's variance in the CA ($n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\subsubsection{Trait}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{FIGURES/impact_trait_tol.pdf}
+    \caption{Effect of the trait tolerance ($n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:enter-label}
+\end{figure}
