@@ -17,18 +17,16 @@ In Figure \ref{fig:trait_ratio}, we observe that the recovery of trait 1 with ax
 
 
 In Figure \ref{fig:tol_trait} we observe that trait recovery decreases as trait tolerance increases.
-This may be explained by the fact that the sharper peak of the optimum of the traits indicates more specialized species, making it easier to accurately locate the trait optimum. However, with higher trait tolerance, the probability of slightly miss-positioning the trait optimum increases. Such mispositioning can make minor switches of the trait order and thus significantly reduce the correlation.
+This may be explained by the fact that the sharper peak of the optimum of the traits indicates more specialized species, making it easier to accurately locate the trait optimum. However, with higher trait tolerance, the probability of slightly miss-positioning the trait optimum increases. Such mispositioning can make minor switches in the trait order and thus significantly reduce the correlation.
 
 
 
-The absence of correlation with the method of Toju et al in figure \ref{fig:toju} is not a finality on its own, as the way of computing it is not so clean and the current gold standard metric is the beta diversity for the turnover of the interactions at the network scale. However, the way of computing the $\beta_{rewiring}$ diversity is based on the fact that some of the species are present in one frame and not in the other. Therefore it only takes into account the species disappearance and ignores the fluctuations in abundance that do not lead to the absence of interactions. Hence many species are accounted for in species turnover, greatly underestimating the portion of the beta diversity due to rewiring. Likewise, we think that the proportion due to rewiring (turnover of the interactions) is overestimated.
 
-This is the easiest proxy for the abundance to obtain. However, with the AFC, we can estimate the relative abundances assuming that the abundance for one species is proportional to the number of interactions of this species.
+As said previously, the current gold standard for computing the rewiring is the beta link diversity due to the turnover of links ($\beta_{OS}$). However, in this case, $\beta_{OS}$ is considered to encompass all the beta link diversity that is not attributable to the turnover of the species. However, the definition of rewiring as defined by $\beta_{OS}$ is very restrictive as it is considered that there is some interactions interaction turnover due to species turnover only when some species interacting in one network are not observed in the second one. Since the variations in abundance are not considered, this method likely overestimates $\beta_{OS}$, while underestimating species turnover.
 
-The downside is that first, this hypothesis may overestimate/underestimate the abundances of the species depending on if these are in an extremity of the environmental gradient.
+Therefore, the absence of correlation is not a finality and is not conclusive on its own. Using Correspondence Analysis (CA), we account for species turnover by assuming that species abundance is proportional to the associated number of interactions observed in the network. This approach would offer a better understanding of beta diversity and interaction turnover.
 
 
-One of our hypotheses was that the rewiring as we think about it right now is only an effect of the abundance variation as well as a strong sampling bias.
 
 
 % Downside of this network generation: Not really realistic that only depends on the abundances and the trait matching because even if we assume that we are at equilibrium on a local scale, taking the same network and removing one species would imply that the depending ones will starve. Whereas it would most likely just make more interactions with others and this is not taken into account and this is what I would call rewiring.
@@ -52,3 +50,5 @@ In the figures \ref{fig:effect_env} and \ref{fig:effect_trait}, it appears that 
 It could be explained by the fact that the CA is reconstructing the trait and we expected it to be analogous to the interaction profile of the species. Hence, it can be considered that the methods work too well to reconstruct the trait matching and hence there is not enough variation in the position when it is interacting with other species with similar traits hence we do not see this shift and it remains stable.
 
 Hence, the Foucart Ca is working well to recover the latent traits of the species in the case of a series of networks, however, it can not be extended to study the rewiring capability of the species in the network. 
+
+
