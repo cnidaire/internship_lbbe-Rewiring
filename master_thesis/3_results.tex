@@ -85,7 +85,7 @@ When most of the weight is given to the first trait, the correlation between the
     \centering
     \includegraphics[width=0.75\linewidth]{FIGURES/trait.pdf}
     \caption{Evaluation of the reconstruction of the trait depending on trait tolerance (50 consumer species, 50 resource species, $n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$ and $\mu_{tol\_env} = 0.5$)}
-    \label{fig:tol_env}
+    \label{fig:tol_trait}
 \end{figure}
 
 The recovery of the traits decreases with increasing trait tolerance ($\mu_{tol\_trait}$). Notably, the trait recovery drastically decreases when $\mu_{tol\_trait}$ exceeds  $0.2$.
@@ -120,41 +120,39 @@ expliquer pourquoi est ce queue il
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Rewiring estimation}
+\subsection{Rewiring estimation: correlation of the $\beta$ diversity contribution $\Delta_{OS}$ and the position's variance in the Correspondence Analysis}
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{FIGURES/rewiring.pdf}
-    \caption{Comparison of rewiring estimation with the correspondence analysis and with the $\beta$ diversity contribution ($n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$and $\mu_{tol\_trait} = 0.1$)}
-    \label{fig:enter-label}
+    \caption{Comparison of rewiring estimation with the correspondence analysis and with the $\beta$ diversity rewiring contribution (100 consumer species, 100 resource species, $n_{inter\_tot} = 10000$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:toju}
 \end{figure}
 
-It seems that there is no correlation between the variance of the position in the CA and the individual contribution to the Beta diversity of link turnover the way it is computed in the article of Toju et al either for the .
+There appears to be no correlation between the variance of position in the Correspondence Analysis and the individual contribution to the $\beta$ diversity of link turnover the way it is computed in the article of \citep{toju_interaction_2024}. This lack of correlation is observed for both consumers and resources. The range of the $\Delta_{OS}$ is approximately of order $10^{-5}$ while the variance in position has a range of order $0.02$.
 
 
-Add 
 
-
-then quickly show if there is a correlation between the consumer's trait variance and the environmental niche (in this case, it can be done for the resources and the consumers as the data is available). And it seems that there is no pattern appearing.
-
-
-\subsection{Origin rewiring}
+\subsection{Origin of rewiring}
 
 \subsubsection{Environment}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{FIGURES/impact_env.pdf}
-    \caption{Effect of the environmental tolerance on the observed position's variance in the CA ($n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$and $\mu_{tol\_trait} = 0.1$)}
-    \label{fig:enter-label}
+    \caption{Effect of the environmental tolerance on the observed position's variance in the CA (500 consumer species, 500 resource species, $n_{inter\_tot} = 25000$, $n_{frame} = 10$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$ and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:effect_env}
 \end{figure}
 
+The position's variance increases when the environmental tolerance ($\mu_{tol\_env}$) is low ($\mu_{tol\_env} < 0.5$), beyond this threshold, the position's variance no longer increases with the environmental tolerance and stabilizes at $1$. 
 
 \subsubsection{Trait}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{FIGURES/impact_trait_tol.pdf}
-    \caption{Effect of the trait tolerance ($n_{inter\_tot} = 2500$, $n_{frame} = 5$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$and $\mu_{tol\_trait} = 0.1$)}
-    \label{fig:enter-label}
+    \caption{Effect of the trait tolerance on the observed position's variance in the CA (500 consumer species, 500 resource species, $n_{inter\_tot} = 25000$, $n_{frame} = 10$, $\delta =  0.2$, $trait\_ratio = 0.7$, $\mu_{tol\_env} = 0.5$ and $\mu_{tol\_trait} = 0.1$)}
+    \label{fig:effect_trait}
 \end{figure}
+
+There appears to be no significant relationship between trait tolerance ($\mu_{tol\_trait}$)and the variance in the correspondence analysis. The environmental tolerance remains stable at around $0.9$.
