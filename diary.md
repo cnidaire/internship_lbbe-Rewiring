@@ -612,68 +612,54 @@ si cite plusieurs articles, dans même {} avec ,
 
 refaire le correlations avec le rewiring en regardant les traits séparément.
 
+## 20 juin
 
-# Todo list
-
-- [ ] ajouter une légère correlation entre de certains traits avec le gradient environnemental.  **Il y a un lieu entre largeur de niche et le degré de spécialisation, plus un individu à des traits "tolerant" plus il pourra s'adapter à des environnements différents et aura une niche large** Pour répondre à ça: "*Abundance and generalisation in mutualistic networks: solving the chicken-and-egg dilemma*" et faire en sorte que les généralistes soient plus abondants ou que il y ait au moins un lien entre les deux
-- [x] ne plus trier en fonction des optimums de niche théoriques mais en fonction de leurs ordre sur le premier axe de l'AFC. En théorie même résultat mais c'est ce que l'on ferait sur des données de terrain.
-- [ ] différentes approches comme AFC, métriques (nestedness, motifs, modularity, degree moyen), beta div afin de comparer des réseaux
-- [ ] lire bersier et al 2012 et abundances and generalization in mutualistic networks solving the chicken and egg dilemma
-- [x] Il y a encore une correlation entre généraliste et en moyenne une plus faible abondance vu que j'utilise dnrm. Il faudrait donc fixer le max et ensuite multiplier par le dnorm selon la variance. Ainsi pour fixer le pique, ce serait peut-être bien de  faire dnorm/dnorm_max
-- [x] regarder les connected components et travailler seulement sur la composante géante
-	- [x] pour ça regarder is.connected et components (pour obtenir les connected components) dans le package bipartite.
-- [ ] teste et regarder les papiers notamment en physique sur l’émergence de la composante géante (aussi appelée percolation)
-- [ ] tester d'aller au delà de la limite de percolation dans les simulations
-
-
-inférer le vrai réseau et comparer en se basant sur le vrai réseau obtenu avec l'AFC et monter que même si le réseau observé est différent, le trait matching est similaire
-
-données caradonna
-
-correlation entre le co / le li et les traits
-
-jouer avec le delta et peut être les faire varier (genre les fixer à 0 pour la moité) et regarder si il est toujours possible d'obtenir le trait matching à partir de ça.
-
-
-
+- [x] define a graph as an ensemble of vertices and edges
+- [ ] add a citation of modularity
+- [x] préciser les paramètres en dessous des figures
+- [x] détailler chacun des paramètres de la simulation dans les méthodes
+- [x] finir de décrire les figures dans les résultats
+- [x] ajouter la partie contributions aux méthodes
+- [ ] relire les méthodes en entier et ajouter les références.
+- [ ] mettre les hypotheses de départ: 
+	- [ ] un meilleur échantillonnage permet une meilleure reconstruction des traits
+	- [ ] un nombre de frames important permet de mieux approximer les traits
+	- [ ] il y a un optimum pour la tolérance des traits et de l’environnement
+	- [ ] the relative weight does not impact the capability of retrieving the traits
+- [ ] rewiring
+	- [ ] we expect a correlation between the position's variance and the beta diversity contribution
+	- [ ] we expect that a high environmental tolerance and trait tolerance are required to be able to do rewiring
+- [ ] définir transposée
+- [ ] mieux définir les triplets dans l'analyse de Foucart
+- [ ] définir les vecteurs d'abondance dans le 2.4.3
+- [ ] augmenter taille du texte
+- [ ] faire attention avec significantly
 
 
-- [ ] reprendre simu et garder giant connected
+## 28 juin
 
-- [ ] est ce que les espèces interagissent de manière random ou non et pouvoir quantifier le changement de role des espèces entre les réseaux
+15 minutes de présentation et 5 minutes de questions 
 
-- [ ] regarder la variance des interactions entre espèces en regardant le nombre d'interaction selon les abondances des deux espèce (le proxy, ce serait le nombre d'interactions observées pour chacune des espèces) regarder si juste effet ligne + effet colonne ou si autre effet
-
-- [x] attention, haute moyenne = plus haute variance
-
-- [ ] puis regarder si le rôle change
-
-- [ ] regarder si les abondances des autres personnes avec lequel il interagit varie: regarder le turnover des abondances
-
-- [ ] regarder ce qui change 
-
-- [ ] regarder quel est les points qui sortent toujours de l'AFC 
-
-- [ ] regarder si les proportion entre les espèces restent constante 
-
-frund distance beta st distance sur le gradient environmental, regarder sensibilité au delta
-beta os correspondrait au rewiring et serait donc attendu proche de 0, si on peut montrer qu'il est observé dans des réseaux générés dans lesquels il n'y a pas de rewiring: bingo!
-regarder méthodes etude rewiring
-
-quest que le rewiring 
-méthodes usuelles analyse rewiring (mesure de beta)
-
-
+plan présentation orale:
+- Situer pourquoi est ce que c'est important de pouvoir prédire les interactions dans un environment qui change : loss biodiv and global warming -> shift of the ecological niches
+- expliquer les facteurs qui permettent de prédire les interactions
+	- Abundances 
+	- trait matching
+	- spatio-temporal distribution
+	- other to characterize: rewiring ! (def and what are affecting the rewiring : look at tolerance )
+- montrer la méthode actuelle pour calculer le rewiring
+	- turnover links due to species turnover
+	- turnover links due to links turnover
+	- negatives points: overestimates abundances effect and network scale
+- partie giga rapide sur la CA  pour les traits -> donne une position selon profil d'interaction (reconstruction des traits)
+	- pool close the species that have a similar interaction profile
+- puis foucart CA pour expliquer le fonctionnement sans les détails
+	- enables to project each network on common axes enabling to observe the species positions on each network
+- résultats sur la corrélation avec les tolérances et avec une autre method: Toju (que je n'expliquerais pas)
+- Pourquoi est ce que la méthode ne fonctionne pas. (reconstruction des traits, ne permet pas de détecter les modifications quand les espèces sont équivalentes) (par example si tout les partenaires changent la position peut être la même si ils ont eux même le même type d'interactions: ce qui est la cas au vu de leurs traits)
+	- ce qui n'a peut-être pas été pris en compte, c'est la pression due à la survie: si les espèces ne peuvent plus se nourrir, alors elle vont interagir avec des espèces moins favorables pour survivre (plus que ce que le trait matching et les abondances laissent deviner). Dans ce cas l'AFC serait probablement en capacité de détecter  des variation de positions. mais pas pris en compte par la simulation.
+		- causes du rewiring restent mal identifiées.
+- Perspectives avec la beta diversité.
 
 
-- [x] regarder la correlation entre les traits plantes avec les lignes obtenues
-- [x] même chose pour le colonnes et les traits des pollinisateurs
-- [ ] regarder la corrélations des moyennes avec les axes avec des boxplots quand on fait plusieurs tirages
-	- [ ] **étudier la dépendance de ces correlations avec les paramètres d'entrée**
-- [ ] faire une heatmap afin de comparer le trait matching th avec celui reconstruit
-- [ ] faire varier delta et évaluer l'impact sur la capacité à évaluer les traits
-- [x] corréler un/les traits au gradient environnemental: $t_2=a^2t_1+(1-a)^2*\epsilon$
-- [ ] trouver des métriques telles que le nombre d'espèces aillant leur trait moyen à l’intérieur de deux écarts types ($\Leftrightarrow 95.45$), et regarder ensuite le lien avec le changement de role (position dans l'AFC) selon la largeur de la niche.
-- [ ] **Ce qui nous intéresse, j'ai plus l'impression que c'est la matrice de trait matching plutôt que de retrouver les trait donc si on arrive à quasi la reconstruire, c'est gagné même si les traits sont répartis entre les 2-4 premiers axes tant que l'on arrive à reconstruire le trait matching th**
-- [ ] regarder le "volume" en n dimension occupé par l'espèce pour voir le changement de rôle dans les différentes frames
-- [ ] Essayer de trouver un moyen de connaitre % d'explication des axes pour l'AFC
+est ce que je calle que j'ai créé un package pour générer des réseaux aléatoires.
