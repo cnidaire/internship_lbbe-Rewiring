@@ -1,104 +1,13 @@
 \section{Conclusion and discussion}
 
-As expected, Figure \ref{fig:ninter} demonstrates that an increasing number of interactions enables better reconstruction of the traits, by reducing the stochasticity of the sampling effect.
 
+The initial problem was: can Lisa Nicvert's method \citep{these_lisa_2024}, which uses Correspondence Analysis to estimate the latent traits of the species (related to the interaction profile) and efficiently discards the effect of the abundance, be extended to quantify interaction rewiring in changing environmental conditions from a series of networks using Foucart Correspondence Analysis (Foucart CA).
 
-Examining the joint influence depicted in Figure \ref{fig:frame_env}, we observe that reconstruction is better for low environmental tolerance values when there is only one sampling location. This is because a single sampled location is placed in the middle of the environmental gradient. With two locations, they are positioned at the two extremities of the gradient. When more locations are included, they are evenly spaced with the first one at the beginning and the last one at the end of the gradient. 
-Since all optima are included in the range of the environmental gradient ($0 < \mu_{tol\_env} < 1$), placing the sampled location in the middle of the gradient results in most species being represented. However, with two locations, some species tend to be missed in each network, leading to nearly disjoint sets of species in the networks. This disjointedness is reinforced by the sampling effect getting stronger (as the total number of observations is fixed), making it challenging for the Foucart CA to find common axes for both networks and explaining the drop in trait recovery.
+As predicted, we found that Foucart CA is capable of reconstructing latent traits in the multiple network case. However, we did not find a correlation with the individual $\Delta_{OS}$ as defined by \cite{toju_interaction_2024}, nor did we find an effect of the environmental and trait tolerance on the rewiring capability (except for very low environmental tolerances). 
+This can be explained by the fact that while Foucart CA positions a species based on its interaction profile, it is unable to detect modifications in the interaction profile when changing partners have similar traits. Hence the absence of the effect of environmental and trait tolerance on the Foucart CA position's variance can not be transposed to the rewiring capacity.
 
-Increasing the number of frames leads to intermediate networks and a finer description of all the species across the environmental gradient, which explains the better performance of trait recovery. Similarly, a higher mean environmental tolerance, results in a more uniform species abundances across the different sampling locations, thus enhancing the trait recovery.
+Therefore, Foucart CA is not a suitable method for studying individual interaction rewiring. 
+Nonetheless, the individual contribution to rewiring defined by \cite{toju_interaction_2024} has several limitations and should be reconsidered for many reasons. It requires heavy computation when applied to large networks. Additionally, the sum of the individual contributions to rewiring does not equate to the global link beta diversity due to interaction turnover. Finally, it is based on the definition given by \cite{poisot_dissimilarity_2012} that considers species turnover only in terms of presence and absence, thus poorly estimating the abundance effect and leading to an overestimation of rewiring by partially attributing the abundance effects.
 
-
-In Figure \ref{fig:delta}, an increasing weight given to trait matching initially reduces the stochasticity caused by the mean-field effect of the abundances. However, the trait recovery decreases beyond a certain point. This decline might be due to a decreasing diversity of the species in the interaction profile, i.e., only the species present and with the best trait matching will be observed. Thus it will be hard to find common axes.
-
-
-In Figure \ref{fig:trait_ratio}, we observe that the recovery of trait 1 with axis 1 decreases as the recovery of trait 2 with axis 2 increases, although the recovery for trait 2 does not reach the same level as trait 1. This discrepancy arises because axis 1 is a composite that holds information about both traits. The overall recovery of the trait information remains constant. However, as we increase the weight given to the second trait, axis 1 increasingly reflects information about the second trait while the second axis becomes more representative of the first trait.
-
-
-
-In Figure \ref{fig:tol_trait}, we observe that trait recovery decreases as trait tolerance increases.
-This may be explained by the fact that the sharper peak of the optimum of the traits indicates more specialized species, making it easier to accurately locate the trait optimum. However, with higher trait tolerance, the probability of slightly mispositioning the trait optimum increases. Such mispositioning can make minor switches in the trait order and thus significantly reduce the correlation.
-
-
-
-
-As mentioned previously, the current gold standard for computing rewiring is the beta interaction diversity due to the turnover of links ($\beta_{OS}$). However, $\beta_{OS}$ is considered to encompass all the beta link diversity not attributable to species turnover ($\beta_{ST}$), and the definition of $\beta_{ST}$ is very restrictive, as it only accounts for interaction turnover when some species interacting in one network are not observed in the second one. Since variations in abundance are not considered, this method likely overestimates $\beta_{OS}$, while underestimating species turnover.
-
-
-Therefore, the absence of correlation is not conclusive on its own. Using Correspondence Analysis (CA), we account for species turnover by assuming that species abundance is proportional to the associated number of interactions observed in the network. This approach offers a better understanding of beta diversity and interaction turnover.
-
-
-
-One of the main hypotheses was that rewiring depends on the generalism of the species and the width of the environmental niche. However, Figures \ref{fig:effect_env} and \ref{fig:effect_trait} show that except when the environmental tolerance is extremely low, there is no correlation between environmental tolerance and trait tolerance with the Foucart CA position's variance. This finding is surprising, as we expected species capable of rewiring to have a broad environmental niche and to be generalists.
-
-This discrepancy might be explained by the fact that Foucart CA reconstructs the trait, which we expected to be analogous to the interaction profile of the species. Therefore, the method may be highly effective in reconstructing trait matching, leading to insufficient variation in species position when interacting with other species with similar traits. As a result,  we do not observe a shift in the position, and it remains stable at its true trait value.
-
-Consequently, while the Foucart CA is effective at recovering the latent traits of species in a series of networks, it cannot be extended to study the rewiring capability of species. This limitation arises because it cannot accurately reconstruct the interaction profiles required to observe rewiring.
-
-
-
-
-
-
-Plan de la discussion : 
-
-- Question initiale (changement des réseaux selon environnement)
-- Résumé résultats et predictions
-- Quelles hypothèses ont été validé ou pas
-
-
-Partie I : Pourquoi ça n'a pas fonctionné ?
-a. Quels papiers ont montré que ça fonctionnait ?
-b. Quelle différence avec notre travail ?
-c. Pourquoi le nôtre a pu montrer des résultats différents : aspects méthodologiques ?
-d. Proposition d'ouverture, quels aspects on pourrait développer pour répondre à la question définitivement et trancher
-
-Partie II : Rewiring 
-a. Discution écologique du concept
-b. Un phénomène réel ? (papier ont montré l'absence de rewiring?)
-c. Hypothèses alternatives au rewiring : patron d'abondance ? Trait ? 
-
-Ce sont juste des propositions, évidemment tu connais plus le sujet. 
-
-\section{new discussion}
-
-The initial problem was: can Lisa Nicvert's method \citep{these_lisa_2024}, which uses Correspondence Analysis to estimate the latent traits of the species (related to the interaction profile) and efficiently discards the effect of the abundance, be extended to quantify interaction rewiring in changing environmental conditions from a series of networks.
-
-As predicted, we find that Foucart CA is capable of reconstructing the latent traits in the multiple network case. However, we find that we find no correlation with the individual $\Delta_{OS}$ as defined by \cite{toju_interaction_2024} and we do not find an effect of the environmental and trait tolerance on the rewiring capability (except for very low environmental tolerances). 
-This can be explained by the fact that Foucart CA is able to position a species depending on its interaction profile, however, it is not able to detect the modification of the interaction profile when the changing partners have similar traits.
-
-Therefore, Foucart CA is not a suitable method to study individual interaction rewiring. 
-Nonetheless, the individual contribution to rewiring as defined by Toju \cite{toju_interaction_2024} is lacking in many ways and should be depreciated for many reasons. It requires heavy computation when applied to large networks. Then, the sum of the individual contributions to rewiring does not sum up to the global link beta diversity due to interaction turnover. Finally, it is based on the definition given by \cite{poisot_dissimilarity_2012} that considers species turnover only as presence and absence, thus poorly estimating the abundance effect and leading to an overestimation of rewiring by partially attributing the abundance effects.
-
-To conclude, new methods should be developed to gain a better understanding of the rewiring by taking proper care of the abundance effect and the trait matching. One way to better care of the abundance effect when computing the global link beta diversity due to interaction turnover could be to assume that the number of interactions observed for a species is a proxy of the abundance of this species, as it is done the Correspondance Analysis \ref{abund_effect_ca}.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Résumé des résultats : Tu reviens à tes hypothèses et tes prédictions (tu peux meme les redire, c'est plus fluide), et tu dis si oui ou non elles sont validées
-
-Critique de tes méthodes/hypothèses de départ :
--D'autres tests à faire pour être sur que ca marche ou pas ?
--Faire d'autres hypothèses ?
--Des facteurs confondants ? (biologique ou méthodo)
-
-Tu rebondis la dessus avec des perspectives
-
-
-
-
-
-
-
+To conclude, new methods should be developed to better understand rewiring, properly taking into account the abundance effects and trait matching. I suggest that we could better account for the abundance effect when computing the global link beta diversity due to interaction turnover by assuming that the number of interactions observed for a species serves as a proxy of the abundance of this species, as done in Correspondence Analysis (\ref{abund_effect_ca}).
 
