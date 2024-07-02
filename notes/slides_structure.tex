@@ -1,9 +1,9 @@
 \documentclass{beamer}
 \usetheme{metropolis}           % Use metropolis theme
-\title{A minimal example}
-\date{\today}
-\author{Matthias Vogelgesang}
-\institute{Centre for Modern Beamer Themes}
+\title{Exploring the role of rewiring on the structure of ecological interaction networks:\newline a simulation-based approach}
+\date{July 5, 2024}
+\author{Rémi Legrand}
+\institute{CLBBE}
 
 \begin{document}
 
@@ -40,48 +40,53 @@
     \end{column}
     \begin{column}{.5\linewidth}
       \includegraphics<1>[width=\linewidth]{figures_slides/abundance.png}%
+      \includegraphics<2>[width=\linewidth]{figures_slides/trait_matching.png}%
       \includegraphics<3>[width=\linewidth]{figures_slides/phenology.png}%
+      \includegraphics<4>[width=\linewidth]{figures_slides/other_rewiring.png}%
     \end{column}
   \end{columns}
 \end{frame}
 
-\section{Subject}
+\section{Exploring the role of rewiring on the structure of ecological interaction networks:\newline a simulation-based approach}
 
-\begin{frame}{Subject of the internship}
-\protect\hypertarget{subject-of-the-internship}{}
-\end{frame}
 
 \begin{frame}{Current method to compute rewiring}
 \protect\hypertarget{current-method-to-compute-rewiring}{}
-take the schematics from poisot or fründ (and cite)
-
-
-\uncover<1->{$$\beta_{dissimilarity} = \frac{a+b+c}{a+ \frac{b}{2} + \frac{c}{2}} - 1$$}
-\uncover<2->{$$\beta_{WN} = \beta_{ST} + \beta_{OS}$$}\vspace{-1em}
-\uncover<3->{$$\Delta\beta_{OS,i} = \beta_{OS} - \beta_{OS,\Delta i}$$}
+\begin{columns}
+  \begin{column}{.5\linewidth}
+    \uncover<1->{$$\beta_{dissimilarity} = \frac{|a|+|c|+|b|}{\frac{|a|}{2} + |c|+ \frac{|b|}{2}} - 1$$}
+    \uncover<2->{$$\beta_{WN} = \beta_{ST} + \beta_{OS}$$}\vspace{-1em}
+    \uncover<3->{$$\Delta\beta_{OS,i} = \beta_{OS} - \beta_{OS,\Delta i}$$}
+  \end{column}
+  \begin{column}{.5\linewidth}
+    \includegraphics<1->[width=\linewidth]{figures_slides/beta_div.png}%
+  \end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{How do we plan to study rewiring : AFC}
-  \protect\hypertarget{how-do-we-plan-to-study-rewiring--afc}{}
-  \begin{block}{Show a dummy network and what a CA looks like}
-    \protect\hypertarget{show-a-dummy-network-and-what-a-ca-looks-like}{}
-  \end{block}
+\protect\hypertarget{How-do-we-plan-to-study-rewiring-:-AFC}{}
+\begin{columns}
+  \begin{column}{.5\linewidth}
+    \includegraphics<1->[width=\linewidth]{figures_slides/network.png}%
+  \end{column}
+  \begin{column}{.5\linewidth}
+    \includegraphics<2->[width=\linewidth]{figures_slides/AFC}%
+  \end{column}
+\end{columns}
 \end{frame}
-
 \begin{frame}{Foucart CA}
 \protect\hypertarget{foucart-ca}{}
+\includegraphics[width=\linewidth]{figures_slides/foucart.png}%
 \end{frame}
 
-\begin{frame}{Compare to other methods and why it did not work (or did
-it?)}
-\protect\hypertarget{compare-to-other-methods-and-why-it-did-not-work-or-did-it}{}
-compare to toju and to tolerance
+\begin{frame}{Compare to other methods and why it did not work}
+  \framesubtitle{(or did it?)}
+  compare to toju and to tolerance
 \end{frame}
 
 \begin{frame}{Why it did not work}
-\protect\hypertarget{why-it-did-not-work}{}
 \begin{itemize}
-\tightlist
 \item
   schematics: disappearance of species -\textgreater{} new interactions
   less favourable (not taken into account in simulated data)
