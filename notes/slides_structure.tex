@@ -3,13 +3,13 @@
 \title{Exploring the role of rewiring on the structure of ecological interaction networks:\newline a simulation-based approach}
 \date{July 5, 2024}
 \author{Rémi Legrand}
-\institute{CLBBE}
+\institute{Laboratoire de Biometrie et Biologie Évolutive}
 
 \begin{document}
 
 \maketitle
 
-\begin{frame}{On the importance of predicting interactions in a changing env}
+\begin{frame}{Importance of predicting interactions in a changing environment}
 
   \begin{columns}
     \begin{column}{.3\linewidth}
@@ -26,7 +26,7 @@
 \begin{frame}{Factors to predict interactions}
 
   \begin{columns}
-    \begin{column}{.5\linewidth}
+    \begin{column}{.4\linewidth}
       %\only<3>{Salut}
       %\uncover<3>{Salut}
       \begin{itemize}
@@ -38,7 +38,7 @@
       \item<4-> \textbf{Others}  adaptation capability (rewiring)
       \end{itemize}
     \end{column}
-    \begin{column}{.5\linewidth}
+    \begin{column}{.6\linewidth}
       \includegraphics<1>[width=\linewidth]{figures_slides/abundance.png}%
       \includegraphics<2>[width=\linewidth]{figures_slides/trait_matching.png}%
       \includegraphics<3>[width=\linewidth]{figures_slides/phenology.png}%
@@ -50,7 +50,7 @@
 \section{Exploring the role of rewiring on the structure of ecological interaction networks:\newline a simulation-based approach}
 
 
-\begin{frame}{Current method to compute rewiring}
+\begin{frame}{Current method to compute rewiring: Beta diversity}
 \protect\hypertarget{current-method-to-compute-rewiring}{}
 \begin{columns}
   \begin{column}{.5\linewidth}
@@ -64,69 +64,85 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{How do we plan to study rewiring : AFC}
-\protect\hypertarget{How-do-we-plan-to-study-rewiring-:-AFC}{}
+\begin{frame}{How do we plan to study rewiring : CA}
+\protect\hypertarget{How-do-we-plan-to-study-rewiring-:-CA}{}
 \begin{columns}
   \begin{column}{.5\linewidth}
     \includegraphics<1->[width=\linewidth]{figures_slides/network.png}%
   \end{column}
   \begin{column}{.5\linewidth}
-    \includegraphics<2->[width=\linewidth]{figures_slides/AFC}%
+    \includegraphics<2->[width=\linewidth]{figures_slides/AFC.png}%
   \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}{Foucart CA}
+\begin{frame}{Multinetwork extension: Foucart CA}
 \protect\hypertarget{foucart-ca}{}
 \includegraphics[width=\linewidth]{figures_slides/foucart.png}%
 \end{frame}
 
-\begin{frame}{Compare to other methods and why it did not work}
+\begin{frame}{Compare to other methods}
   \framesubtitle{(or did it?)}
-  compare to toju and to tolerance
+  \begin{columns}
+    \begin{column}{.5\linewidth}
+      \includegraphics<1->[width=\linewidth]{figures_slides/rewiring.pdf}%
+    \end{column}
+    \begin{column}{.5\linewidth}
+      \begin{minipage}{\linewidth}
+        \includegraphics<2->[width=\linewidth]{figures_slides/impact_env.pdf}\\ [1cm]
+        \includegraphics<2->[width=\linewidth]{figures_slides/impact_trait_tol.pdf}%
+      \end{minipage}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Why it did not work}
+
+\begin{frame}{Why it did not work?}
+  \begin{columns}
+    \begin{column}{.5\linewidth}
+      \includegraphics<1->[width=\linewidth]{figures_slides/simulation_limits.png}%
+    \end{column}
+    \begin{column}{.5\linewidth}
+      \includegraphics<2->[width=\linewidth]{figures_slides/foucart_limits.png}%
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Perspectives}
+\protect\hypertarget{perspectives}{}
 \begin{itemize}
 \item
-  schematics: disappearance of species -\textgreater{} new interactions
-  less favourable (not taken into account in simulated data)
+  Improve the Beta dissimilarity computation
 \item
-  schematics: reconstruction of the trait and not profile interaction
-  (the id of the interactant does not matter)
+  Correct the simulation bias
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Perspectives to improve beta diversity and further
-research on Foucart}
-\protect\hypertarget{perspectives-to-improve-beta-diversity-and-further-research-on-foucart}{}
-\begin{itemize}
-\item
-  how to compute better the beta dissimilarity: take into account the
-  abundances and not just the presence/ abscence of the species in the
-  different networks
-\item
-  a simulation bias? : resilience to perturbation not taken into account
-  in the simulation
-\end{itemize}
+\section*{Thanks for your attention!}
+
+\begin{frame}{Simulation process}
+  \centering
+  \includegraphics<1->[height=0.95\textheight, keepaspectratio]{figures_slides/Netw_generation.png}%
 \end{frame}
 
-\begin{frame}{Citations:}
-\protect\hypertarget{citations}{}
-\begin{itemize}
-\item
-  Image giec biodiv: Figure 2.6 in Parmesan, C., M.D. Morecroft, Y.
-  Trisurat, R. Adrian, G.Z. Anshari, A. Arneth, Q. Gao, P. Gonzalez, R.
-  Harris, J. Price, N. Stevens, and G.H. Talukdar, 2022: Terrestrial and
-  Freshwater Ecosystems and their Services. In: Climate Change 2022:
-  Impacts, Adaptation, and Vulnerability. Contribution of Working Group
-  II to the Sixth Assessment Report of the Intergovernmental Panel on
-  Climate Change {[}H.-O. Pörtner, D.C. Roberts, M. Tignor, E.S.
-  Poloczanska, K. Mintenbeck, A. Alegría, M. Craig, S. Langsdorf, S.
-  Löschke, V. Möller, A. Okem, B. Rama (eds.){]}. Cambridge University
-  Press, Cambridge, UK and New York, NY, USA, pp. 197-377,
-  doi:10.1017/9781009325844.004.
-  \href{https://www.ipcc.ch/report/ar6/wg2/figures/chapter-2/figure-2-006}{https://www.ipcc.ch/report/ar6/wg2/figures/chapter-2/figure-2-006}
-\item
-\end{itemize}
+\begin{frame}{Trait recovery}
+  \includegraphics<1->[width=\linewidth]{figures_slides/supplements/ninter.pdf}%
 \end{frame}
+
+\begin{frame}{Trait recovery}
+  \includegraphics<1->[width=\linewidth]{figures_slides/supplements/frame_env.pdf}%
+\end{frame}
+
+\begin{frame}{Trait recovery}
+  \includegraphics<1->[width=\linewidth]{figures_slides/supplements/delta.pdf}%
+\end{frame}
+
+\begin{frame}{Trait recovery}
+  \includegraphics<1->[width=\linewidth]{figures_slides/supplements/ratio.pdf}%
+\end{frame}
+
+\begin{frame}{Trait recovery}
+  \includegraphics<1->[width=\linewidth]{figures_slides/supplements/trait.pdf}%
+\end{frame}
+
+
 \end{document}
