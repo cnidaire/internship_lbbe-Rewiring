@@ -9,33 +9,34 @@
 
 \maketitle
 
-\begin{frame}{Importance of predicting interactions in a changing environment}
+\section{Inroduction}
+
+\begin{frame}{\scalebox{.9}{Importance of predicting interactions in a changing environment}}
 
   \begin{columns}
-    \begin{column}{.3\linewidth}
-      \includegraphics<1->[width=\linewidth]{figures_slides/biodiv_loss_giec.png}
+    \begin{column}{.5\linewidth}
+      \includegraphics<1->[width=\linewidth]{figures_slides/ipbes.png}
     \end{column}
-    \begin{column}{.7\linewidth}
+    \begin{column}{.6\linewidth}
       \includegraphics<2>[width=\linewidth]{figures_slides/temperature_raising.pdf}
     \end{column}
   \end{columns}
   \vfill
-  {\scriptsize \uncover<1->{IPBES report 2019} \hfill \uncover<2->{IPCC report v5 2023}}
+  {\scriptsize \uncover<1->{IPBES report 2019} \hfill \uncover<2->{Hawkins (2020)}}
 \end{frame}
 
-\begin{frame}{Factors to predict interactions}
-
+\begin{frame}{How to predict interactions}
   \begin{columns}
     \begin{column}{.4\linewidth}
       %\only<3>{Salut}
       %\uncover<3>{Salut}
       \begin{itemize}
-      \item<1-> \textbf{Abundances}
+      \item<1-> \textbf{Abundances}%
       \item<2-> \textbf{Trait matching} %% The influence of biogeographical and evolutionary
         %% histories on morphological trait-matching and resource specialization
         %% in mutualistic hummingbird--plant networks
-      \item<3-> \textbf{Phenology}
-      \item<4-> \textbf{Others}  adaptation capability (rewiring)
+      \item<3-> \textbf{Phenology}%
+      \item<4-> \textbf{Others}  adaptation capability (rewiring)%
       \end{itemize}
     \end{column}
     \begin{column}{.6\linewidth}
@@ -45,64 +46,86 @@
       \includegraphics<4>[width=\linewidth]{figures_slides/other_rewiring.png}%
     \end{column}
   \end{columns}
+  \vfill
+  {\scriptsize \hfill \uncover<4->{Fründ et al (2016)}}
 \end{frame}
 
 \section{Exploring the role of rewiring on the structure of ecological interaction networks:\newline a simulation-based approach}
 
 
-\begin{frame}{Current method to compute rewiring: Beta diversity}
+
+\begin{frame}{Current method to compute rewiring: Beta dissimilarity}
 \protect\hypertarget{current-method-to-compute-rewiring}{}
 \begin{columns}
   \begin{column}{.5\linewidth}
-    \uncover<1->{$$\beta_{dissimilarity} = \frac{|a|+|c|+|b|}{\frac{|a|}{2} + |c|+ \frac{|b|}{2}} - 1$$}
-    \uncover<2->{$$\beta_{WN} = \beta_{ST} + \beta_{OS}$$}\vspace{-1em}
-    \uncover<3->{$$\Delta\beta_{OS,i} = \beta_{OS} - \beta_{OS,\Delta i}$$}
+    \uncover<1->{Link dissimilarity: }
+    \uncover<1->{$$\beta_{WN} = \beta_{ST} + \beta_{OS}$$}
+    \uncover<3->{Downside: on binary networks (do not take into accout abundances)}
   \end{column}
   \begin{column}{.5\linewidth}
-    \includegraphics<1->[width=\linewidth]{figures_slides/beta_div.png}%
+    \begin{minipage}{\linewidth}
+      \includegraphics<2->[width=\linewidth]{figures_slides/beta_st.png}\\ [1cm]
+      \includegraphics<2->[width=\linewidth]{figures_slides/beta_os.png}%
+    \end{minipage}
   \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}{How do we plan to study rewiring : CA}
-\protect\hypertarget{How-do-we-plan-to-study-rewiring-:-CA}{}
-\begin{columns}
-  \begin{column}{.5\linewidth}
-    \includegraphics<1->[width=\linewidth]{figures_slides/network.png}%
-  \end{column}
-  \begin{column}{.5\linewidth}
-    \includegraphics<2->[width=\linewidth]{figures_slides/AFC.png}%
-  \end{column}
-\end{columns}
+
+\begin{frame}{Current method to compute rewiring: Beta dissimilarity}
+  \protect\hypertarget{current-method-to-compute-rewiring}{}
+  \begin{columns}
+    \begin{column}{.5\linewidth}
+      \uncover<1->{Contribution to rewiring}
+      \uncover<1->{$$\Delta\beta_{OS,i} = \beta_{OS} - \beta_{OS,\Delta i}$$}
+      \uncover<2->{Downsides: $\sum_{i}\beta_{OS,\Delta i} \ne \beta_{OS}$}
+    \end{column}
+    \begin{column}{.5\linewidth}
+      \includegraphics<1->[width=\linewidth]{figures_slides/beta_contrib.png}
+    \end{column}
+  \end{columns}
+  \end{frame}
+
+\section{How can we study rewiring and take into account}
+
+\section{Methods}
+
+\begin{frame}{\scalebox{.9}{How better account for abundances in the rewiring computation}}
+  \centering
+  \includegraphics[height=0.7\textheight, keepaspectratio]{figures_slides/netw_notation.png}%
 \end{frame}
-\begin{frame}{Multinetwork extension: Foucart CA}
+
+\begin{frame}{\scalebox{.9}{How better account for abundances in the rewiring computation}}
+  \centering
+  \includegraphics<1->[height=0.95\textheight, keepaspectratio]{figures_slides/Netw_generation.png}%
+\end{frame}
+
+\begin{frame}{\scalebox{.9}{How better account for abundances in the rewiring computation}}
+  \centering
+  \includegraphics[width=\linewidth, keepaspectratio]{figures_slides/SVD.png}%
+\end{frame}
+
+
+\begin{frame}{Multinetwork extension: Foucart Correspondance Analysis}
 \protect\hypertarget{foucart-ca}{}
 \includegraphics[width=\linewidth]{figures_slides/foucart.png}%
 \end{frame}
 
+\section{Results}
+
 \begin{frame}{Compare to other methods}
   \framesubtitle{(or did it?)}
-  \begin{columns}
-    \begin{column}{.5\linewidth}
-      \includegraphics<1->[width=\linewidth]{figures_slides/rewiring.pdf}%
-    \end{column}
-    \begin{column}{.5\linewidth}
-      \begin{minipage}{\linewidth}
-        \includegraphics<2->[width=\linewidth]{figures_slides/impact_env.pdf}\\ [1cm]
-        \includegraphics<2->[width=\linewidth]{figures_slides/impact_trait_tol.pdf}%
-      \end{minipage}
-    \end{column}
-  \end{columns}
+  \includegraphics<1->[width=\linewidth]{figures_slides/rewiring.pdf}%
 \end{frame}
 
 
 \begin{frame}{Why it did not work?}
   \begin{columns}
     \begin{column}{.5\linewidth}
-      \includegraphics<1->[width=\linewidth]{figures_slides/simulation_limits.png}%
+      \includegraphics<1->[width=\linewidth]{figures_slides/foucart_limits.png}%
     \end{column}
     \begin{column}{.5\linewidth}
-      \includegraphics<2->[width=\linewidth]{figures_slides/foucart_limits.png}%
+      \includegraphics<2->[width=\linewidth]{figures_slides/simulation_limits.png}%
     \end{column}
   \end{columns}
 \end{frame}
@@ -111,9 +134,9 @@
 \protect\hypertarget{perspectives}{}
 \begin{itemize}
 \item
-  Improve the Beta dissimilarity computation
+  Take abundances into account in the Beta dissimilarity computation
 \item
-  Correct the simulation bias
+  Integrate perturbation and the adaptation of species in the simulation
 \end{itemize}
 \end{frame}
 
@@ -123,6 +146,20 @@
   \centering
   \includegraphics<1->[height=0.95\textheight, keepaspectratio]{figures_slides/Netw_generation.png}%
 \end{frame}
+
+\begin{frame}{Beta dissimilarity}
+  \protect\hypertarget{current-method-to-compute-rewiring}{}
+  \begin{columns}
+    \begin{column}{.5\linewidth}
+      \uncover<1->{$$\beta_{dissimilarity} = \frac{|a|+|c|+|b|}{\frac{|a|}{2} + |c|+ \frac{|b|}{2}} - 1$$}
+      \uncover<2->{$$\beta_{WN} = \beta_{ST} + \beta_{OS}$$}\vspace{-1em}
+      \uncover<3->{$$\Delta\beta_{OS,i} = \beta_{OS} - \beta_{OS,\Delta i}$$}
+    \end{column}
+    \begin{column}{.5\linewidth}
+      \includegraphics<1->[width=\linewidth]{figures_slides/beta_div.png}%
+    \end{column}
+  \end{columns}
+  \end{frame}
 
 \begin{frame}{Trait recovery}
   \includegraphics<1->[width=\linewidth]{figures_slides/supplements/ninter.pdf}%
