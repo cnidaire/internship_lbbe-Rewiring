@@ -22,8 +22,7 @@ Analysis used in the report
 
 ## Notes
 
-Diverse notes used, mainly for me, myself and I (I love me, I think I'm hot af - Rémi Legrand himself)
-
+Diverse notes used, mainly for myself.
 ## Master thesis
 
 contain the teX files and the illustrations used for the master thesis report
