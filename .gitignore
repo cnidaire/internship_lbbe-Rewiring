@@ -2,14 +2,11 @@
 .Rhistory
 *.RData
 .Ruserdata
-*.Rproj
 *.md.backup
 *.html
 *_cache
 *_files
-*.png
 biblio/
 *.obsidian
 *.Rcheck
 *.zip
-*.pdf
