@@ -1,5 +1,5 @@
 ---
-title: "Comparison"
+title: "Comparison of variance of the position in CA and the individual contribution to The beta link turnover of coocuring species"
 format: html
 editor: visual
 ---
@@ -271,26 +271,6 @@ mean(nw_beta_div$OS)
 ## Comparison between the variance and the beta diversity
 
 ```{r}
-fig1 <- ggplot() +
-  geom_point(data = as.data.frame(cbind(con_var, beta_indiv_con)), aes(x = tot_con, y = delta_os)) +
-  xlab(TeX("$\\sigma^2$ position correspondance analysis")) +  # Add X axis label
-  ylab("delta OS indiv") +  # Add Y axis label
-  ggtitle("Consumers") +  # Add plot title
-  theme_bw()
-
-fig2 <- ggplot() +
-  geom_point(data = as.data.frame(cbind(res_var, beta_indiv_res)), aes(x = tot_res, y = delta_os)) +
-  xlab(TeX("$\\sigma^2$ position correspondance analysis")) +  # Add X axis label
-  ylab("delta OS indiv") +  # Add Y axis label
-  ggtitle("Resources") +  # Add plot title
-  theme_bw()
-
-ggarrange(fig1, fig2)
-```
-
-## Better Visualization
-
-```{r}
 (con <- as.data.frame(cbind(con_var, beta_indiv_con)))
 (res <- as.data.frame(cbind(res_var, beta_indiv_res)))
 ```
@@ -307,10 +287,10 @@ rewiring
 
 ```{r}
 figure <- ggplot() +
-  geom_point(data = rewiring, aes(x = tot, y = delta_os)) +
+  geom_point(data = rewiring, aes(x = tot, y = delta_os),alpha = 0.5, col = "#9350A6") +
   facet_wrap(~spe, scales = "free") +
-  xlab("Variance position correspondance analysis") +  # Add X axis label
-  ylab(TeX("$\\Delta_{OS}$ individual")) +  # Add Y axis label
+  xlab("Variance position Correspondence Analysis") +  # Add X axis label
+  ylab(TeX("$\\Delta_{OS}$ individual")) + # Add Y axis label
   theme_bw()
 
 figure
